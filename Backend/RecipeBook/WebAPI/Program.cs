@@ -44,11 +44,11 @@ public class Program
         catch ( Exception ex )
         {
             Console.WriteLine( ex.Message );
-            Console.WriteLine( "Сервер неожиданно завершил работу." );
+            Console.WriteLine( "РЎРµСЂРІРµСЂ РЅРµРѕР¶РёРґР°РЅРЅРѕ Р·Р°РІРµСЂС€РёР» СЂР°Р±РѕС‚Сѓ." );
         }
         finally
         {
-            Console.WriteLine( "Сервер отключается..." );
+            Console.WriteLine( "РЎРµСЂРІРµСЂ РѕС‚РєР»СЋС‡Р°РµС‚СЃСЏ..." );
         }
     }
 }
