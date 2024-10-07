@@ -9,9 +9,9 @@ public class User
     public string Password { get; set; }
     public string Information { get; set; } = string.Empty;
 
-    public ICollection<Recipe> Recipes { get; set; } = new HashSet<Recipe>();
+    public ICollection<Recipe> Recipes { get; set; } = new List<Recipe>();
     public ICollection<Like> Likes { get; set; } = new HashSet<Like>();
-    public ICollection<Favorite> Favorites { get; set; } = new HashSet<Favorite>();
+    public ICollection<Favorite> Favorites { get; set; } = new List<Favorite>();
 
     public User( string name, string login, string password )
     {

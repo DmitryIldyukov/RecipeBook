@@ -12,8 +12,8 @@ public class Recipe
     public string ImageName { get; set; }
 
     public ICollection<Tag> Tags { get; set; } = new HashSet<Tag>();
-    public ICollection<Step> Steps { get; set; } = new HashSet<Step>();
-    public ICollection<Ingredient> Ingredients { get; set; } = new HashSet<Ingredient>();
+    public ICollection<Step> Steps { get; set; } = new List<Step>();
+    public ICollection<Ingredient> Ingredients { get; set; } = new List<Ingredient>();
     public ICollection<Like> Likes { get; set; } = new HashSet<Like>();
     public ICollection<Favorite> Favorites { get; set; } = new HashSet<Favorite>();
 
