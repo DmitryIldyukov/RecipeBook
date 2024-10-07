@@ -1,7 +1,8 @@
-﻿using MediatR;
+﻿namespace Application.Common.CQRS.Query;
 
-namespace Application.Common.CQRS.Query;
-
-public interface IQueryHandler<in TQuery, TResponse>
-    : IRequestHandler<TQuery, TResponse> where TQuery : IQuery<TResponse>
-{ }
+public interface IQueryHandler<in TQuery, TResponse> 
+    where TQuery : class
+    where TResponse : class
+{
+    Task<TResponse> Handle( TQuery query );
+}

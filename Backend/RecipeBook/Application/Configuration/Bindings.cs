@@ -1,6 +1,6 @@
-﻿using Application.UseCases.Commands.Recipe.Create;
+﻿using Application.Common.CQRS.Command;
+using Application.UseCases.Commands.Recipe.Create;
 using FluentValidation;
-using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.Configuration;
@@ -11,7 +11,7 @@ public static class Bindings
     {
         services.AddTransient<IValidator<CreateRecipeCommand>, CreateRecipeCommandValidator>();
 
-        services.AddMediatR( typeof( Bindings ).Assembly );
+        services.AddScoped<ICommandHandler<CreateRecipeCommand, int>, CreateRecipeCommandHandler>();
 
         return services;
     }

@@ -1,7 +1,13 @@
-﻿using MediatR;
-
-namespace Application.Common.CQRS.Command;
+﻿namespace Application.Common.CQRS.Command;
 
 public interface ICommandHandler<in TCommand, TResponse>
-    : IRequestHandler<TCommand, TResponse> where TCommand : ICommand<TResponse>
-{ }
+    where TCommand : class
+{
+    Task<TResponse> Handle( TCommand command );
+}
+
+public interface ICommandHandler<in TCommand>
+    where TCommand : class
+{
+    Task Handle( TCommand command );
+}

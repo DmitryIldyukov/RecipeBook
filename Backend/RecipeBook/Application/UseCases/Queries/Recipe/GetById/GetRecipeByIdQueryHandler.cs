@@ -5,7 +5,7 @@ namespace Application.UseCases.Queries.Recipe.GetById;
 
 public class GetRecipeByIdQueryHandler : IQueryHandler<GetRecipeByIdQuery, GetRecipeQueryDto>
 {
-    public Task<GetRecipeQueryDto> Handle( GetRecipeByIdQuery request, CancellationToken cancellationToken )
+    public Task<GetRecipeQueryDto> Handle( GetRecipeByIdQuery query )
     {
         throw new NotImplementedException();
     }
