@@ -2,9 +2,9 @@
 
 namespace Application.UseCases.Commands.Recipe.Create;
 
-public class CreateRecipeCommandHandler : ICommandHandler<CreateRecipeCommand, int>
+public class CreateRecipeCommandHandler : ICommandHandler<CreateRecipeCommand>
 {
-    public Task<int> Handle( CreateRecipeCommand command )
+    public Task Handle( CreateRecipeCommand command )
     {
         throw new NotImplementedException();
     }
