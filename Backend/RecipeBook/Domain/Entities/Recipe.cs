@@ -1,8 +1,7 @@
 ﻿namespace Domain.Entities;
 
-public class Recipe
+public class Recipe : Entity
 {
-    public int RecipeId { get; init; }
     public int UserId { get; set; }
     public User User { get; set; }
     public string Name { get; set; }
@@ -17,8 +16,9 @@ public class Recipe
     public ICollection<Like> Likes { get; set; } = new HashSet<Like>();
     public ICollection<Favorite> Favorites { get; set; } = new HashSet<Favorite>();
 
-    public Recipe(int userId, string name, string description, int cookTime, int portionCount, string imageName )
+    public Recipe( int userId, string name, string description, int cookTime, int portionCount, string imageName)
     {
+        UserId = userId;
         Name = name;
         Description = description;
         CookTime = cookTime;

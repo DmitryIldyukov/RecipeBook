@@ -9,9 +9,9 @@ public class LikeConfiguration : IEntityTypeConfiguration<Like>
     public void Configure( EntityTypeBuilder<Like> builder )
     {
         builder.ToTable( "likes" )
-            .HasKey( l => l.LikeId );
+            .HasKey( l => l.Id );
 
-        builder.Property( l => l.LikeId )
+        builder.Property( l => l.Id )
             .HasComment( "Id лайка" )
             .HasColumnName( "like_id" )
             .ValueGeneratedOnAdd()

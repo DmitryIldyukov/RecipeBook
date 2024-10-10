@@ -9,9 +9,9 @@ public class StepConfiguration : IEntityTypeConfiguration<Step>
     public void Configure( EntityTypeBuilder<Step> builder )
     {
         builder.ToTable( "steps" )
-            .HasKey( s => s.StepId );
+            .HasKey( s => s.Id );
 
-        builder.Property( s => s.StepId )
+        builder.Property( s => s.Id )
             .HasComment( "Id шага" )
             .HasColumnName( "step_id" )
             .ValueGeneratedOnAdd()

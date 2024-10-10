@@ -1,8 +1,7 @@
 ﻿namespace Domain.Entities;
 
-public class User
+public class User : Entity
 {
-    public int UserId { get; init; }
     public string Name { get; set; }
     public string Login { get; set; }
     public string Email { get; set; } = string.Empty;

@@ -1,8 +1,7 @@
 ﻿namespace Domain.Entities;
 
-public class Favorite
+public class Favorite : Entity
 {
-    public int FavoriteId { get; init; }
     public int UserId { get; init; }
     public User User { get; init; }
     public int RecipeId { get; init; }

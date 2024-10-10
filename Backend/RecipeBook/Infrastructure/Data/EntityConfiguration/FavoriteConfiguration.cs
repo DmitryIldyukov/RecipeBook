@@ -9,9 +9,9 @@ public class FavoriteConfiguration : IEntityTypeConfiguration<Favorite>
     public void Configure( EntityTypeBuilder<Favorite> builder )
     {
         builder.ToTable( "favorites" )
-            .HasKey( x => x.FavoriteId );
+            .HasKey( x => x.Id );
 
-        builder.Property( f => f.FavoriteId )
+        builder.Property( f => f.Id )
             .HasComment( "Id избранного" )
             .HasColumnName( "favorite_id" )
             .ValueGeneratedOnAdd()
@@ -32,8 +32,8 @@ public class FavoriteConfiguration : IEntityTypeConfiguration<Favorite>
             .HasForeignKey( u => u.UserId )
             .OnDelete( DeleteBehavior.Restrict );
 
-        builder.HasOne(f => f.Recipe )
-            .WithMany(r => r.Favorites )
+        builder.HasOne( f => f.Recipe )
+            .WithMany( r => r.Favorites )
             .HasForeignKey( r => r.RecipeId )
             .OnDelete( DeleteBehavior.Cascade );
     }

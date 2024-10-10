@@ -9,9 +9,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     public void Configure( EntityTypeBuilder<User> builder )
     {
         builder.ToTable( "users" )
-            .HasKey( u => u.UserId );
+            .HasKey( u => u.Id );
 
-        builder.Property( u => u.UserId )
+        builder.Property( u => u.Id )
             .HasComment( "Id пользователя" )
             .HasColumnName( "user_id" )
             .ValueGeneratedOnAdd()

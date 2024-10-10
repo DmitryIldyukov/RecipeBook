@@ -1,8 +1,7 @@
 ﻿namespace Domain.Entities;
 
-public class Tag
+public class Tag : Entity
 {
-    public int TagId { get; init; }
     public string Name { get; init; }
 
     public ICollection<Recipe> Recipes { get; set; } = new HashSet<Recipe>();

@@ -9,9 +9,9 @@ public class IngredientConfiguration : IEntityTypeConfiguration<Ingredient>
     public void Configure( EntityTypeBuilder<Ingredient> builder )
     {
         builder.ToTable( "ingredients" )
-            .HasKey( i => i.IngredientId );
+            .HasKey( i => i.Id );
 
-        builder.Property( i => i.IngredientId )
+        builder.Property( i => i.Id )
             .HasComment( "Id ингредиента" )
             .HasColumnName( "ingredient_id" )
             .ValueGeneratedOnAdd()

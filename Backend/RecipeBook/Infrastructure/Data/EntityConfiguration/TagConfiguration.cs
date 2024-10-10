@@ -9,9 +9,9 @@ public class TagConfiguration : IEntityTypeConfiguration<Tag>
     public void Configure( EntityTypeBuilder<Tag> builder )
     {
         builder.ToTable( "tags" )
-            .HasKey( t => t.TagId );
+            .HasKey( t => t.Id );
 
-        builder.Property( t => t.TagId )
+        builder.Property( t => t.Id )
             .HasComment( "Id тега" )
             .HasColumnName( "tag_id" )
             .ValueGeneratedOnAdd()

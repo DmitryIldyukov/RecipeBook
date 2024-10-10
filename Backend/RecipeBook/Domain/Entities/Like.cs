@@ -1,8 +1,7 @@
 ﻿namespace Domain.Entities;
 
-public class Like
+public class Like : Entity
 {
-    public int LikeId { get; init; }
     public int UserId { get; init; }
     public User User { get; init; }
     public int RecipeId { get; init; }
