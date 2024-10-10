@@ -9,9 +9,9 @@ public static class Bindings
 {
     public static IServiceCollection AddApplication( this IServiceCollection services )
     {
-        services.AddTransient<IValidator<CreateRecipeCommand>, CreateRecipeCommandValidator>();
+        services.AddScoped<IValidator<CreateRecipeCommand>, CreateRecipeCommandValidator>();
 
-        services.AddScoped<ICommandHandler<CreateRecipeCommand, int>, CreateRecipeCommandHandler>();
+        services.AddScoped<ICommandHandler<CreateRecipeCommand>, CreateRecipeCommandHandler>();
 
         return services;
     }
