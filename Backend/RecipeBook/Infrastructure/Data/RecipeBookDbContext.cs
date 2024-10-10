@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data;
 
@@ -9,6 +10,14 @@ public class RecipeBookDbContext : DbContext
     { }
 
     #region DbSets
+
+    public DbSet<User> Users { get; set; }
+    public DbSet<Recipe> Recipes { get; set; }
+    public DbSet<Favorite> Favorites { get; set; }
+    public DbSet<Ingredient> Ingredients { get; set; }
+    public DbSet<Like> Likes { get; set; }
+    public DbSet<Step> Steps { get; set; }
+    public DbSet<Tag> Tags { get; set; }
 
     #endregion
 
