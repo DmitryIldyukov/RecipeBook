@@ -17,11 +17,6 @@ public class StepConfiguration : IEntityTypeConfiguration<Step>
             .ValueGeneratedOnAdd()
             .IsRequired();
 
-        builder.Property( s => s.RecipeId )
-            .HasComment( "Id рецепта" )
-            .HasColumnName( "recipe_id" )
-            .IsRequired();
-
         builder.Property( s => s.Description )
             .HasComment( "Описание шага" )
             .HasColumnName( "description" )
@@ -30,7 +25,8 @@ public class StepConfiguration : IEntityTypeConfiguration<Step>
 
         builder.HasOne( s => s.Recipe )
             .WithMany( r => r.Steps )
-            .HasForeignKey( s => s.RecipeId )
+            .HasForeignKey( "recipe_id" )
+            .IsRequired()
             .OnDelete( DeleteBehavior.Cascade );
     }
 }

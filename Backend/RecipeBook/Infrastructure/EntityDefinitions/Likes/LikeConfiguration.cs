@@ -17,16 +17,6 @@ public class LikeConfiguration : IEntityTypeConfiguration<Like>
             .ValueGeneratedOnAdd()
             .IsRequired();
 
-        builder.Property( l => l.UserId )
-            .HasComment( "Id пользователя" )
-            .HasColumnName( "user_id" )
-            .IsRequired();
-
-        builder.Property( l => l.RecipeId )
-            .HasComment( "Id рецепта" )
-            .HasColumnName( "recipe_id" )
-            .IsRequired();
-
         builder.Property( l => l.CreatedAt )
             .HasComment( "Дата и время лайка" )
             .HasColumnName( "created_at" )
@@ -34,12 +24,14 @@ public class LikeConfiguration : IEntityTypeConfiguration<Like>
 
         builder.HasOne( f => f.User )
             .WithMany( u => u.Likes )
-            .HasForeignKey( u => u.UserId )
+            .HasForeignKey( "user_id" )
+            .IsRequired()
             .OnDelete( DeleteBehavior.Restrict );
 
         builder.HasOne( f => f.Recipe )
             .WithMany( r => r.Likes )
-            .HasForeignKey( r => r.RecipeId )
+            .HasForeignKey( "recipe_id" )
+            .IsRequired()
             .OnDelete( DeleteBehavior.Cascade );
     }
 }
