@@ -24,13 +24,13 @@ namespace Infrastructure.Migrations.Migrations
 
             modelBuilder.Entity("Domain.Entities.Favorite", b =>
                 {
-                    b.Property<int>("FavoriteId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("favorite_id")
                         .HasComment("Id избранного");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FavoriteId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("RecipeId")
                         .HasColumnType("int")
@@ -42,7 +42,7 @@ namespace Infrastructure.Migrations.Migrations
                         .HasColumnName("user_id")
                         .HasComment("Id пользователя");
 
-                    b.HasKey("FavoriteId");
+                    b.HasKey("Id");
 
                     b.HasIndex("RecipeId");
 
@@ -53,13 +53,13 @@ namespace Infrastructure.Migrations.Migrations
 
             modelBuilder.Entity("Domain.Entities.Ingredient", b =>
                 {
-                    b.Property<int>("IngredientId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("ingredient_id")
                         .HasComment("Id ингредиента");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IngredientId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -80,7 +80,7 @@ namespace Infrastructure.Migrations.Migrations
                         .HasColumnName("title")
                         .HasComment("Заголовок для игредиентов");
 
-                    b.HasKey("IngredientId");
+                    b.HasKey("Id");
 
                     b.HasIndex("RecipeId");
 
@@ -89,13 +89,13 @@ namespace Infrastructure.Migrations.Migrations
 
             modelBuilder.Entity("Domain.Entities.Like", b =>
                 {
-                    b.Property<int>("LikeId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("like_id")
                         .HasComment("Id лайка");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LikeId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2")
@@ -112,7 +112,7 @@ namespace Infrastructure.Migrations.Migrations
                         .HasColumnName("user_id")
                         .HasComment("Id пользователя");
 
-                    b.HasKey("LikeId");
+                    b.HasKey("Id");
 
                     b.HasIndex("RecipeId");
 
@@ -123,13 +123,18 @@ namespace Infrastructure.Migrations.Migrations
 
             modelBuilder.Entity("Domain.Entities.Recipe", b =>
                 {
-                    b.Property<int>("RecipeId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("recipe_id")
                         .HasComment("Id рецепта");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RecipeId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AuthorId")
+                        .HasColumnType("int")
+                        .HasColumnName("author_id")
+                        .HasComment("Id автора");
 
                     b.Property<int>("CookTime")
                         .HasColumnType("int")
@@ -162,27 +167,22 @@ namespace Infrastructure.Migrations.Migrations
                         .HasColumnName("portion_count")
                         .HasComment("Порций в блюде");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int")
-                        .HasColumnName("user_id")
-                        .HasComment("Id пользователя");
+                    b.HasKey("Id");
 
-                    b.HasKey("RecipeId");
-
-                    b.HasIndex("UserId");
+                    b.HasIndex("AuthorId");
 
                     b.ToTable("recipes", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Step", b =>
                 {
-                    b.Property<int>("StepId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("step_id")
                         .HasComment("Id шага");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StepId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -196,7 +196,7 @@ namespace Infrastructure.Migrations.Migrations
                         .HasColumnName("recipe_id")
                         .HasComment("Id рецепта");
 
-                    b.HasKey("StepId");
+                    b.HasKey("Id");
 
                     b.HasIndex("RecipeId");
 
@@ -205,13 +205,13 @@ namespace Infrastructure.Migrations.Migrations
 
             modelBuilder.Entity("Domain.Entities.Tag", b =>
                 {
-                    b.Property<int>("TagId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("tag_id")
                         .HasComment("Id тега");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TagId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -220,20 +220,20 @@ namespace Infrastructure.Migrations.Migrations
                         .HasColumnName("name")
                         .HasComment("Название тега");
 
-                    b.HasKey("TagId");
+                    b.HasKey("Id");
 
                     b.ToTable("tags", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.User", b =>
                 {
-                    b.Property<int>("UserId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("user_id")
                         .HasComment("Id пользователя");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -270,22 +270,22 @@ namespace Infrastructure.Migrations.Migrations
                         .HasColumnName("password")
                         .HasComment("Пароль");
 
-                    b.HasKey("UserId");
+                    b.HasKey("Id");
 
                     b.ToTable("users", (string)null);
                 });
 
             modelBuilder.Entity("recipe_tags", b =>
                 {
-                    b.Property<int>("RecipesRecipeId")
+                    b.Property<int>("RecipesId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TagsTagId")
+                    b.Property<int>("TagsId")
                         .HasColumnType("int");
 
-                    b.HasKey("RecipesRecipeId", "TagsTagId");
+                    b.HasKey("RecipesId", "TagsId");
 
-                    b.HasIndex("TagsTagId");
+                    b.HasIndex("TagsId");
 
                     b.ToTable("recipe_tags");
                 });
@@ -341,13 +341,13 @@ namespace Infrastructure.Migrations.Migrations
 
             modelBuilder.Entity("Domain.Entities.Recipe", b =>
                 {
-                    b.HasOne("Domain.Entities.User", "User")
+                    b.HasOne("Domain.Entities.User", "Author")
                         .WithMany("Recipes")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("Author");
                 });
 
             modelBuilder.Entity("Domain.Entities.Step", b =>
@@ -365,13 +365,13 @@ namespace Infrastructure.Migrations.Migrations
                 {
                     b.HasOne("Domain.Entities.Recipe", null)
                         .WithMany()
-                        .HasForeignKey("RecipesRecipeId")
+                        .HasForeignKey("RecipesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.Tag", null)
                         .WithMany()
-                        .HasForeignKey("TagsTagId")
+                        .HasForeignKey("TagsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

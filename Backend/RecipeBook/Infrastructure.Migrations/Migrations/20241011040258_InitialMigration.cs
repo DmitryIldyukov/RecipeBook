@@ -47,7 +47,7 @@ namespace Infrastructure.Migrations.Migrations
                 {
                     recipe_id = table.Column<int>(type: "int", nullable: false, comment: "Id рецепта")
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    user_id = table.Column<int>(type: "int", nullable: false, comment: "Id пользователя"),
+                    author_id = table.Column<int>(type: "int", nullable: false, comment: "Id автора"),
                     name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false, comment: "Название рецепта"),
                     description = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false, comment: "Описание"),
                     cook_time = table.Column<int>(type: "int", nullable: false, comment: "Время готовки в минутах"),
@@ -58,11 +58,11 @@ namespace Infrastructure.Migrations.Migrations
                 {
                     table.PrimaryKey("PK_recipes", x => x.recipe_id);
                     table.ForeignKey(
-                        name: "FK_recipes_users_user_id",
-                        column: x => x.user_id,
+                        name: "FK_recipes_users_author_id",
+                        column: x => x.author_id,
                         principalTable: "users",
                         principalColumn: "user_id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -143,21 +143,21 @@ namespace Infrastructure.Migrations.Migrations
                 name: "recipe_tags",
                 columns: table => new
                 {
-                    RecipesRecipeId = table.Column<int>(type: "int", nullable: false),
-                    TagsTagId = table.Column<int>(type: "int", nullable: false)
+                    RecipesId = table.Column<int>(type: "int", nullable: false),
+                    TagsId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_recipe_tags", x => new { x.RecipesRecipeId, x.TagsTagId });
+                    table.PrimaryKey("PK_recipe_tags", x => new { x.RecipesId, x.TagsId });
                     table.ForeignKey(
-                        name: "FK_recipe_tags_recipes_RecipesRecipeId",
-                        column: x => x.RecipesRecipeId,
+                        name: "FK_recipe_tags_recipes_RecipesId",
+                        column: x => x.RecipesId,
                         principalTable: "recipes",
                         principalColumn: "recipe_id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_recipe_tags_tags_TagsTagId",
-                        column: x => x.TagsTagId,
+                        name: "FK_recipe_tags_tags_TagsId",
+                        column: x => x.TagsId,
                         principalTable: "tags",
                         principalColumn: "tag_id",
                         onDelete: ReferentialAction.Cascade);
@@ -209,14 +209,14 @@ namespace Infrastructure.Migrations.Migrations
                 column: "user_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_recipe_tags_TagsTagId",
+                name: "IX_recipe_tags_TagsId",
                 table: "recipe_tags",
-                column: "TagsTagId");
+                column: "TagsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_recipes_user_id",
+                name: "IX_recipes_author_id",
                 table: "recipes",
-                column: "user_id");
+                column: "author_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_steps_recipe_id",
