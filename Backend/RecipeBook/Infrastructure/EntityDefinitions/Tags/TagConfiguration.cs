@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Data.EntityConfiguration;
+namespace Infrastructure.EntityDefinitions.Tags;
 
 public class TagConfiguration : IEntityTypeConfiguration<Tag>
 {

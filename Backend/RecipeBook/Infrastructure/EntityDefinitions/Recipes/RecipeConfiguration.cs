@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Data.EntityConfiguration;
+namespace Infrastructure.EntityDefinitions.Recipes;
 
 public class RecipeConfiguration : IEntityTypeConfiguration<Recipe>
 {

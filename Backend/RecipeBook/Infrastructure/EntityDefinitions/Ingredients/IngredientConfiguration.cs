@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Data.EntityConfiguration;
+namespace Infrastructure.EntityDefinitions.Ingredients;
 
 public class IngredientConfiguration : IEntityTypeConfiguration<Ingredient>
 {
