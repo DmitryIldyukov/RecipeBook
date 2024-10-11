@@ -2,8 +2,8 @@
 
 public class Recipe : Entity
 {
-    public int UserId { get; init; }
-    public User User { get; init; }
+    public int AuthorId { get; init; }
+    public User Author { get; init; }
     public string Name { get; set; }
     public string Description { get; set; }
     public int CookTime { get; set; }
@@ -16,9 +16,9 @@ public class Recipe : Entity
     public ICollection<Like> Likes { get; set; } = new HashSet<Like>();
     public ICollection<Favorite> Favorites { get; set; } = new HashSet<Favorite>();
 
-    public Recipe( int userId, string name, string description, int cookTime, int portionCount, string imageName)
+    public Recipe( int authorId, string name, string description, int cookTime, int portionCount, string imageName)
     {
-        UserId = userId;
+        AuthorId = authorId;
         Name = name;
         Description = description;
         CookTime = cookTime;

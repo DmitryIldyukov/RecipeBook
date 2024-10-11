@@ -17,9 +17,9 @@ public class RecipeConfiguration : IEntityTypeConfiguration<Recipe>
             .ValueGeneratedOnAdd()
             .IsRequired();
 
-        builder.Property( r => r.UserId )
-            .HasComment( "Id пользователя" )
-            .HasColumnName( "user_id" )
+        builder.Property( r => r.AuthorId )
+            .HasComment( "Id автора" )
+            .HasColumnName( "author_id" )
             .IsRequired();
 
         builder.Property( r => r.Name )
@@ -50,10 +50,10 @@ public class RecipeConfiguration : IEntityTypeConfiguration<Recipe>
             .HasMaxLength( 100 )
             .IsRequired();
 
-        builder.HasOne( r => r.User )
+        builder.HasOne( r => r.Author )
             .WithMany( u => u.Recipes )
-            .HasForeignKey( r => r.UserId )
-            .OnDelete( DeleteBehavior.Cascade );
+            .HasForeignKey( r => r.AuthorId )
+            .OnDelete( DeleteBehavior.Restrict );
 
         builder.HasMany( r => r.Tags )
             .WithMany( t => t.Recipes )
