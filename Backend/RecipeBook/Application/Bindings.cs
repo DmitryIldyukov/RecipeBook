@@ -8,7 +8,7 @@ namespace Application;
 
 public static class Bindings
 {
-    public static IServiceCollection AddApplication(this IServiceCollection services)
+    public static IServiceCollection AddApplication( this IServiceCollection services )
     {
         services.AddScoped<IValidator<CreateRecipeCommand>, CreateRecipeCommandValidator>();
         services.AddScoped<IValidator<CreateUserCommand>, CreateUserCommandValidator>();
