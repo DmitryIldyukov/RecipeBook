@@ -1,0 +1,63 @@
+@import "../../index.scss";
+
+.container {
+  position: relative;
+  z-index: 10;
+  padding: 40px 120px;
+  height: 80px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.menu {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 524px;
+}
+
+.mainBtn {
+  font-family: Montserrat;
+  font-weight: 700;
+  font-size: 24px;
+  color: $primary-color;
+}
+
+.menuButtons {
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+}
+
+.menuBtn {
+  font-family: Montserrat;
+  font-weight: 400;
+  font-size: 18px;
+}
+
+.loginBtn {
+  font-family: Montserrat;
+  font-weight: 600;
+  font-size: 18px;
+  color: $primary-color;
+}
+
+.loginContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 14px;
+}
+
+.line {
+  color: $primary-color;
+  font-family: Montserrat;
+  font-weight: 400;
+  font-size: 18px;
+}
+
+.logoutBtn {
+  cursor: pointer;
+}

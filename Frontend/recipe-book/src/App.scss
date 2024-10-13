@@ -1,0 +1,11 @@
+@import "./index.scss";
+
+.app {
+  background-color: $background-color;
+  height: 100vh;
+}
+
+.container {
+  margin: 0 auto;
+  max-width: $content-width;
+}
