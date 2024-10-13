@@ -1,0 +1,67 @@
+@import "../../index.scss";
+
+.intro {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 800px;
+  width: 100%;
+  padding-left: 120px;
+}
+
+.introInfo {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 33px;
+}
+
+.title {
+  font-family: $primary-font;
+  font-weight: 700;
+  font-size: 72px;
+  line-height: 88px;
+}
+
+.description {
+  margin: 16px 0 42px;
+  font-family: $primary-font;
+  font-weight: 400;
+  font-size: 18px;
+}
+
+.actionButtons {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+}
+
+.primaryBtn {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 18px;
+  padding: 18px 34px;
+  font-family: $primary-font;
+  font-weight: 600;
+  font-size: 18px;
+  color: #ffffff;
+  background-color: $primary-color;
+  border-radius: 16px;
+}
+
+.secondaryBtn {
+  padding: 18px 78px;
+  font-family: $primary-font;
+  font-weight: 600;
+  font-size: 18px;
+  color: $primary-color;
+  border: solid 1px;
+  border-color: $primary-color;
+  border-radius: 16px;
+}
+
+.secondaryBtn:hover {
+  color: #ffffff;
+  background-color: $primary-color;
+}

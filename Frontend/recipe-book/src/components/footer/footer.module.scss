@@ -13,7 +13,7 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding: 37px 120px;
+  padding: 37px 0;
   align-items: center;
   width: $content-width;
 }
@@ -27,7 +27,7 @@
 
 .description {
   font-family: $primary-font;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 20px;
   color: #4a525a;
 }

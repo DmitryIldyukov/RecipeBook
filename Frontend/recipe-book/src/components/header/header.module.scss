@@ -1,6 +1,7 @@
 @import "../../index.scss";
 
 .content {
+  position: absolute;
   display: flex;
   margin: 0 auto;
   width: 100%;
@@ -10,8 +11,8 @@
 
 .container {
   display: flex;
-  padding: 40px 120px;
-  height: 80px;
+  padding: 40px 0;
+  height: 118px;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
@@ -44,9 +45,17 @@
   font-size: 18px;
 }
 
+.bold {
+  font-weight: 700;
+}
+
+.regular {
+  font-weight: 400;
+}
+
 .loginBtn {
   font-family: $primary-font;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 18px;
   color: $primary-color;
 }
