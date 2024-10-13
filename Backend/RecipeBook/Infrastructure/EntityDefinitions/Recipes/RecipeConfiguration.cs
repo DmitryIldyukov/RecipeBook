@@ -17,6 +17,11 @@ public class RecipeConfiguration : IEntityTypeConfiguration<Recipe>
             .ValueGeneratedOnAdd()
             .IsRequired();
 
+        builder.Property( r => r.AuthorId )
+            .HasComment( "Id автора" )
+            .HasColumnName( "author_id" )
+            .IsRequired();
+
         builder.Property( r => r.Name )
             .HasComment( "Название рецепта" )
             .HasColumnName( "name" )
@@ -47,8 +52,7 @@ public class RecipeConfiguration : IEntityTypeConfiguration<Recipe>
 
         builder.HasOne( r => r.Author )
             .WithMany( u => u.Recipes )
-            .HasForeignKey( "author_id" )
-            .IsRequired()
+            .HasForeignKey( r => r.AuthorId )
             .OnDelete( DeleteBehavior.Restrict );
 
         builder.HasMany( r => r.Tags )

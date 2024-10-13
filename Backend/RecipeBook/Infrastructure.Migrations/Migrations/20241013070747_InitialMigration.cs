@@ -47,7 +47,7 @@ namespace Infrastructure.Migrations.Migrations
                 {
                     recipe_id = table.Column<int>(type: "int", nullable: false, comment: "Id рецепта")
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    author_id = table.Column<int>(type: "int", nullable: false),
+                    author_id = table.Column<int>(type: "int", nullable: false, comment: "Id автора"),
                     name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false, comment: "Название рецепта"),
                     description = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false, comment: "Описание"),
                     cook_time = table.Column<int>(type: "int", nullable: false, comment: "Время готовки в минутах"),
@@ -71,8 +71,8 @@ namespace Infrastructure.Migrations.Migrations
                 {
                     favorite_id = table.Column<int>(type: "int", nullable: false, comment: "Id избранного")
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    user_id = table.Column<int>(type: "int", nullable: false),
-                    recipe_id = table.Column<int>(type: "int", nullable: false)
+                    user_id = table.Column<int>(type: "int", nullable: false, comment: "Id пользователя"),
+                    recipe_id = table.Column<int>(type: "int", nullable: false, comment: "Id рецепта")
                 },
                 constraints: table =>
                 {
@@ -97,7 +97,7 @@ namespace Infrastructure.Migrations.Migrations
                 {
                     ingredient_id = table.Column<int>(type: "int", nullable: false, comment: "Id ингредиента")
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    recipe_id = table.Column<int>(type: "int", nullable: false),
+                    recipe_id = table.Column<int>(type: "int", nullable: false, comment: "Id рецепта"),
                     title = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false, comment: "Заголовок для игредиентов"),
                     description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false, comment: "Список продуктов")
                 },
@@ -118,8 +118,8 @@ namespace Infrastructure.Migrations.Migrations
                 {
                     like_id = table.Column<int>(type: "int", nullable: false, comment: "Id лайка")
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    user_id = table.Column<int>(type: "int", nullable: false),
-                    recipe_id = table.Column<int>(type: "int", nullable: false),
+                    user_id = table.Column<int>(type: "int", nullable: false, comment: "Id пользователя"),
+                    recipe_id = table.Column<int>(type: "int", nullable: false, comment: "Id рецепта"),
                     created_at = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "Дата и время лайка")
                 },
                 constraints: table =>
@@ -169,7 +169,7 @@ namespace Infrastructure.Migrations.Migrations
                 {
                     step_id = table.Column<int>(type: "int", nullable: false, comment: "Id шага")
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    recipe_id = table.Column<int>(type: "int", nullable: false),
+                    recipe_id = table.Column<int>(type: "int", nullable: false, comment: "Id рецепта"),
                     description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false, comment: "Описание шага")
                 },
                 constraints: table =>

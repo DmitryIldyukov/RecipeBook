@@ -32,17 +32,21 @@ namespace Infrastructure.Migrations.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("recipe_id")
-                        .HasColumnType("int");
+                    b.Property<int>("RecipeId")
+                        .HasColumnType("int")
+                        .HasColumnName("recipe_id")
+                        .HasComment("Id рецепта");
 
-                    b.Property<int>("user_id")
-                        .HasColumnType("int");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int")
+                        .HasColumnName("user_id")
+                        .HasComment("Id пользователя");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("recipe_id");
+                    b.HasIndex("RecipeId");
 
-                    b.HasIndex("user_id");
+                    b.HasIndex("UserId");
 
                     b.ToTable("favorites", (string)null);
                 });
@@ -64,6 +68,11 @@ namespace Infrastructure.Migrations.Migrations
                         .HasColumnName("description")
                         .HasComment("Список продуктов");
 
+                    b.Property<int>("RecipeId")
+                        .HasColumnType("int")
+                        .HasColumnName("recipe_id")
+                        .HasComment("Id рецепта");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(40)
@@ -71,12 +80,9 @@ namespace Infrastructure.Migrations.Migrations
                         .HasColumnName("title")
                         .HasComment("Заголовок для игредиентов");
 
-                    b.Property<int>("recipe_id")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("recipe_id");
+                    b.HasIndex("RecipeId");
 
                     b.ToTable("ingredients", (string)null);
                 });
@@ -96,17 +102,21 @@ namespace Infrastructure.Migrations.Migrations
                         .HasColumnName("created_at")
                         .HasComment("Дата и время лайка");
 
-                    b.Property<int>("recipe_id")
-                        .HasColumnType("int");
+                    b.Property<int>("RecipeId")
+                        .HasColumnType("int")
+                        .HasColumnName("recipe_id")
+                        .HasComment("Id рецепта");
 
-                    b.Property<int>("user_id")
-                        .HasColumnType("int");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int")
+                        .HasColumnName("user_id")
+                        .HasComment("Id пользователя");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("recipe_id");
+                    b.HasIndex("RecipeId");
 
-                    b.HasIndex("user_id");
+                    b.HasIndex("UserId");
 
                     b.ToTable("likes", (string)null);
                 });
@@ -120,6 +130,11 @@ namespace Infrastructure.Migrations.Migrations
                         .HasComment("Id рецепта");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AuthorId")
+                        .HasColumnType("int")
+                        .HasColumnName("author_id")
+                        .HasComment("Id автора");
 
                     b.Property<int>("CookTime")
                         .HasColumnType("int")
@@ -152,12 +167,9 @@ namespace Infrastructure.Migrations.Migrations
                         .HasColumnName("portion_count")
                         .HasComment("Порций в блюде");
 
-                    b.Property<int>("author_id")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("author_id");
+                    b.HasIndex("AuthorId");
 
                     b.ToTable("recipes", (string)null);
                 });
@@ -179,12 +191,14 @@ namespace Infrastructure.Migrations.Migrations
                         .HasColumnName("description")
                         .HasComment("Описание шага");
 
-                    b.Property<int>("recipe_id")
-                        .HasColumnType("int");
+                    b.Property<int>("RecipeId")
+                        .HasColumnType("int")
+                        .HasColumnName("recipe_id")
+                        .HasComment("Id рецепта");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("recipe_id");
+                    b.HasIndex("RecipeId");
 
                     b.ToTable("steps", (string)null);
                 });
@@ -280,13 +294,13 @@ namespace Infrastructure.Migrations.Migrations
                 {
                     b.HasOne("Domain.Entities.Recipe", "Recipe")
                         .WithMany("Favorites")
-                        .HasForeignKey("recipe_id")
+                        .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.User", "User")
                         .WithMany("Favorites")
-                        .HasForeignKey("user_id")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -299,7 +313,7 @@ namespace Infrastructure.Migrations.Migrations
                 {
                     b.HasOne("Domain.Entities.Recipe", "Recipe")
                         .WithMany("Ingredients")
-                        .HasForeignKey("recipe_id")
+                        .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -310,13 +324,13 @@ namespace Infrastructure.Migrations.Migrations
                 {
                     b.HasOne("Domain.Entities.Recipe", "Recipe")
                         .WithMany("Likes")
-                        .HasForeignKey("recipe_id")
+                        .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.User", "User")
                         .WithMany("Likes")
-                        .HasForeignKey("user_id")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -329,7 +343,7 @@ namespace Infrastructure.Migrations.Migrations
                 {
                     b.HasOne("Domain.Entities.User", "Author")
                         .WithMany("Recipes")
-                        .HasForeignKey("author_id")
+                        .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -340,7 +354,7 @@ namespace Infrastructure.Migrations.Migrations
                 {
                     b.HasOne("Domain.Entities.Recipe", "Recipe")
                         .WithMany("Steps")
-                        .HasForeignKey("recipe_id")
+                        .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

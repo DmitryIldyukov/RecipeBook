@@ -2,16 +2,15 @@
 
 public class Ingredient : Entity
 {
+    public int RecipeId { get; init; }
     public Recipe Recipe { get; init; }
     public string Title { get; set; }
     public string Description { get; set; }
 
-    public Ingredient( Recipe recipe, string title, string description )
+    public Ingredient( int recipeId, string title, string description )
     {
-        Recipe = recipe;
+        RecipeId = recipeId;
         Title = title;
         Description = description;
     }
-
-    public Ingredient() { }
 }

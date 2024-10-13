@@ -17,6 +17,11 @@ public class IngredientConfiguration : IEntityTypeConfiguration<Ingredient>
             .ValueGeneratedOnAdd()
             .IsRequired();
 
+        builder.Property( i => i.RecipeId )
+            .HasComment( "Id рецепта" )
+            .HasColumnName( "recipe_id" )
+            .IsRequired();
+
         builder.Property( i => i.Title )
             .HasComment( "Заголовок для игредиентов" )
             .HasColumnName( "title" )
@@ -31,8 +36,7 @@ public class IngredientConfiguration : IEntityTypeConfiguration<Ingredient>
 
         builder.HasOne( i => i.Recipe )
             .WithMany( r => r.Ingredients )
-            .HasForeignKey( "recipe_id" )
-            .IsRequired()
+            .HasForeignKey( i => i.RecipeId )
             .OnDelete( DeleteBehavior.Cascade );
     }
 }

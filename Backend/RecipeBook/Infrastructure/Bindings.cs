@@ -4,7 +4,7 @@ using Infrastructure.Data;
 using Infrastructure.EntityDefinitions.Recipes;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Infrastructure.Configuration;
+namespace Infrastructure;
 
 public static class Bindings
 {

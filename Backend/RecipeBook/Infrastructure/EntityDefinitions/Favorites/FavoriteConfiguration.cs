@@ -17,16 +17,24 @@ public class FavoriteConfiguration : IEntityTypeConfiguration<Favorite>
             .ValueGeneratedOnAdd()
             .IsRequired();
 
+        builder.Property( f => f.UserId )
+            .HasComment( "Id пользователя" )
+            .HasColumnName( "user_id" )
+            .IsRequired();
+
+        builder.Property( f => f.RecipeId )
+            .HasComment( "Id рецепта" )
+            .HasColumnName( "recipe_id" )
+            .IsRequired();
+
         builder.HasOne( f => f.User )
             .WithMany( u => u.Favorites )
-            .HasForeignKey( "user_id" )
-            .IsRequired()
+            .HasForeignKey( f => f.UserId )
             .OnDelete( DeleteBehavior.Restrict );
 
         builder.HasOne( f => f.Recipe )
             .WithMany( r => r.Favorites )
-            .HasForeignKey( "recipe_id" )
-            .IsRequired()
+            .HasForeignKey( f => f.RecipeId )
             .OnDelete( DeleteBehavior.Cascade );
     }
 }

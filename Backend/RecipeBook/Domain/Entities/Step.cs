@@ -2,14 +2,13 @@
 
 public class Step : Entity
 {
+    public int RecipeId { get; init; }
     public Recipe Recipe { get; init; }
     public string Description { get; set; }
 
-    public Step( Recipe recipe, string description )
+    public Step( int recipeId, string description )
     {
-        Recipe = recipe;
+        RecipeId = recipeId;
         Description = description;
     }
-
-    public Step() { }
 }

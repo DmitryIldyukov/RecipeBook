@@ -2,14 +2,14 @@
 
 public class Favorite : Entity
 {
+    public int UserId { get; init; }
     public User User { get; init; }
+    public int RecipeId { get; init; }
     public Recipe Recipe { get; init; }
 
-    public Favorite( User user, Recipe recipe )
+    public Favorite( int userId, int recipeId )
     {
-        User = user;
-        Recipe = recipe;
+        UserId = userId;
+        RecipeId = recipeId;
     }
-
-    public Favorite() { }
 }

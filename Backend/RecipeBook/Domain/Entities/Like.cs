@@ -2,15 +2,15 @@
 
 public class Like : Entity
 {
+    public int UserId { get; init; }
     public User User { get; init; }
+    public int RecipeId { get; init; }
     public Recipe Recipe { get; init; }
     public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
 
-    public Like( User user, Recipe recipe )
+    public Like( int userId, int recipeId )
     {
-        User = user;
-        Recipe = recipe;
+        UserId = userId;
+        RecipeId = recipeId;
     }
-
-    public Like() { }
 }
