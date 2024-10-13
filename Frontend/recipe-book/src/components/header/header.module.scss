@@ -1,14 +1,21 @@
 @import "../../index.scss";
 
+.content {
+  display: flex;
+  margin: 0 auto;
+  width: 100%;
+  flex-direction: row;
+  justify-content: center;
+}
+
 .container {
-  position: relative;
-  z-index: 10;
+  display: flex;
   padding: 40px 120px;
   height: 80px;
-  display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  width: $content-width;
 }
 
 .menu {
@@ -19,7 +26,7 @@
 }
 
 .mainBtn {
-  font-family: Montserrat;
+  font-family: $primary-font;
   font-weight: 700;
   font-size: 24px;
   color: $primary-color;
@@ -32,13 +39,13 @@
 }
 
 .menuBtn {
-  font-family: Montserrat;
+  font-family: $primary-font;
   font-weight: 400;
   font-size: 18px;
 }
 
 .loginBtn {
-  font-family: Montserrat;
+  font-family: $primary-font;
   font-weight: 600;
   font-size: 18px;
   color: $primary-color;
@@ -53,7 +60,7 @@
 
 .line {
   color: $primary-color;
-  font-family: Montserrat;
+  font-family: $primary-font;
   font-weight: 400;
   font-size: 18px;
 }

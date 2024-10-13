@@ -17,28 +17,30 @@ export const Header = () => {
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.menu}>
-        <button className={styles.mainBtn}>Recipes</button>
-        <div className={styles.menuButtons}>
-          <button className={styles.menuBtn}>Главная</button>
-          <button className={styles.menuBtn}>Рецепты</button>
-          <button className={styles.menuBtn}>Избранное</button>
+    <div className={styles.content}>
+      <div className={styles.container}>
+        <div className={styles.menu}>
+          <button className={styles.mainBtn}>Recipes</button>
+          <div className={styles.menuButtons}>
+            <button className={styles.menuBtn}>Главная</button>
+            <button className={styles.menuBtn}>Рецепты</button>
+            <button className={styles.menuBtn}>Избранное</button>
+          </div>
         </div>
-      </div>
-      <div className={styles.loginContainer}>
-        <img src={loginImg} alt="login" />
-        {!isLogged ? (
-          <button className={styles.loginBtn} onClick={logOut}>
-            Войти
-          </button>
-        ) : (
-          <>
-            <button className={styles.loginBtn}>Привет, Татьяна</button>
-            <span className={styles.line}>|</span>
-            <img className={styles.logoutBtn} src={logoutImg} alt="logout" onClick={logOut} />
-          </>
-        )}
+        <div className={styles.loginContainer}>
+          <img src={loginImg} alt="login" />
+          {!isLogged ? (
+            <button className={styles.loginBtn} onClick={logOut}>
+              Войти
+            </button>
+          ) : (
+            <>
+              <button className={styles.loginBtn}>Привет, Татьяна</button>
+              <span className={styles.line}>|</span>
+              <img className={styles.logoutBtn} src={logoutImg} alt="logout" onClick={logOut} />
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
