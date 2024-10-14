@@ -1,3 +1,3 @@
 export const homePage = "/homePage";
-export const recipePage = "/recipePage";
-export const favoritesPage = "/favoritesPage";
+export const recipeListPage = "/recipeList";
+export const favoritesPage = "/favorites";

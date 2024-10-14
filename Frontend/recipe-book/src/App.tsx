@@ -3,7 +3,8 @@ import { Footer } from "./components/footer/footer";
 import { Header } from "./components/header/header";
 import { HomePage } from "./components/homePage/homePage";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { homePage } from "./constants/pathConstants";
+import { homePage, recipeListPage } from "./constants/pathConstants";
+import { RecipesPage } from "./components/recipesPage/recipeListPage";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <div className="container">
           <Routes>
             <Route path={homePage} element={<HomePage />} />
+            <Route path={recipeListPage} element={<RecipesPage />} />
             <Route path="*" element={<Navigate to={homePage} replace />} />
           </Routes>
         </div>

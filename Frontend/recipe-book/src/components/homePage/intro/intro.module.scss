@@ -35,33 +35,3 @@
   flex-direction: row;
   gap: 24px;
 }
-
-.primaryBtn {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 18px;
-  padding: 18px 34px;
-  font-family: $primary-font;
-  font-weight: 600;
-  font-size: 18px;
-  color: #ffffff;
-  background-color: $primary-color;
-  border-radius: 16px;
-}
-
-.secondaryBtn {
-  padding: 18px 78px;
-  font-family: $primary-font;
-  font-weight: 600;
-  font-size: 18px;
-  color: $primary-color;
-  border: solid 1px;
-  border-color: $primary-color;
-  border-radius: 16px;
-}
-
-.secondaryBtn:hover {
-  color: #ffffff;
-  background-color: $primary-color;
-}

@@ -1,16 +1,13 @@
 import MyButton from "../../customComponents/myButton/myButton";
-import styles from "./searchPanel.module.scss";
+import styles from "./searchBar.module.scss";
 
-export const SearchPanel = () => {
+export const SearchBar = () => {
   return (
     <div className={styles.container}>
-      <div className={styles.descriptionBlock}>
-        <h2 className={styles.title}>Поиск рецептов</h2>
-        <p className={styles.description}>Введите примерное название блюда, а мы по тегам найдем его</p>
-      </div>
-      <div className={styles.searchPanel}>
-        <div className={styles.search}>
-          <input type="text" placeholder="Название Блюда...." className={styles.searchBar} />
+      <div className={styles.line}>
+        <p className={styles.title}>Поиск рецепта</p>
+        <div className={styles.searchBar}>
+          <input type="text" placeholder="Название Блюда...." className={styles.searchBarInput} />
           <MyButton
             isPrimary={true}
             onClick={() => {
@@ -22,6 +19,8 @@ export const SearchPanel = () => {
             Поиск
           </MyButton>
         </div>
+      </div>
+      <div className={styles.line}>
         <div className={styles.tagBar}>
           <p className={styles.tag}>Мясо</p>
           <p className={styles.tag}>Деликатесы</p>

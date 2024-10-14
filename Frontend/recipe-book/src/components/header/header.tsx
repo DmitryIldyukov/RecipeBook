@@ -3,7 +3,7 @@ import loginImg from "../../assets/login.svg";
 import logoutImg from "../../assets/exit_to_app.svg";
 import { useAppStore } from "../../store/store";
 import { useLocation, useNavigate } from "react-router-dom";
-import { homePage, recipePage, favoritesPage } from "../../constants/pathConstants";
+import { homePage, recipeListPage, favoritesPage } from "../../constants/pathConstants";
 
 export const Header = () => {
   const location = useLocation();
@@ -43,9 +43,9 @@ export const Header = () => {
               Главная
             </button>
             <button
-              className={`${styles.menuBtn} ${location.pathname === recipePage ? styles.bold : styles.regular}`}
+              className={`${styles.menuBtn} ${location.pathname === recipeListPage ? styles.bold : styles.regular}`}
               onClick={() => {
-                navigate(recipePage);
+                navigate(recipeListPage);
               }}
             >
               Рецепты

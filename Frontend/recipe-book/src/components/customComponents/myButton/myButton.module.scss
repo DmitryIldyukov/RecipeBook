@@ -1,0 +1,31 @@
+@import "../../../index.scss";
+
+.myBtnPrimary {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  font-family: $primary-font;
+  font-weight: 600;
+  font-size: 18px;
+  color: #ffffff;
+  background-color: $primary-color;
+  border-radius: 16px;
+}
+
+.myBtnSecondary {
+  padding: 18px 78px;
+  font-family: $primary-font;
+  font-weight: 600;
+  font-size: 18px;
+  color: $primary-color;
+  border: solid 1px;
+  border-color: $primary-color;
+  border-radius: 16px;
+}
+
+.myBtnSecondary:hover {
+  color: #ffffff;
+  background-color: $primary-color;
+}

@@ -5,23 +5,23 @@ import image from "../../../assets/image.jpg";
 import icon from "../../../assets/yummy.svg";
 import likeIcon from "../../../assets/like.svg";
 import timeIcon from "../../../assets/time.svg";
+import RecipeService from "../../../services/recipeService";
 
 export const RecipeOfDay = () => {
   const [recipe, setRecipe] = useState<Recipe | null>(null);
+  const recipeService = new RecipeService();
 
   useEffect(() => {
-    setRecipe({
-      authorId: 1,
-      authorLogin: "@glazest",
-      name: "Тыквенный Cупчик На Кокосовом Молоке",
-      description:
-        "Если у вас осталась тыква, и вы не знаете что с ней сделать, то это решение для вас! Ароматный, согревающий суп-пюре на кокосовом молоке. Можно даже в Пост! ",
-      tags: ["супы, диета"],
-      favoritesCount: 45,
-      likesCount: 356,
-      cookTime: 35,
-      portionCount: 4,
-    });
+    const fetchData = () => {
+      try {
+        const data = recipeService.getRecipeOfDay();
+        setRecipe(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   return (

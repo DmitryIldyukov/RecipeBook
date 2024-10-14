@@ -1,0 +1,60 @@
+@import "../../../index.scss";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  max-width: $content-width;
+  width: 100%;
+}
+
+.line {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 54px;
+}
+
+.title {
+  font-family: $primary-font;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 30px;
+}
+
+.tagBar {
+  display: flex;
+  flex-direction: row;
+  margin: 24px auto 0;
+  width: 490px;
+  gap: 10px;
+}
+
+.tag {
+  font-family: $primary-font;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 18px;
+  color: #808080;
+}
+
+.searchBar {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+}
+
+.searchBarInput {
+  font-family: $primary-font;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 32px;
+  color: $secondary-color;
+  padding-left: 35px;
+  width: 780px;
+  height: 73px;
+  border-radius: 16px;
+  border: none;
+  box-shadow: 0px 16px 72px #22272f0d;
+}
