@@ -1,4 +1,4 @@
-using Application.Configuration;
+using Application;
 using Infrastructure;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
