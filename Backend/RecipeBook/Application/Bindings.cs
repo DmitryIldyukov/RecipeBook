@@ -1,6 +1,6 @@
 ﻿using Application.Common.CQRS.Command;
 using Application.UseCases.Commands.Recipe.Create;
-using Application.UseCases.Commands.User.Create;
+using Application.UseCases.Commands.Users.Create;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 

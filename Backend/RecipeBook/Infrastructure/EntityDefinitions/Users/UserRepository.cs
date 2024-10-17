@@ -1,19 +1,20 @@
-﻿using Application.Interfaces.Repositories;
+﻿using System.Linq.Expressions;
+using Application.Interfaces.Repositories;
 using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.EntityDefinitions.Users;
 
-public class UserRepository( RecipeBookDbContext context ) : IUserRepository
+public class UserRepository( RecipeBookDbContext dbContext ) : IUserRepository
 {
     public async Task Create( User user )
     {
-        await context.AddAsync( user );
+        await dbContext.AddAsync( user );
     }
 
-    public async Task<bool> UserIsExist( string login )
+    public async Task<bool> ContainsAsync( Expression<Func<User, bool>> predicate )
     {
-        return await context.Users.AnyAsync( user => user.Login == login );
+        return await dbContext.Users.AnyAsync( predicate );
     }
 }

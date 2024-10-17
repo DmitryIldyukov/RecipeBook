@@ -1,5 +1,5 @@
 ﻿using Application.Common.CQRS.Command;
-using Application.UseCases.Commands.User.Create;
+using Application.UseCases.Commands.Users.Create;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Dtos.User;
 

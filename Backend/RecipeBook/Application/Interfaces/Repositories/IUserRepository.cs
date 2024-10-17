@@ -1,9 +1,10 @@
-﻿using Domain.Entities;
+﻿using System.Linq.Expressions;
+using Application.Common.Repositories;
+using Domain.Entities;
 
 namespace Application.Interfaces.Repositories;
 
-public interface IUserRepository
+public interface IUserRepository : ICreateRepository<User>
 {
-    Task Create( User user );
-    Task<bool> UserIsExist( string login );
+    Task<bool> ContainsAsync( Expression<Func<User, bool>> predicate );
 }
