@@ -2,12 +2,10 @@
 
 namespace Infrastructure.Data;
 
-public class UnitOfWork( RecipeBookDbContext context ) : IUnitOfWork
+public class UnitOfWork( RecipeBookDbContext dbContext ) : IUnitOfWork
 {
-    private readonly RecipeBookDbContext _context = context;
-
     public Task Commit()
     {
-        return _context.SaveChangesAsync();
+        return dbContext.SaveChangesAsync();
     }
 }
