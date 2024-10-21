@@ -1,3 +1,4 @@
+using System.Reflection;
 using Application;
 using Infrastructure;
 using Infrastructure.Data;
@@ -22,6 +23,8 @@ public class Program
             builder.Services
                 .AddApplication()
                 .AddInfrastructure();
+
+            builder.Services.AddAutoMapper( Assembly.GetExecutingAssembly() );
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();

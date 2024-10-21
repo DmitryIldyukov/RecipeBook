@@ -17,4 +17,9 @@ public class UserRepository( RecipeBookDbContext dbContext ) : IUserRepository
     {
         return await dbContext.Users.AnyAsync( predicate );
     }
+
+    public async Task<User> GetById( int id )
+    {
+        return await dbContext.Users.FirstOrDefaultAsync( u => u.Id == id );
+    }
 }

@@ -7,4 +7,5 @@ namespace Application.Interfaces.Repositories;
 public interface IUserRepository : ICreateRepository<User>
 {
     Task<bool> ContainsAsync( Expression<Func<User, bool>> predicate );
+    Task<User> GetById( int id );
 }
