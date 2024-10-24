@@ -1,15 +1,32 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Application.Common.CQRS.Command;
+using Application.UseCases.Commands.Recipes.Create;
+using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using WebAPI.Dtos.Recipe;
 
 namespace WebAPI.Controllers;
 
 [ApiController]
 [Route( "api/[controller]" )]
-public class RecipeController : ControllerBase
+public class RecipeController(
+    ICommandHandler<CreateRecipeCommand> createHandler,
+    IMapper mapper
+) : ControllerBase
 {
-    [HttpGet]
-    [ProducesResponseType( typeof( string ), StatusCodes.Status200OK )]
-    public async Task<IActionResult> GetWelcomeMessage()
+    [HttpPost]
+    public async Task<IActionResult> AddRecipe( [FromForm] RecipeDto dto )
     {
-        return Ok( "Hello World!" );
+        CreateRecipeCommand command = mapper.Map<CreateRecipeCommand>( dto );
+
+        try
+        {
+            await createHandler.Handle( command );
+
+            return Ok();
+        }
+        catch ( FluentValidation.ValidationException e )
+        {
+            return BadRequest( e.Errors.Select( error => error.ErrorMessage ).ToList() );
+        }
     }
 }

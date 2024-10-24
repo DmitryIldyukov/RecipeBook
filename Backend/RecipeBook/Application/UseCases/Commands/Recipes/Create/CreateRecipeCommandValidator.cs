@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Application.UseCases.Commands.Recipe.Create;
+namespace Application.UseCases.Commands.Recipes.Create;
 
 public class CreateRecipeCommandValidator : AbstractValidator<CreateRecipeCommand>
 {

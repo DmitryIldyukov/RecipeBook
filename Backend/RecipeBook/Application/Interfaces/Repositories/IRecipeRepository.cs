@@ -1,5 +1,10 @@
-﻿namespace Application.Interfaces.Repositories;
+﻿using Application.Common.Repositories;
+using Domain.Entities;
 
-public interface IRecipeRepository
+namespace Application.Interfaces.Repositories;
+
+public interface IRecipeRepository : ICreateRepository<Recipe>, IDeleteRepository<Recipe>
 {
+    IQueryable<Recipe> GetAll();
+    Task<Recipe> GetById( int id );
 }
