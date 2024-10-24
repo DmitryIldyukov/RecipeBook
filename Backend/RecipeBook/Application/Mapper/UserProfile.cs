@@ -4,9 +4,9 @@ using Domain.Entities;
 
 namespace Application.Mapper;
 
-public class UserProfiles : Profile
+public class UserProfile : Profile
 {
-    public UserProfiles()
+    public UserProfile()
     {
         CreateMap<User, GetUserQueryDto>();
     }

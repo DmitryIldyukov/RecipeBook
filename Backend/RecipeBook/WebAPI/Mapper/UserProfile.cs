@@ -1,5 +1,5 @@
 ﻿using Application.UseCases.Commands.Users.Create;
-using Application.UseCases.Queries.Users.GetById;
+using Application.UseCases.Commands.Users.Update;
 using AutoMapper;
 using WebAPI.Dtos.User;
 
@@ -10,7 +10,6 @@ public class UserProfile : Profile
     public UserProfile()
     {
         CreateMap<UserRegisterDto, CreateUserCommand>();
-
-        CreateMap<UserGetDto, GetUserByIdQuery>();
+        CreateMap<UserEditDto, UpdateUserCommand>();
     }
 }

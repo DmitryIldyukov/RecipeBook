@@ -1,6 +1,7 @@
 ﻿using Application.Common.CQRS.Command;
 using Application.Common.CQRS.Query;
 using Application.UseCases.Commands.Users.Create;
+using Application.UseCases.Commands.Users.Update;
 using Application.UseCases.Queries.Users.Dtos;
 using Application.UseCases.Queries.Users.GetById;
 using AutoMapper;
@@ -14,6 +15,7 @@ namespace WebAPI.Controllers;
 [Route( "api/[controller]" )]
 public class UserController(
     ICommandHandler<CreateUserCommand> createCommandHandler,
+    ICommandHandler<UpdateUserCommand> updateCommandHandler,
     IQueryHandler<GetUserByIdQuery, GetUserQueryDto> getByIdQueryHandler,
     IMapper mapper
 ) : ControllerBase
@@ -37,19 +39,44 @@ public class UserController(
         }
     }
 
-    [HttpGet( "{id}" )]
+    [HttpGet( "{userId:int}" )]
     [ProducesResponseType( typeof( GetUserQueryDto ), StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
     [ProducesResponseType( typeof( string ), StatusCodes.Status404NotFound )]
-    public async Task<IActionResult> GetUserById( [FromRoute] int id )
+    public async Task<IActionResult> GetUserById( [FromRoute] int userId )
     {
-        GetUserByIdQuery query = new GetUserByIdQuery() { Id = id };
+        GetUserByIdQuery query = new GetUserByIdQuery() { Id = userId };
 
         try
         {
             GetUserQueryDto response = await getByIdQueryHandler.Handle( query );
 
             return Ok( response );
+        }
+        catch ( FluentValidation.ValidationException e )
+        {
+            return BadRequest( e.Errors.Select( error => error.ErrorMessage ).ToList() );
+        }
+        catch ( NotFoundException e )
+        {
+            return NotFound( e.Message );
+        }
+    }
+
+    [HttpPut( "{userId:int}" )]
+    [ProducesResponseType( StatusCodes.Status200OK )]
+    [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
+    [ProducesResponseType( typeof( string ), StatusCodes.Status404NotFound )]
+    public async Task<IActionResult> EditUser( [FromRoute] int userId, [FromBody] UserEditDto dto )
+    {
+        UpdateUserCommand command = mapper.Map<UpdateUserCommand>( dto );
+        command.Id = userId;
+
+        try
+        {
+            await updateCommandHandler.Handle( command );
+
+            return Ok();
         }
         catch ( FluentValidation.ValidationException e )
         {
