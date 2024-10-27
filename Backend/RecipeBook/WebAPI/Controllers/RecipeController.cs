@@ -14,6 +14,8 @@ public class RecipeController(
 ) : ControllerBase
 {
     [HttpPost]
+    [ProducesResponseType( StatusCodes.Status200OK )]
+    [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
     public async Task<IActionResult> AddRecipe( [FromForm] RecipeDto dto )
     {
         CreateRecipeCommand command = mapper.Map<CreateRecipeCommand>( dto );
