@@ -4,4 +4,16 @@ namespace Application.UseCases.Commands.Ingredients;
 
 public class CreateIngredientCommandValidator : AbstractValidator<CreateIngredientCommand>
 {
+    public CreateIngredientCommandValidator()
+    {
+        RuleFor( i => i.RecipeId )
+            .NotEmpty().WithMessage( "Id рецепта обязателен." );
+
+        RuleFor( i => i.Title )
+            .NotEmpty().WithMessage( "Заголовок обязателен." )
+            .MaximumLength( 40 ).WithMessage( "Заголовок не может превышать 40 символов." );
+
+        RuleFor( i => i.Description )
+            .NotEmpty().WithMessage( "Описание обязательно." );
+    }
 }

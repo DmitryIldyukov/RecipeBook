@@ -12,6 +12,7 @@ public class CreateTagCommandValidator : AbstractValidator<CreateTagCommand>
         _repository = repo;
 
         RuleFor( command => command.Name )
-            .NotEmpty().WithMessage( "Тэг не может быть пустым." );
+            .NotEmpty().WithMessage( "Тэг не может быть пустым." )
+            .MaximumLength( 20 ).WithMessage( "Максимальная длина тэга 30 символов." );
     }
 }

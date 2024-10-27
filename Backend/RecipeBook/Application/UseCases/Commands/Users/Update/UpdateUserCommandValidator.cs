@@ -16,6 +16,7 @@ public class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand>
 
         RuleFor( command => command.Login )
             .NotEmpty().WithMessage( "Логин не может быть пустым." )
+            .MaximumLength( 30 ).WithMessage( "Максимальная длина логина 30 символов." )
             .MustAsync( LoginIsUnique ).WithMessage( "Пользователь с таким логином уже существует." );
 
         RuleFor( command => command.Password )
