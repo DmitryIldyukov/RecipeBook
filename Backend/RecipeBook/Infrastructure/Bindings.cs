@@ -1,4 +1,5 @@
-﻿using Application.Common.PasswordHasher;
+﻿using Application.Common.FileHelper;
+using Application.Common.PasswordHasher;
 using Application.Interfaces;
 using Application.Interfaces.Repositories;
 using Infrastructure.Data;
@@ -22,6 +23,7 @@ public static class Bindings
         services.AddScoped<IStepRepository, StepRepository>();
 
         services.AddScoped<IPasswordHasher, PasswordHasher.PasswordHasher>();
+        services.AddScoped<IFileHelper, FileHelper.FileHelper>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 

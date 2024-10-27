@@ -1,7 +1,7 @@
 ﻿using Application.Common.CQRS.Query;
-using Application.UseCases.Queries.Recipe.Dtos;
+using Application.UseCases.Queries.Recipes.Dtos;
 
-namespace Application.UseCases.Queries.Recipe.GetById;
+namespace Application.UseCases.Queries.Recipes.GetById;
 
 public class GetRecipeByIdQueryHandler : IQueryHandler<GetRecipeByIdQuery, GetRecipeQueryDto>
 {

@@ -1,4 +1,5 @@
 ﻿using Application.Common.CQRS.Command;
+using Application.Common.FileHelper;
 using Application.Interfaces;
 using Application.Interfaces.Repositories;
 using Application.UseCases.Commands.Dtos.Ingredients;
@@ -11,6 +12,9 @@ using AutoMapper;
 using Domain.Entities;
 using FluentValidation;
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Application.UseCases.Commands.Recipes.Create;
 
@@ -21,6 +25,8 @@ public class CreateRecipeCommandHandler(
     ICommandHandler<CreateStepCommand, Step> createStepHandler,
     ICommandHandler<CreateIngredientCommand, Ingredient> createIngredientHandler,
     IValidator<CreateRecipeCommand> validator,
+    IFileHelper fileHelper,
+    IConfiguration configuration,
     IMapper mapper
 ) : ICommandHandler<CreateRecipeCommand>
 {
@@ -48,6 +54,8 @@ public class CreateRecipeCommandHandler(
         await recipeRepository.Create( recipe );
 
         await unitOfWork.Commit();
+
+        SaveImage( recipe, command.ImageFile );
     }
 
     private async Task AddTags( Recipe recipe, ICollection<TagDto> tags )
@@ -80,5 +88,12 @@ public class CreateRecipeCommandHandler(
             Ingredient ingredientEntity = await createIngredientHandler.Handle( createIngredientCommand );
             recipe.Ingredients.Add( ingredientEntity );
         }
+    }
+
+    private void SaveImage( Recipe recipe, IFormFile image )
+    {
+        string fileExtension = Path.GetExtension( recipe.ImageName );
+        string fileNameOnDisk = recipe.Id + fileExtension;
+        fileHelper.Save( configuration.GetSection( "RecipeImages" ).Value, fileNameOnDisk, image.OpenReadStream() );
     }
 }
