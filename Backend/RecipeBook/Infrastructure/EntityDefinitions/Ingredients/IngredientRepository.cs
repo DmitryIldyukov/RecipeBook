@@ -12,12 +12,12 @@ public class IngredientRepository( RecipeBookDbContext dbContext ) : IIngredient
         await dbContext.Ingredients.AddAsync( ingredient );
     }
 
-    public async Task Delete( Ingredient ingredient )
+    public void Delete( Ingredient ingredient )
     {
         dbContext.Ingredients.Remove( ingredient );
     }
 
-    public async Task<IReadOnlyList<Ingredient>> GetRecipeIngredients( int recipeId )
+    public async Task<IReadOnlyList<Ingredient>> GetIngredientsByReceptId( int recipeId )
     {
         return await dbContext.Ingredients.Where( i => i.RecipeId == recipeId ).ToListAsync();
     }

@@ -12,7 +12,7 @@ public class StepRepository( RecipeBookDbContext dbContext ) : IStepRepository
         await dbContext.AddAsync( step );
     }
 
-    public async Task Delete( Step entity )
+    public void Delete( Step entity )
     {
         dbContext.Steps.Remove( entity );
     }

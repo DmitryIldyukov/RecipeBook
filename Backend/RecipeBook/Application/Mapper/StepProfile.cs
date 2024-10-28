@@ -1,4 +1,4 @@
-﻿using Application.UseCases.Commands.Dtos.Steps;
+﻿using Application.UseCases.Commands.Recipes.Dtos;
 using Application.UseCases.Commands.Steps.Create;
 using AutoMapper;
 using Domain.Entities;
@@ -9,8 +9,8 @@ public class StepProfile : Profile
 {
     public StepProfile()
     {
-        CreateMap<StepDto, CreateStepCommand>();
-        CreateMap<StepDto, Step>();
+        CreateMap<RecipeStepDto, CreateStepCommand>();
+        CreateMap<RecipeStepDto, Step>();
         CreateMap<CreateStepCommand, Step>();
     }
 }

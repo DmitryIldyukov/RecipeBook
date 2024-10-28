@@ -8,7 +8,7 @@ namespace WebAPI.Controllers;
 [ApiController]
 [Route( "api/[controller]" )]
 public class TagController(
-    IQueryHandler<GetAllTagsQuery, IReadOnlyList<GetTagDto>> handler
+    IQueryHandler<GetAllTagsQuery, IReadOnlyList<GetTagDto>> getTagshandler
 ) : ControllerBase
 {
     [HttpGet]
@@ -17,7 +17,7 @@ public class TagController(
     {
         GetAllTagsQuery query = new();
 
-        IReadOnlyList<GetTagDto> tags = await handler.Handle( query );
+        IReadOnlyList<GetTagDto> tags = await getTagshandler.Handle( query );
         return Ok( tags );
     }
 }

@@ -14,9 +14,9 @@ namespace WebAPI.Controllers;
 [ApiController]
 [Route( "api/[controller]" )]
 public class UserController(
-    ICommandHandler<CreateUserCommand> createCommandHandler,
-    ICommandHandler<UpdateUserCommand> updateCommandHandler,
-    IQueryHandler<GetUserByIdQuery, GetUserQueryDto> getByIdQueryHandler,
+    ICommandHandler<CreateUserCommand> createUserCommandHandler,
+    ICommandHandler<UpdateUserCommand> updateUserCommandHandler,
+    IQueryHandler<GetUserByIdQuery, GetUserQueryDto> getUserByIdHandler,
     IMapper mapper
 ) : ControllerBase
 {
@@ -29,7 +29,7 @@ public class UserController(
 
         try
         {
-            await createCommandHandler.Handle( command );
+            await createUserCommandHandler.Handle( command );
 
             return Ok();
         }
@@ -49,7 +49,7 @@ public class UserController(
 
         try
         {
-            GetUserQueryDto response = await getByIdQueryHandler.Handle( query );
+            GetUserQueryDto response = await getUserByIdHandler.Handle( query );
 
             return Ok( response );
         }
@@ -69,12 +69,18 @@ public class UserController(
     [ProducesResponseType( typeof( string ), StatusCodes.Status404NotFound )]
     public async Task<IActionResult> EditUser( [FromRoute] int userId, [FromBody] UserEditDto dto )
     {
-        UpdateUserCommand command = mapper.Map<UpdateUserCommand>( dto );
-        command.Id = userId;
+        UpdateUserCommand command = new()
+        {
+            Id = userId,
+            Name = dto.Name,
+            Login = dto.Login,
+            Password = dto.Password,
+            Information = dto.Information
+        };
 
         try
         {
-            await updateCommandHandler.Handle( command );
+            await updateUserCommandHandler.Handle( command );
 
             return Ok();
         }

@@ -5,5 +5,5 @@ namespace Application.Interfaces.Repositories;
 
 public interface IIngredientRepository : ICreateRepository<Ingredient>, IDeleteRepository<Ingredient>
 {
-    Task<IReadOnlyList<Ingredient>> GetRecipeIngredients( int recipeId );
+    Task<IReadOnlyList<Ingredient>> GetIngredientsByReceptId( int recipeId );
 }

@@ -1,5 +1,4 @@
 ﻿using Application.Common.CQRS.Command;
-using Application.Interfaces;
 using Application.Interfaces.Repositories;
 using Domain.Entities;
 using FluentValidation;

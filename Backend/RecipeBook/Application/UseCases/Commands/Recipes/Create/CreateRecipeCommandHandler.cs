@@ -2,10 +2,8 @@
 using Application.Common.FileHelper;
 using Application.Interfaces;
 using Application.Interfaces.Repositories;
-using Application.UseCases.Commands.Dtos.Ingredients;
-using Application.UseCases.Commands.Dtos.Steps;
-using Application.UseCases.Commands.Dtos.Tags;
 using Application.UseCases.Commands.Ingredients.Create;
+using Application.UseCases.Commands.Recipes.Dtos;
 using Application.UseCases.Commands.Steps.Create;
 using Application.UseCases.Commands.Tags.Create;
 using AutoMapper;
@@ -57,9 +55,9 @@ public class CreateRecipeCommandHandler(
         SaveImage( recipe, command.ImageFile );
     }
 
-    private async Task AddTags( Recipe recipe, ICollection<TagDto> tags )
+    private async Task AddTags( Recipe recipe, ICollection<RecipeTagDto> tags )
     {
-        foreach ( TagDto tag in tags )
+        foreach ( RecipeTagDto tag in tags )
         {
             CreateTagCommand createTagCommand = mapper.Map<CreateTagCommand>( tag );
             Tag tagEntity = await createTagHandler.Handle( createTagCommand );
@@ -67,23 +65,32 @@ public class CreateRecipeCommandHandler(
         }
     }
 
-    private async Task AddSteps( Recipe recipe, ICollection<StepDto> steps )
+    private async Task AddSteps( Recipe recipe, ICollection<RecipeStepDto> steps )
     {
-        foreach ( StepDto step in steps )
+        foreach ( RecipeStepDto step in steps )
         {
-            CreateStepCommand createStepCommand = mapper.Map<CreateStepCommand>( step );
-            createStepCommand.RecipeId = recipe.Id;
+            CreateStepCommand createStepCommand = new CreateStepCommand()
+            {
+                RecipeId = recipe.Id,
+                Description = step.Description,
+            };
+
             Step stepEntity = await createStepHandler.Handle( createStepCommand );
             recipe.Steps.Add( stepEntity );
         }
     }
 
-    private async Task AddIngredients( Recipe recipe, ICollection<IngredientDto> ingredients )
+    private async Task AddIngredients( Recipe recipe, ICollection<RecipeIngredientDto> ingredients )
     {
-        foreach ( IngredientDto ingredient in ingredients )
+        foreach ( RecipeIngredientDto ingredient in ingredients )
         {
-            CreateIngredientCommand createIngredientCommand = mapper.Map<CreateIngredientCommand>( ingredient );
-            createIngredientCommand.RecipeId = recipe.Id;
+            CreateIngredientCommand createIngredientCommand = new CreateIngredientCommand()
+            {
+                RecipeId = recipe.Id,
+                Title = ingredient.Title,
+                Description = ingredient.Description,
+            };
+
             Ingredient ingredientEntity = await createIngredientHandler.Handle( createIngredientCommand );
             recipe.Ingredients.Add( ingredientEntity );
         }

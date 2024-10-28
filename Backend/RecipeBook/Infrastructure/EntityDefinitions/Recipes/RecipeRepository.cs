@@ -12,14 +12,9 @@ public class RecipeRepository( RecipeBookDbContext dbContext ) : IRecipeReposito
         await dbContext.Recipes.AddAsync( recipe );
     }
 
-    public async Task Delete( Recipe recipe )
+    public void Delete( Recipe recipe )
     {
         dbContext.Recipes.Remove( recipe );
-    }
-
-    public IQueryable<Recipe> GetAll()
-    {
-        return dbContext.Recipes;
     }
 
     public async Task<Recipe> GetById( int id )

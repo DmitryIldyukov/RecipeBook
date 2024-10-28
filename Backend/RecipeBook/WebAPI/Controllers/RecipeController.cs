@@ -13,7 +13,7 @@ namespace WebAPI.Controllers;
 [ApiController]
 [Route( "api/[controller]" )]
 public class RecipeController(
-    ICommandHandler<CreateRecipeCommand> createHandler,
+    ICommandHandler<CreateRecipeCommand> createRecipeHandler,
     IQueryHandler<GetRecipeImageQuery, GetImageQueryDto> getImageHandler,
     IMapper mapper
 ) : ControllerBase
@@ -27,7 +27,7 @@ public class RecipeController(
 
         try
         {
-            await createHandler.Handle( command );
+            await createRecipeHandler.Handle( command );
 
             return Ok();
         }

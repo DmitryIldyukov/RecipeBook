@@ -1,4 +1,4 @@
-﻿using Application.UseCases.Commands.Dtos.Tags;
+﻿using Application.UseCases.Commands.Recipes.Dtos;
 using Application.UseCases.Commands.Tags.Create;
 using Application.UseCases.Queries.Tags.Dtos;
 using AutoMapper;
@@ -11,8 +11,8 @@ public class TagProfile : Profile
     public TagProfile()
     {
         CreateMap<Tag, GetTagDto>();
-        CreateMap<TagDto, CreateTagCommand>();
-        CreateMap<TagDto, Tag>();
+        CreateMap<RecipeTagDto, CreateTagCommand>();
+        CreateMap<RecipeTagDto, Tag>();
         CreateMap<CreateTagCommand, Tag>();
     }
 }
