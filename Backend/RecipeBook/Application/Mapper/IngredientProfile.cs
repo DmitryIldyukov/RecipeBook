@@ -1,5 +1,5 @@
 ﻿using Application.UseCases.Commands.Dtos.Ingredients;
-using Application.UseCases.Commands.Ingredients;
+using Application.UseCases.Commands.Ingredients.Create;
 using AutoMapper;
 using Domain.Entities;
 

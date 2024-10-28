@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Application.UseCases.Commands.Ingredients;
+namespace Application.UseCases.Commands.Ingredients.Create;
 
 public class CreateIngredientCommandValidator : AbstractValidator<CreateIngredientCommand>
 {

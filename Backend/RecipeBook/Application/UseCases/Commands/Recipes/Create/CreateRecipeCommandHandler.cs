@@ -5,7 +5,7 @@ using Application.Interfaces.Repositories;
 using Application.UseCases.Commands.Dtos.Ingredients;
 using Application.UseCases.Commands.Dtos.Steps;
 using Application.UseCases.Commands.Dtos.Tags;
-using Application.UseCases.Commands.Ingredients;
+using Application.UseCases.Commands.Ingredients.Create;
 using Application.UseCases.Commands.Steps.Create;
 using Application.UseCases.Commands.Tags.Create;
 using AutoMapper;

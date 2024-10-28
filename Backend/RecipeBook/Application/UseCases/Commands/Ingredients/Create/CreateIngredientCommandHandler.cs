@@ -6,7 +6,7 @@ using Domain.Entities;
 using FluentValidation;
 using FluentValidation.Results;
 
-namespace Application.UseCases.Commands.Ingredients;
+namespace Application.UseCases.Commands.Ingredients.Create;
 
 public class CreateIngredientCommandHandler(
     IIngredientRepository ingredientRepository,
