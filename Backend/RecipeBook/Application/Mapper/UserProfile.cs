@@ -1,4 +1,4 @@
-﻿using Application.UseCases.Queries.Users.Dtos;
+﻿using Application.UseCases.Users.Dtos;
 using AutoMapper;
 using Domain.Entities;
 

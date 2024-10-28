@@ -1,9 +1,9 @@
 ﻿using System.Reflection;
-using Application.UseCases.Commands.Ingredients;
-using Application.UseCases.Commands.Recipes;
-using Application.UseCases.Commands.Steps;
-using Application.UseCases.Commands.Tags;
-using Application.UseCases.Commands.Users;
+using Application.UseCases.Ingredients;
+using Application.UseCases.Recipes;
+using Application.UseCases.Steps;
+using Application.UseCases.Tags;
+using Application.UseCases.Users;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application;

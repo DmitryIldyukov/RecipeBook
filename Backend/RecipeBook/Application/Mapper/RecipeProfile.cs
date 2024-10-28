@@ -1,4 +1,4 @@
-﻿using Application.UseCases.Commands.Recipes.Create;
+﻿using Application.UseCases.Recipes.Commands.Create;
 using AutoMapper;
 using Domain.Entities;
 

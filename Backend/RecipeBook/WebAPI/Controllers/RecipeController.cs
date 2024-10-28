@@ -1,10 +1,10 @@
 ﻿using Application.Common.CQRS.Command;
 using Application.Common.CQRS.Query;
-using Application.UseCases.Commands.Recipes.Create;
-using Application.UseCases.Queries.Recipes.Dtos;
-using Application.UseCases.Queries.Recipes.GetRecipeImage;
+using Application.Common.Result;
+using Application.UseCases.Recipes.Commands.Create;
+using Application.UseCases.Recipes.Dtos;
+using Application.UseCases.Recipes.Queries.GetRecipeImage;
 using AutoMapper;
-using Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Dtos.Recipe;
 
@@ -13,8 +13,8 @@ namespace WebAPI.Controllers;
 [ApiController]
 [Route( "api/[controller]" )]
 public class RecipeController(
-    ICommandHandler<CreateRecipeCommand> createRecipeHandler,
-    IQueryHandler<GetRecipeImageQuery, GetImageQueryDto> getImageHandler,
+    ICommandHandler<CreateRecipeCommand, Result> createRecipeHandler,
+    IQueryHandler<GetRecipeImageQuery, ResultT<GetImageQueryDto>> getImageHandler,
     IMapper mapper
 ) : ControllerBase
 {
@@ -24,23 +24,18 @@ public class RecipeController(
     public async Task<IActionResult> AddRecipe( [FromForm] RecipeDto dto )
     {
         CreateRecipeCommand command = mapper.Map<CreateRecipeCommand>( dto );
-
-        try
+        Result result = await createRecipeHandler.Handle( command );
+        if ( result.IsSuccess )
         {
-            await createRecipeHandler.Handle( command );
-
             return Ok();
         }
-        catch ( FluentValidation.ValidationException e )
-        {
-            return BadRequest( e.Errors.Select( error => error.ErrorMessage ).ToList() );
-        }
+
+        return BadRequest( result.ErrorMessages );
     }
 
     [HttpGet( "RecipeImage/{recipeId:int}" )]
     [ProducesResponseType( typeof( FileResult ), StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
-    [ProducesResponseType( typeof( string ), StatusCodes.Status404NotFound )]
     public async Task<IActionResult> GetRecipeImage( [FromRoute] int recipeId )
     {
         GetRecipeImageQuery query = new GetRecipeImageQuery()
@@ -48,19 +43,13 @@ public class RecipeController(
             RecipeId = recipeId
         };
 
-        try
-        {
-            GetImageQueryDto imageDto = await getImageHandler.Handle( query );
+        ResultT<GetImageQueryDto> result = await getImageHandler.Handle( query );
 
-            return File( imageDto.File, imageDto.MimeType, imageDto.FileName );
-        }
-        catch ( FluentValidation.ValidationException e )
+        if ( result.IsSuccess )
         {
-            return BadRequest( e.Errors.Select( error => error.ErrorMessage ).ToList() );
+            return File( result.Value.File, result.Value.MimeType, result.Value.FileName );
         }
-        catch ( Exception e ) when ( e is FileNotFoundException || e is NotFoundException )
-        {
-            return NotFound( e.Message );
-        }
+
+        return BadRequest( result.ErrorMessages );
     }
 }

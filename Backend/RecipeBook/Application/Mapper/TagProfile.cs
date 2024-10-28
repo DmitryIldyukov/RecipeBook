@@ -1,6 +1,6 @@
-﻿using Application.UseCases.Commands.Recipes.Dtos;
-using Application.UseCases.Commands.Tags.Create;
-using Application.UseCases.Queries.Tags.Dtos;
+﻿using Application.UseCases.Recipes.Dtos;
+using Application.UseCases.Tags.Commands.Create;
+using Application.UseCases.Tags.Dtos;
 using AutoMapper;
 using Domain.Entities;
 

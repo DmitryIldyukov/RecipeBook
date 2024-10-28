@@ -1,5 +1,5 @@
-﻿using Application.UseCases.Commands.Users.Create;
-using Application.UseCases.Commands.Users.Update;
+﻿using Application.UseCases.Users.Commands.Create;
+using Application.UseCases.Users.Commands.Update;
 using AutoMapper;
 using WebAPI.Dtos.User;
 

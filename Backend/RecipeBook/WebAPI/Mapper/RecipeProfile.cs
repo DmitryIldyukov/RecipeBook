@@ -1,5 +1,5 @@
-﻿using Application.UseCases.Commands.Recipes.Create;
-using Application.UseCases.Commands.Recipes.Dtos;
+﻿using Application.UseCases.Recipes.Commands.Create;
+using Application.UseCases.Recipes.Dtos;
 using AutoMapper;
 using WebAPI.Dtos.Igredient;
 using WebAPI.Dtos.Recipe;

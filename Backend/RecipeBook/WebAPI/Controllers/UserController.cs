@@ -1,11 +1,11 @@
 ﻿using Application.Common.CQRS.Command;
 using Application.Common.CQRS.Query;
-using Application.UseCases.Commands.Users.Create;
-using Application.UseCases.Commands.Users.Update;
-using Application.UseCases.Queries.Users.Dtos;
-using Application.UseCases.Queries.Users.GetById;
+using Application.Common.Result;
+using Application.UseCases.Users.Commands.Create;
+using Application.UseCases.Users.Commands.Update;
+using Application.UseCases.Users.Dtos;
+using Application.UseCases.Users.Queries.GetById;
 using AutoMapper;
-using Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Dtos.User;
 
@@ -14,9 +14,9 @@ namespace WebAPI.Controllers;
 [ApiController]
 [Route( "api/[controller]" )]
 public class UserController(
-    ICommandHandler<CreateUserCommand> createUserCommandHandler,
-    ICommandHandler<UpdateUserCommand> updateUserCommandHandler,
-    IQueryHandler<GetUserByIdQuery, GetUserQueryDto> getUserByIdHandler,
+    ICommandHandler<CreateUserCommand, Result> createUserCommandHandler,
+    ICommandHandler<UpdateUserCommand, Result> updateUserCommandHandler,
+    IQueryHandler<GetUserByIdQuery, ResultT<GetUserQueryDto>> getUserByIdHandler,
     IMapper mapper
 ) : ControllerBase
 {
@@ -27,70 +27,52 @@ public class UserController(
     {
         CreateUserCommand command = mapper.Map<CreateUserCommand>( dto );
 
-        try
+        Result result = await createUserCommandHandler.Handle( command );
+        if ( result.IsSuccess )
         {
-            await createUserCommandHandler.Handle( command );
-
             return Ok();
         }
-        catch ( FluentValidation.ValidationException e )
-        {
-            return BadRequest( e.Errors.Select( error => error.ErrorMessage ).ToList() );
-        }
+
+        return BadRequest( result.ErrorMessages );
     }
 
     [HttpGet( "{userId:int}" )]
     [ProducesResponseType( typeof( GetUserQueryDto ), StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
-    [ProducesResponseType( typeof( string ), StatusCodes.Status404NotFound )]
     public async Task<IActionResult> GetUserById( [FromRoute] int userId )
     {
         GetUserByIdQuery query = new GetUserByIdQuery() { Id = userId };
 
-        try
+        ResultT<GetUserQueryDto> result = await getUserByIdHandler.Handle( query );
+        if ( result.IsSuccess )
         {
-            GetUserQueryDto response = await getUserByIdHandler.Handle( query );
+            return Ok( result.Value );
+        }
 
-            return Ok( response );
-        }
-        catch ( FluentValidation.ValidationException e )
-        {
-            return BadRequest( e.Errors.Select( error => error.ErrorMessage ).ToList() );
-        }
-        catch ( NotFoundException e )
-        {
-            return NotFound( e.Message );
-        }
+        return BadRequest( result.ErrorMessages );
     }
 
     [HttpPut( "{userId:int}" )]
     [ProducesResponseType( StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
-    [ProducesResponseType( typeof( string ), StatusCodes.Status404NotFound )]
     public async Task<IActionResult> EditUser( [FromRoute] int userId, [FromBody] UserEditDto dto )
     {
         UpdateUserCommand command = new()
         {
-            Id = userId,
+            UserId = userId,
             Name = dto.Name,
             Login = dto.Login,
             Password = dto.Password,
             Information = dto.Information
         };
 
-        try
-        {
-            await updateUserCommandHandler.Handle( command );
+        Result result = await updateUserCommandHandler.Handle( command );
 
+        if ( result.IsSuccess )
+        {
             return Ok();
         }
-        catch ( FluentValidation.ValidationException e )
-        {
-            return BadRequest( e.Errors.Select( error => error.ErrorMessage ).ToList() );
-        }
-        catch ( NotFoundException e )
-        {
-            return NotFound( e.Message );
-        }
+
+        return BadRequest( result.ErrorMessages );
     }
 }
