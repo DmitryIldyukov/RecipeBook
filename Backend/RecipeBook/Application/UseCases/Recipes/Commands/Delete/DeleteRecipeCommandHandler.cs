@@ -34,6 +34,7 @@ public class DeleteRecipeCommandHandler(
 
         DeleteTagsCommand deleteTagsCommand = new DeleteTagsCommand()
         {
+            RecipeId = recipe.Id,
             Tags = recipe.Tags
         };
         await deleteTagsHandler.Handle( deleteTagsCommand );
