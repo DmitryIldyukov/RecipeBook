@@ -5,6 +5,7 @@ using Application.UseCases.Recipes.Commands.Create;
 using Application.UseCases.Recipes.Commands.Delete;
 using Application.UseCases.Recipes.Commands.Update;
 using Application.UseCases.Recipes.Dtos;
+using Application.UseCases.Recipes.Queries.GetDailyRecipe;
 using Application.UseCases.Recipes.Queries.GetRecipeImage;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +20,7 @@ public class RecipeController(
     ICommandHandler<UpdateRecipeCommand, Result> updateRecipeHandler,
     ICommandHandler<DeleteRecipeCommand, Result> deleteRecipeHandler,
     IQueryHandler<GetRecipeImageQuery, ResultT<GetImageQueryDto>> getImageHandler,
+    IQueryHandler<GetDailyRecipeQuery, ResultT<DailyRecipeDto>> getDailyRecipeHandler,
     IMapper mapper
 ) : ControllerBase
 {
@@ -52,6 +54,23 @@ public class RecipeController(
         if ( result.IsSuccess )
         {
             return File( result.Value.File, result.Value.MimeType, result.Value.FileName );
+        }
+
+        return BadRequest( result.ErrorMessages );
+    }
+
+    [HttpGet( "DailyRecipe" )]
+    [ProducesResponseType( typeof( DailyRecipeDto ), StatusCodes.Status200OK )]
+    [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
+    public async Task<IActionResult> GetDailyRecipe()
+    {
+        GetDailyRecipeQuery query = new GetDailyRecipeQuery();
+
+        ResultT<DailyRecipeDto> result = await getDailyRecipeHandler.Handle( query );
+
+        if ( result.IsSuccess )
+        {
+            return Ok( result.Value );
         }
 
         return BadRequest( result.ErrorMessages );

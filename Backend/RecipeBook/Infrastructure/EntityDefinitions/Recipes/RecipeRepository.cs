@@ -27,4 +27,12 @@ public class RecipeRepository( RecipeBookDbContext dbContext ) : IRecipeReposito
             .Include( r => r.Favorites )
             .FirstOrDefaultAsync( r => r.Id == id );
     }
+
+    public async Task<Recipe> GetDailyRecipe()
+    {
+        return await dbContext.Recipes
+            .Include( r => r.Likes )
+            .OrderBy( r => r.Likes.Where( l => l.CreatedAt > DateTime.Now.AddDays( -1 ) ).Count() )
+            .FirstOrDefaultAsync();
+    }
 }

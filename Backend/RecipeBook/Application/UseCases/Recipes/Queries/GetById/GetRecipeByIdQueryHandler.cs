@@ -4,9 +4,9 @@ using Application.UseCases.Recipes.Dtos;
 
 namespace Application.UseCases.Recipes.Queries.GetById;
 
-public class GetRecipeByIdQueryHandler : IQueryHandler<GetRecipeByIdQuery, ResultT<GetRecipeQueryDto>>
+public class GetRecipeByIdQueryHandler : IQueryHandler<GetRecipeByIdQuery, ResultT<DailyRecipeDto>>
 {
-    public Task<ResultT<GetRecipeQueryDto>> Handle( GetRecipeByIdQuery query )
+    public Task<ResultT<DailyRecipeDto>> Handle( GetRecipeByIdQuery query )
     {
         throw new NotImplementedException();
     }
