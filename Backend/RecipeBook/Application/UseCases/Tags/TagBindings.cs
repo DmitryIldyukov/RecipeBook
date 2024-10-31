@@ -2,6 +2,7 @@
 using Application.Common.CQRS.Query;
 using Application.Common.Result;
 using Application.UseCases.Tags.Commands.Create;
+using Application.UseCases.Tags.Commands.Delete;
 using Application.UseCases.Tags.Commands.UpdateRecipeTags;
 using Application.UseCases.Tags.Dtos;
 using Application.UseCases.Tags.Queries.GetAll;
@@ -18,11 +19,13 @@ public static class TagBindings
     {
         services.AddScoped<IValidator<CreateTagCommand>, CreateTagCommandValidator>();
         services.AddScoped<IValidator<UpdateRecipeTagsCommand>, UpdateRecipeTagsCommandValidator>();
+        services.AddScoped<IValidator<DeleteTagsCommand>, DeleteTagsCommandValidator>();
         services.AddScoped<IValidator<GetAllTagsQuery>, GetAllTagsQueryValidator>();
         services.AddScoped<IValidator<GetTagByNameQuery>, GetTagByNameQueryValidator>();
 
         services.AddScoped<ICommandHandler<CreateTagCommand, ResultT<Tag>>, CreateTagCommandHandler>();
         services.AddScoped<ICommandHandler<UpdateRecipeTagsCommand, Result>, UpdateRecipeTagsCommandHandler>();
+        services.AddScoped<ICommandHandler<DeleteTagsCommand, Result>, DeleteTagsCommandHandler>();
 
         services.AddScoped<IQueryHandler<GetTagByNameQuery, ResultT<GetTagDto>>, GetTagByNameQueryHandler>();
         services.AddScoped<IQueryHandler<GetAllTagsQuery, ResultT<IReadOnlyList<GetTagDto>>>, GetAllTagsQueryHandler>();

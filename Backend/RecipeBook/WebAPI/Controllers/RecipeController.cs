@@ -2,6 +2,7 @@
 using Application.Common.CQRS.Query;
 using Application.Common.Result;
 using Application.UseCases.Recipes.Commands.Create;
+using Application.UseCases.Recipes.Commands.Delete;
 using Application.UseCases.Recipes.Commands.Update;
 using Application.UseCases.Recipes.Dtos;
 using Application.UseCases.Recipes.Queries.GetRecipeImage;
@@ -16,6 +17,7 @@ namespace WebAPI.Controllers;
 public class RecipeController(
     ICommandHandler<CreateRecipeCommand, Result> createRecipeHandler,
     ICommandHandler<UpdateRecipeCommand, Result> updateRecipeHandler,
+    ICommandHandler<DeleteRecipeCommand, Result> deleteRecipeHandler,
     IQueryHandler<GetRecipeImageQuery, ResultT<GetImageQueryDto>> getImageHandler,
     IMapper mapper
 ) : ControllerBase
@@ -63,6 +65,25 @@ public class RecipeController(
         UpdateRecipeCommand command = mapper.Map<UpdateRecipeCommand>( dto ) with { RecipeId = recipeId };
 
         Result result = await updateRecipeHandler.Handle( command );
+        if ( result.IsSuccess )
+        {
+            return Ok();
+        }
+
+        return BadRequest( result.ErrorMessages );
+    }
+
+    [HttpDelete( "{recipeId:int}" )]
+    [ProducesResponseType( StatusCodes.Status200OK )]
+    [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
+    public async Task<IActionResult> DeleteRecipe( [FromRoute] int recipeId )
+    {
+        DeleteRecipeCommand command = new DeleteRecipeCommand()
+        {
+            RecipeId = recipeId
+        };
+
+        Result result = await deleteRecipeHandler.Handle( command );
         if ( result.IsSuccess )
         {
             return Ok();
