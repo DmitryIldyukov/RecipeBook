@@ -7,8 +7,7 @@ public class CreateIngredientCommandValidator : AbstractValidator<CreateIngredie
     public CreateIngredientCommandValidator()
     {
         RuleFor( i => i.RecipeId )
-            .NotNull().WithMessage( "Id рецепта обязателен." )
-            .GreaterThan( 0 ).WithMessage( "Идентификатор должен быть положительным числом." );
+            .NotNull().WithMessage( "Id рецепта обязателен." );
 
         RuleFor( i => i.Title )
             .NotEmpty().WithMessage( "Заголовок обязателен." )
