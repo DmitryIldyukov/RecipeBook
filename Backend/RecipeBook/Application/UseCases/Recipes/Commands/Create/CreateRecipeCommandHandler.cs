@@ -93,11 +93,8 @@ public class CreateRecipeCommandHandler(
     {
         foreach ( RecipeStepDto step in steps )
         {
-            CreateStepCommand createStepCommand = new CreateStepCommand()
-            {
-                RecipeId = recipe.Id,
-                Description = step.Description,
-            };
+            CreateStepCommand createStepCommand =
+                mapper.Map<CreateStepCommand>( step ) with { RecipeId = recipe.Id };
 
             ResultT<Step> stepResult = await createStepHandler.Handle( createStepCommand );
 
@@ -116,12 +113,8 @@ public class CreateRecipeCommandHandler(
     {
         foreach ( RecipeIngredientDto ingredient in ingredients )
         {
-            CreateIngredientCommand createIngredientCommand = new CreateIngredientCommand()
-            {
-                RecipeId = recipe.Id,
-                Title = ingredient.Title,
-                Description = ingredient.Description,
-            };
+            CreateIngredientCommand createIngredientCommand =
+                mapper.Map<CreateIngredientCommand>( ingredient ) with { RecipeId = recipe.Id };
 
             ResultT<Ingredient> ingredientResult = await createIngredientHandler.Handle( createIngredientCommand );
 

@@ -19,6 +19,12 @@ public class RecipeRepository( RecipeBookDbContext dbContext ) : IRecipeReposito
 
     public async Task<Recipe> GetById( int id )
     {
-        return await dbContext.Recipes.FirstOrDefaultAsync( r => r.Id == id );
+        return await dbContext.Recipes
+            .Include( r => r.Ingredients )
+            .Include( r => r.Steps )
+            .Include( r => r.Tags )
+            .Include( r => r.Likes )
+            .Include( r => r.Favorites )
+            .FirstOrDefaultAsync( r => r.Id == id );
     }
 }

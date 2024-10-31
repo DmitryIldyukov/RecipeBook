@@ -1,4 +1,5 @@
 ﻿using Application.UseCases.Recipes.Commands.Create;
+using Application.UseCases.Recipes.Commands.Update;
 using Application.UseCases.Recipes.Dtos;
 using AutoMapper;
 using WebAPI.Dtos.Igredient;
@@ -16,5 +17,6 @@ public class RecipeProfile : Profile
         CreateMap<TagDto, RecipeTagDto>();
         CreateMap<StepDto, RecipeStepDto>();
         CreateMap<IngredientDto, RecipeIngredientDto>();
+        CreateMap<UpdateRecipeDto, UpdateRecipeCommand>();
     }
 }

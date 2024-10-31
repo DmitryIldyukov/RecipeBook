@@ -3,8 +3,9 @@ using Domain.Entities;
 
 namespace Application.Interfaces.Repositories;
 
-public interface ITagRepository : ICreateRepository<Tag>
+public interface ITagRepository : ICreateRepository<Tag>, IDeleteRepository<Tag>
 {
     Task<Tag> GetByName( string name );
     IQueryable<Tag> GetAll();
+    Task<bool> IsUsedInOtherRecipes( int tagId, int RecipeId );
 }

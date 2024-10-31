@@ -17,6 +17,11 @@ public class IngredientRepository( RecipeBookDbContext dbContext ) : IIngredient
         dbContext.Ingredients.Remove( ingredient );
     }
 
+    public async Task<Ingredient> GetById( int ingredientId )
+    {
+        return await dbContext.Ingredients.FirstOrDefaultAsync( i => i.Id == ingredientId );
+    }
+
     public async Task<IReadOnlyList<Ingredient>> GetIngredientsByReceptId( int recipeId )
     {
         return await dbContext.Ingredients.Where( i => i.RecipeId == recipeId ).ToListAsync();

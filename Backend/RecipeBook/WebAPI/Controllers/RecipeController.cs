@@ -2,6 +2,7 @@
 using Application.Common.CQRS.Query;
 using Application.Common.Result;
 using Application.UseCases.Recipes.Commands.Create;
+using Application.UseCases.Recipes.Commands.Update;
 using Application.UseCases.Recipes.Dtos;
 using Application.UseCases.Recipes.Queries.GetRecipeImage;
 using AutoMapper;
@@ -14,6 +15,7 @@ namespace WebAPI.Controllers;
 [Route( "api/[controller]" )]
 public class RecipeController(
     ICommandHandler<CreateRecipeCommand, Result> createRecipeHandler,
+    ICommandHandler<UpdateRecipeCommand, Result> updateRecipeHandler,
     IQueryHandler<GetRecipeImageQuery, ResultT<GetImageQueryDto>> getImageHandler,
     IMapper mapper
 ) : ControllerBase
@@ -48,6 +50,22 @@ public class RecipeController(
         if ( result.IsSuccess )
         {
             return File( result.Value.File, result.Value.MimeType, result.Value.FileName );
+        }
+
+        return BadRequest( result.ErrorMessages );
+    }
+
+    [HttpPut( "{recipeId:int}" )]
+    [ProducesResponseType( StatusCodes.Status200OK )]
+    [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
+    public async Task<IActionResult> UpdateRecipe( [FromRoute] int recipeId, [FromForm] UpdateRecipeDto dto )
+    {
+        UpdateRecipeCommand command = mapper.Map<UpdateRecipeCommand>( dto ) with { RecipeId = recipeId };
+
+        Result result = await updateRecipeHandler.Handle( command );
+        if ( result.IsSuccess )
+        {
+            return Ok();
         }
 
         return BadRequest( result.ErrorMessages );

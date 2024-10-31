@@ -21,4 +21,9 @@ public class StepRepository( RecipeBookDbContext dbContext ) : IStepRepository
     {
         return await dbContext.Steps.Where( s => s.RecipeId == recipeId ).ToListAsync();
     }
+
+    public async Task<Step> GetById( int stepId )
+    {
+        return await dbContext.Steps.FirstOrDefaultAsync( s => s.Id == stepId );
+    }
 }
