@@ -20,6 +20,10 @@ public class UserRepository( RecipeBookDbContext dbContext ) : IUserRepository
 
     public async Task<User> GetById( int id )
     {
-        return await dbContext.Users.FirstOrDefaultAsync( u => u.Id == id );
+        return await dbContext.Users
+            .Include( u => u.Recipes )
+            .Include( u => u.Likes )
+            .Include( u => u.Favorites )
+            .FirstOrDefaultAsync( u => u.Id == id );
     }
 }
