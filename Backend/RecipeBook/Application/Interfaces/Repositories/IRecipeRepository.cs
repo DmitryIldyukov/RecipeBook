@@ -1,4 +1,5 @@
-﻿using Application.Common.Repositories;
+﻿using Application.Common.Page;
+using Application.Common.Repositories;
 using Domain.Entities;
 
 namespace Application.Interfaces.Repositories;
@@ -7,4 +8,5 @@ public interface IRecipeRepository : ICreateRepository<Recipe>, IDeleteRepositor
 {
     Task<Recipe> GetById( int id );
     Task<Recipe> GetDailyRecipe();
+    IQueryable<Recipe> GetUserFavoriteRecipesByPage( int userId, Page page );
 }

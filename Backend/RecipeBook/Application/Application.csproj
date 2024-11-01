@@ -19,8 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="UseCases\Favorites\Commands\" />
-    <Folder Include="UseCases\Favorites\Queries\" />
     <Folder Include="UseCases\Ingredients\Queries\" />
     <Folder Include="UseCases\Likes\Queries\" />
     <Folder Include="UseCases\Likes\Commands\" />

@@ -1,4 +1,5 @@
-﻿using Application.Interfaces.Repositories;
+﻿using Application.Common.Page;
+using Application.Interfaces.Repositories;
 using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,7 @@ public class RecipeRepository( RecipeBookDbContext dbContext ) : IRecipeReposito
             .Include( r => r.Tags )
             .Include( r => r.Likes )
             .Include( r => r.Favorites )
+            .Include( r => r.Author )
             .FirstOrDefaultAsync( r => r.Id == id );
     }
 
@@ -34,5 +36,19 @@ public class RecipeRepository( RecipeBookDbContext dbContext ) : IRecipeReposito
             .Include( r => r.Likes )
             .OrderBy( r => r.Likes.Where( l => l.CreatedAt > DateTime.Now.AddDays( -1 ) ).Count() )
             .FirstOrDefaultAsync();
+    }
+
+    public IQueryable<Recipe> GetUserFavoriteRecipesByPage( int userId, Page page )
+    {
+        return dbContext.Recipes
+            .Include( r => r.Ingredients )
+            .Include( r => r.Steps )
+            .Include( r => r.Tags )
+            .Include( r => r.Likes )
+            .Include( r => r.Favorites )
+            .Include( r => r.Author )
+            .Where( r => r.Favorites.Any( f => f.UserId == userId ) )
+            .Skip( ( page.PageNumber ) * page.PageSize )
+            .Take( page.PageSize );
     }
 }

@@ -5,7 +5,9 @@ using Application.UseCases.Recipes.Commands.Create;
 using Application.UseCases.Recipes.Commands.Delete;
 using Application.UseCases.Recipes.Commands.Update;
 using Application.UseCases.Recipes.Dtos;
+using Application.UseCases.Recipes.Queries.GetById;
 using Application.UseCases.Recipes.Queries.GetDailyRecipe;
+using Application.UseCases.Recipes.Queries.GetFavoriteRecipes;
 using Application.UseCases.Recipes.Queries.GetRecipeImage;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +23,8 @@ public static class RecipeBindings
         services.AddScoped<IValidator<DeleteRecipeCommand>, DeleteRecipeCommandValidator>();
         services.AddScoped<IValidator<GetRecipeImageQuery>, GetRecipeImageQueryValidator>();
         services.AddScoped<IValidator<GetDailyRecipeQuery>, GetDailyRecipeQueryValidator>();
+        services.AddScoped<IValidator<GetRecipeByIdQuery>, GetRecipeByIdQueryValidator>();
+        services.AddScoped<IValidator<GetUserFavoriteRecipesQuery>, GetUserFavoriteRecipesQueryValidator>();
 
         services.AddScoped<ICommandHandler<CreateRecipeCommand, Result>, CreateRecipeCommandHandler>();
         services.AddScoped<ICommandHandler<UpdateRecipeCommand, Result>, UpdateRecipeCommandHandler>();
@@ -28,5 +32,7 @@ public static class RecipeBindings
 
         services.AddScoped<IQueryHandler<GetRecipeImageQuery, ResultT<GetImageQueryDto>>, GetRecipeImageQueryHandler>();
         services.AddScoped<IQueryHandler<GetDailyRecipeQuery, ResultT<DailyRecipeDto>>, GetDailyRecipeQueryHandler>();
+        services.AddScoped<IQueryHandler<GetRecipeByIdQuery, ResultT<GetRecipeQueryDto>>, GetRecipeByIdQueryHandler>();
+        services.AddScoped<IQueryHandler<GetUserFavoriteRecipesQuery, ResultT<IReadOnlyList<GetRecipeQueryDto>>>, GetUserFavoriteRecipesQueryHandler>();
     }
 }

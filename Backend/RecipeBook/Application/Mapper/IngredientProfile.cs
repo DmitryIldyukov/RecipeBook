@@ -1,4 +1,5 @@
 ﻿using Application.UseCases.Ingredients.Commands.Create;
+using Application.UseCases.Ingredients.Dtos;
 using Application.UseCases.Recipes.Dtos;
 using AutoMapper;
 using Domain.Entities;
@@ -12,5 +13,6 @@ public class IngredientProfile : Profile
         CreateMap<RecipeIngredientDto, CreateIngredientCommand>();
         CreateMap<RecipeIngredientDto, Ingredient>();
         CreateMap<CreateIngredientCommand, Ingredient>();
+        CreateMap<Ingredient, GetIngredientDto>();
     }
 }

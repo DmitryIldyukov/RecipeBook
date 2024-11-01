@@ -2,5 +2,5 @@
 
 public class GetRecipeByIdQuery
 {
-
+    public int RecipeId { get; init; }
 }

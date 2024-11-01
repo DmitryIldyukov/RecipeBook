@@ -5,7 +5,9 @@ using Application.UseCases.Recipes.Commands.Create;
 using Application.UseCases.Recipes.Commands.Delete;
 using Application.UseCases.Recipes.Commands.Update;
 using Application.UseCases.Recipes.Dtos;
+using Application.UseCases.Recipes.Queries.GetById;
 using Application.UseCases.Recipes.Queries.GetDailyRecipe;
+using Application.UseCases.Recipes.Queries.GetFavoriteRecipes;
 using Application.UseCases.Recipes.Queries.GetRecipeImage;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +23,8 @@ public class RecipeController(
     ICommandHandler<DeleteRecipeCommand, Result> deleteRecipeHandler,
     IQueryHandler<GetRecipeImageQuery, ResultT<GetImageQueryDto>> getImageHandler,
     IQueryHandler<GetDailyRecipeQuery, ResultT<DailyRecipeDto>> getDailyRecipeHandler,
+    IQueryHandler<GetUserFavoriteRecipesQuery, ResultT<IReadOnlyList<GetRecipeQueryDto>>> getFavoriteRecipesHandler,
+    IQueryHandler<GetRecipeByIdQuery, ResultT<GetRecipeQueryDto>> getByIdHandler,
     IMapper mapper
 ) : ControllerBase
 {
@@ -67,6 +71,43 @@ public class RecipeController(
         GetDailyRecipeQuery query = new GetDailyRecipeQuery();
 
         ResultT<DailyRecipeDto> result = await getDailyRecipeHandler.Handle( query );
+
+        if ( result.IsSuccess )
+        {
+            return Ok( result.Value );
+        }
+
+        return BadRequest( result.ErrorMessages );
+    }
+
+    [HttpPost( "FavoriteUsers/{userId:int}" )]
+    [ProducesResponseType( typeof( IReadOnlyList<GetRecipeQueryDto> ), StatusCodes.Status200OK )]
+    [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
+    public async Task<IActionResult> GetUserFavoritesRecipes( [FromRoute] int userId, [FromBody] FavoriteRecipesDto recipesDto )
+    {
+        GetUserFavoriteRecipesQuery query = mapper.Map<GetUserFavoriteRecipesQuery>( recipesDto ) with { UserId = userId };
+
+        ResultT<IReadOnlyList<GetRecipeQueryDto>> result = await getFavoriteRecipesHandler.Handle( query );
+
+        if ( result.IsSuccess )
+        {
+            return Ok( result.Value );
+        }
+
+        return BadRequest( result.ErrorMessages );
+    }
+
+    [HttpGet( "{recipeId:int}" )]
+    [ProducesResponseType( typeof( IReadOnlyList<GetRecipeQueryDto> ), StatusCodes.Status200OK )]
+    [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
+    public async Task<IActionResult> GetRecipeById( [FromRoute] int recipeId )
+    {
+        GetRecipeByIdQuery query = new GetRecipeByIdQuery()
+        {
+            RecipeId = recipeId
+        };
+
+        ResultT<GetRecipeQueryDto> result = await getByIdHandler.Handle( query );
 
         if ( result.IsSuccess )
         {

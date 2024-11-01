@@ -1,13 +1,35 @@
 ﻿using Application.Common.CQRS.Query;
 using Application.Common.Result;
+using Application.Interfaces.Repositories;
 using Application.UseCases.Recipes.Dtos;
+using AutoMapper;
+using Domain.Entities;
+using FluentValidation;
+using FluentValidation.Results;
 
 namespace Application.UseCases.Recipes.Queries.GetById;
 
-public class GetRecipeByIdQueryHandler : IQueryHandler<GetRecipeByIdQuery, ResultT<DailyRecipeDto>>
+public class GetRecipeByIdQueryHandler(
+    IRecipeRepository recipeRepository,
+    IValidator<GetRecipeByIdQuery> validator,
+    IMapper mapper
+) : IQueryHandler<GetRecipeByIdQuery, ResultT<GetRecipeQueryDto>>
 {
-    public Task<ResultT<DailyRecipeDto>> Handle( GetRecipeByIdQuery query )
+    public async Task<ResultT<GetRecipeQueryDto>> Handle( GetRecipeByIdQuery query )
     {
-        throw new NotImplementedException();
+        ValidationResult validationResult = await validator.ValidateAsync( query );
+        if ( !validationResult.IsValid )
+        {
+            return ResultT<GetRecipeQueryDto>.Failure( validationResult.Errors.Select( e => e.ErrorMessage ) );
+        }
+
+        Recipe recipe = await recipeRepository.GetById( query.RecipeId );
+
+        if ( recipe is null )
+        {
+            return ResultT<GetRecipeQueryDto>.Failure( $"Рецепт с Id {query.RecipeId} не найден." );
+        }
+
+        return ResultT<GetRecipeQueryDto>.Success( mapper.Map<GetRecipeQueryDto>( recipe ), "Рецепт найден." );
     }
 }
