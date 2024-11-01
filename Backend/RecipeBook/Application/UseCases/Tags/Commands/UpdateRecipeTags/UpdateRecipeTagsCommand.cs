@@ -3,7 +3,7 @@ using Domain.Entities;
 
 namespace Application.UseCases.Tags.Commands.UpdateRecipeTags;
 
-public class UpdateRecipeTagsCommand
+public record UpdateRecipeTagsCommand
 {
     public Recipe Recipe { get; init; }
     public ICollection<RecipeTagDto> Tags { get; init; }

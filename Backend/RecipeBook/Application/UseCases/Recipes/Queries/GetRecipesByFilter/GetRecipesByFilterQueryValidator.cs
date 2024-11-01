@@ -6,6 +6,10 @@ public class GetRecipesByFilterQueryValidator : AbstractValidator<GetRecipesByFi
 {
     public GetRecipesByFilterQueryValidator()
     {
+        RuleFor( f => f.Page.PageNumber )
+            .GreaterThan( 0 ).WithMessage( "Минимальный номер страницы 1." );
 
+        RuleFor( f => f.Page.PageSize )
+            .GreaterThan( 0 ).WithMessage( "Минимальный размер страницы 1." );
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Application.UseCases.Recipes.Queries.GetById;
 
-public class GetRecipeByIdQuery
+public record GetRecipeByIdQuery
 {
     public int RecipeId { get; init; }
 }

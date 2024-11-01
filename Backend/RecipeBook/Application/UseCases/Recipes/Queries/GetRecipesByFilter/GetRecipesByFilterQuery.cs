@@ -2,7 +2,7 @@
 
 namespace Application.UseCases.Recipes.Queries.GetRecipesByFilter;
 
-public class GetRecipesByFilterQuery
+public record GetRecipesByFilterQuery
 {
     public string SearchString { get; init; }
     public Page Page { get; init; }

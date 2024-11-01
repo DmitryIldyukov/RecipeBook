@@ -1,6 +1,6 @@
 ﻿namespace Application.UseCases.Recipes.Commands.Delete;
 
-public class DeleteRecipeCommand
+public record DeleteRecipeCommand
 {
     public int RecipeId { get; init; }
 }

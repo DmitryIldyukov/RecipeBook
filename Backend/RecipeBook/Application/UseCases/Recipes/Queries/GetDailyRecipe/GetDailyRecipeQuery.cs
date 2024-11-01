@@ -1,5 +1,5 @@
 ﻿namespace Application.UseCases.Recipes.Queries.GetDailyRecipe;
 
-public class GetDailyRecipeQuery
+public record GetDailyRecipeQuery
 {
 }

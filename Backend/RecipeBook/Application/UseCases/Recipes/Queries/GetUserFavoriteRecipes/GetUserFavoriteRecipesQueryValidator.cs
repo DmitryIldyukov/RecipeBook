@@ -10,7 +10,7 @@ public class GetUserFavoriteRecipesQueryValidator : AbstractValidator<GetUserFav
             .NotEmpty().WithMessage( "Идентификатор пользователя обязателен." );
 
         RuleFor( f => f.Page.PageNumber )
-            .GreaterThan( -1 ).WithMessage( "Минимальный номер страницы 0." );
+            .GreaterThan( 0 ).WithMessage( "Минимальный номер страницы 1." );
 
         RuleFor( f => f.Page.PageSize )
             .GreaterThan( 0 ).WithMessage( "Минимальный размер страницы 1." );

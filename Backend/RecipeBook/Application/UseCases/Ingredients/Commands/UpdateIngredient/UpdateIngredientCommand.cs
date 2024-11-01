@@ -1,6 +1,6 @@
 ﻿namespace Application.UseCases.Ingredients.Commands.UpdateIngredient;
 
-public class UpdateIngredientCommand
+public record UpdateIngredientCommand
 {
     public int IngredientId { get; init; }
     public string Title { get; init; }
