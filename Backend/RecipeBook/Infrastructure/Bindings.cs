@@ -5,6 +5,7 @@ using Application.Interfaces.Repositories;
 using Infrastructure.Data;
 using Infrastructure.EntityDefinitions.Favorites;
 using Infrastructure.EntityDefinitions.Ingredients;
+using Infrastructure.EntityDefinitions.Likes;
 using Infrastructure.EntityDefinitions.Recipes;
 using Infrastructure.EntityDefinitions.Steps;
 using Infrastructure.EntityDefinitions.Tags;
@@ -23,6 +24,7 @@ public static class Bindings
         services.AddScoped<IIngredientRepository, IngredientRepository>();
         services.AddScoped<IStepRepository, StepRepository>();
         services.AddScoped<IFavoriteRepository, FavoriteRepository>();
+        services.AddScoped<ILikeRepository, LikeRepository>();
 
         services.AddScoped<IPasswordHasher, PasswordHasher.PasswordHasher>();
         services.AddScoped<IFileHelper, FileHelper.FileHelper>();
