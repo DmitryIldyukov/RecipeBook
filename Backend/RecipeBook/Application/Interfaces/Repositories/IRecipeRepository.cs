@@ -9,6 +9,7 @@ public interface IRecipeRepository : ICreateRepository<Recipe>, IDeleteRepositor
 {
     Task<Recipe> GetById( int id );
     Task<Recipe> GetDailyRecipe();
-    IQueryable<Recipe> GetUserFavoriteRecipesByPage( int userId, Page page );
+    Task<IReadOnlyList<Recipe>> GetUserFavoriteRecipesByPage( int userId, Page page );
+    Task<IReadOnlyList<Recipe>> GetRecipesByFilter( string searchString, Page page );
     Task<bool> ContainsAsync( Expression<Func<Recipe, bool>> predicate );
 }

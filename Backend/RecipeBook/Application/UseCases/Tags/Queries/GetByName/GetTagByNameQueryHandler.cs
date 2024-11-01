@@ -1,6 +1,5 @@
 ﻿using Application.Common.CQRS.Query;
 using Application.Common.Result;
-using Application.Interfaces;
 using Application.Interfaces.Repositories;
 using Application.UseCases.Tags.Dtos;
 using AutoMapper;
@@ -11,7 +10,7 @@ using FluentValidation.Results;
 namespace Application.UseCases.Tags.Queries.GetByName;
 
 public class GetTagByNameQueryHandler(
-    ITagRepository tagRepository, IUnitOfWork unitOfWork, IValidator<GetTagByNameQuery> validator, IMapper mapper
+    ITagRepository tagRepository, IValidator<GetTagByNameQuery> validator, IMapper mapper
 ) : IQueryHandler<GetTagByNameQuery, ResultT<GetTagDto>>
 {
     public async Task<ResultT<GetTagDto>> Handle( GetTagByNameQuery query )

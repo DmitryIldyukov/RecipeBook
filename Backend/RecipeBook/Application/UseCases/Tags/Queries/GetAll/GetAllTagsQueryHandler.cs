@@ -6,7 +6,6 @@ using AutoMapper;
 using Domain.Entities;
 using FluentValidation;
 using FluentValidation.Results;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.UseCases.Tags.Queries.GetAll;
 
@@ -22,8 +21,8 @@ public class GetAllTagsQueryHandler(
             return ResultT<IReadOnlyList<GetTagDto>>.Failure( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
-        IQueryable<Tag> tags = tagRepository.GetAll();
+        IReadOnlyList<Tag> tags = await tagRepository.GetAll();
 
-        return ResultT<IReadOnlyList<GetTagDto>>.Success( await mapper.ProjectTo<GetTagDto>( tags ).ToListAsync(), "Тэги успешно получены." );
+        return ResultT<IReadOnlyList<GetTagDto>>.Success( mapper.Map<IReadOnlyList<GetTagDto>>( tags ), "Тэги успешно получены." );
     }
 }

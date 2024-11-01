@@ -7,15 +7,15 @@ using Domain.Entities;
 using FluentValidation;
 using FluentValidation.Results;
 
-namespace Application.UseCases.Recipes.Queries.GetFavoriteRecipes;
+namespace Application.UseCases.Recipes.Queries.GetRecipesByFilter;
 
-public class GetUserFavoriteRecipesQueryHandler(
+public class GetRecipesByFilterQueryHandler(
     IRecipeRepository recipeRepository,
-    IValidator<GetUserFavoriteRecipesQuery> validator,
+    IValidator<GetRecipesByFilterQuery> validator,
     IMapper mapper
-) : IQueryHandler<GetUserFavoriteRecipesQuery, ResultT<IReadOnlyList<GetRecipeQueryDto>>>
+) : IQueryHandler<GetRecipesByFilterQuery, ResultT<IReadOnlyList<GetRecipeQueryDto>>>
 {
-    public async Task<ResultT<IReadOnlyList<GetRecipeQueryDto>>> Handle( GetUserFavoriteRecipesQuery query )
+    public async Task<ResultT<IReadOnlyList<GetRecipeQueryDto>>> Handle( GetRecipesByFilterQuery query )
     {
         ValidationResult validationResult = await validator.ValidateAsync( query );
         if ( !validationResult.IsValid )
@@ -23,10 +23,10 @@ public class GetUserFavoriteRecipesQueryHandler(
             return ResultT<IReadOnlyList<GetRecipeQueryDto>>.Failure( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
-        IReadOnlyList<Recipe> recipes = await recipeRepository.GetUserFavoriteRecipesByPage( query.UserId, query.Page );
+        IReadOnlyList<Recipe> recipes = await recipeRepository.GetRecipesByFilter( query.SearchString, query.Page );
 
         IReadOnlyList<GetRecipeQueryDto> response = mapper.Map<IReadOnlyList<GetRecipeQueryDto>>( recipes );
 
-        return ResultT<IReadOnlyList<GetRecipeQueryDto>>.Success( response, $"Избранные рецепты пользователя с id {query.UserId} найдены." );
+        return ResultT<IReadOnlyList<GetRecipeQueryDto>>.Success( response, "Рецепты найдены." );
     }
 }

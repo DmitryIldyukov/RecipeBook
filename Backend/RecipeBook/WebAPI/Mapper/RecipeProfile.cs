@@ -2,6 +2,7 @@
 using Application.UseCases.Recipes.Commands.Update;
 using Application.UseCases.Recipes.Dtos;
 using Application.UseCases.Recipes.Queries.GetFavoriteRecipes;
+using Application.UseCases.Recipes.Queries.GetRecipesByFilter;
 using AutoMapper;
 using WebAPI.Dtos.Igredient;
 using WebAPI.Dtos.Recipe;
@@ -20,5 +21,6 @@ public class RecipeProfile : Profile
         CreateMap<IngredientDto, RecipeIngredientDto>();
         CreateMap<UpdateRecipeDto, UpdateRecipeCommand>();
         CreateMap<FavoriteRecipesDto, GetUserFavoriteRecipesQuery>();
+        CreateMap<RecipesByFilterDto, GetRecipesByFilterQuery>();
     }
 }

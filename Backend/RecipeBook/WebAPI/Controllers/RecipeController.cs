@@ -9,6 +9,7 @@ using Application.UseCases.Recipes.Queries.GetById;
 using Application.UseCases.Recipes.Queries.GetDailyRecipe;
 using Application.UseCases.Recipes.Queries.GetFavoriteRecipes;
 using Application.UseCases.Recipes.Queries.GetRecipeImage;
+using Application.UseCases.Recipes.Queries.GetRecipesByFilter;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Dtos.Recipe;
@@ -24,6 +25,7 @@ public class RecipeController(
     IQueryHandler<GetRecipeImageQuery, ResultT<GetImageQueryDto>> getImageHandler,
     IQueryHandler<GetDailyRecipeQuery, ResultT<DailyRecipeDto>> getDailyRecipeHandler,
     IQueryHandler<GetUserFavoriteRecipesQuery, ResultT<IReadOnlyList<GetRecipeQueryDto>>> getFavoriteRecipesHandler,
+    IQueryHandler<GetRecipesByFilterQuery, ResultT<IReadOnlyList<GetRecipeQueryDto>>> getRecipesByFilterHandler,
     IQueryHandler<GetRecipeByIdQuery, ResultT<GetRecipeQueryDto>> getByIdHandler,
     IMapper mapper
 ) : ControllerBase
@@ -38,6 +40,40 @@ public class RecipeController(
         if ( result.IsSuccess )
         {
             return Ok();
+        }
+
+        return BadRequest( result.ErrorMessages );
+    }
+
+    [HttpPost( "FavoriteUsers/{userId:int}" )]
+    [ProducesResponseType( typeof( IReadOnlyList<GetRecipeQueryDto> ), StatusCodes.Status200OK )]
+    [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
+    public async Task<IActionResult> GetUserFavoritesRecipes( [FromRoute] int userId, [FromBody] FavoriteRecipesDto recipesDto )
+    {
+        GetUserFavoriteRecipesQuery query = mapper.Map<GetUserFavoriteRecipesQuery>( recipesDto ) with { UserId = userId };
+
+        ResultT<IReadOnlyList<GetRecipeQueryDto>> result = await getFavoriteRecipesHandler.Handle( query );
+
+        if ( result.IsSuccess )
+        {
+            return Ok( result.Value );
+        }
+
+        return BadRequest( result.ErrorMessages );
+    }
+
+    [HttpPost( "GetRecipesByFilter" )]
+    [ProducesResponseType( typeof( IReadOnlyList<GetRecipeQueryDto> ), StatusCodes.Status200OK )]
+    [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
+    public async Task<IActionResult> GetRecipesByFilters( [FromBody] RecipesByFilterDto recipesDto )
+    {
+        GetRecipesByFilterQuery query = mapper.Map<GetRecipesByFilterQuery>( recipesDto );
+
+        ResultT<IReadOnlyList<GetRecipeQueryDto>> result = await getRecipesByFilterHandler.Handle( query );
+
+        if ( result.IsSuccess )
+        {
+            return Ok( result.Value );
         }
 
         return BadRequest( result.ErrorMessages );
@@ -71,23 +107,6 @@ public class RecipeController(
         GetDailyRecipeQuery query = new GetDailyRecipeQuery();
 
         ResultT<DailyRecipeDto> result = await getDailyRecipeHandler.Handle( query );
-
-        if ( result.IsSuccess )
-        {
-            return Ok( result.Value );
-        }
-
-        return BadRequest( result.ErrorMessages );
-    }
-
-    [HttpPost( "FavoriteUsers/{userId:int}" )]
-    [ProducesResponseType( typeof( IReadOnlyList<GetRecipeQueryDto> ), StatusCodes.Status200OK )]
-    [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
-    public async Task<IActionResult> GetUserFavoritesRecipes( [FromRoute] int userId, [FromBody] FavoriteRecipesDto recipesDto )
-    {
-        GetUserFavoriteRecipesQuery query = mapper.Map<GetUserFavoriteRecipesQuery>( recipesDto ) with { UserId = userId };
-
-        ResultT<IReadOnlyList<GetRecipeQueryDto>> result = await getFavoriteRecipesHandler.Handle( query );
 
         if ( result.IsSuccess )
         {

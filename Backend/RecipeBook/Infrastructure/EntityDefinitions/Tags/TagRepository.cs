@@ -17,9 +17,9 @@ public class TagRepository( RecipeBookDbContext dbContext ) : ITagRepository
         dbContext.Tags.Remove( tag );
     }
 
-    public IQueryable<Tag> GetAll()
+    public async Task<IReadOnlyList<Tag>> GetAll()
     {
-        return dbContext.Tags;
+        return await dbContext.Tags.ToListAsync();
     }
 
     public async Task<Tag> GetByName( string name )
