@@ -3,6 +3,7 @@ using Application.Common.PasswordHasher;
 using Application.Interfaces;
 using Application.Interfaces.Repositories;
 using Infrastructure.Data;
+using Infrastructure.EntityDefinitions.Favorites;
 using Infrastructure.EntityDefinitions.Ingredients;
 using Infrastructure.EntityDefinitions.Recipes;
 using Infrastructure.EntityDefinitions.Steps;
@@ -21,6 +22,7 @@ public static class Bindings
         services.AddScoped<ITagRepository, TagRepository>();
         services.AddScoped<IIngredientRepository, IngredientRepository>();
         services.AddScoped<IStepRepository, StepRepository>();
+        services.AddScoped<IFavoriteRepository, FavoriteRepository>();
 
         services.AddScoped<IPasswordHasher, PasswordHasher.PasswordHasher>();
         services.AddScoped<IFileHelper, FileHelper.FileHelper>();
