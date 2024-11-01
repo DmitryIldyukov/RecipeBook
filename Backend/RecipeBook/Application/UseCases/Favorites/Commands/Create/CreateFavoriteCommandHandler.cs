@@ -25,7 +25,8 @@ public class CreateFavoriteCommandHandler(
             return Result.Failure( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
-        if ( await recipeRepository.GetById( command.RecipeId ) is null )
+        bool recipeIsExists = await recipeRepository.ContainsAsync( r => r.Id == command.RecipeId );
+        if ( !recipeIsExists )
         {
             return Result.Failure( $"Рецепт с Id {command.RecipeId} не найден." );
         }

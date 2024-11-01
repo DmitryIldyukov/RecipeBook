@@ -1,4 +1,5 @@
-﻿using Application.Common.Page;
+﻿using System.Linq.Expressions;
+using Application.Common.Page;
 using Application.Interfaces.Repositories;
 using Domain.Entities;
 using Infrastructure.Data;
@@ -50,5 +51,10 @@ public class RecipeRepository( RecipeBookDbContext dbContext ) : IRecipeReposito
             .Where( r => r.Favorites.Any( f => f.UserId == userId ) )
             .Skip( ( page.PageNumber ) * page.PageSize )
             .Take( page.PageSize );
+    }
+
+    public async Task<bool> ContainsAsync( Expression<Func<Recipe, bool>> predicate )
+    {
+        return await dbContext.Recipes.AnyAsync( predicate );
     }
 }
