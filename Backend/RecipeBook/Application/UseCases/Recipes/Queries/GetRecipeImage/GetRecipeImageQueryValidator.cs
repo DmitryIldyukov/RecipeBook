@@ -7,7 +7,7 @@ public class GetRecipeImageQueryValidator : AbstractValidator<GetRecipeImageQuer
     public GetRecipeImageQueryValidator()
     {
         RuleFor( q => q.RecipeId )
-            .NotEmpty().WithMessage( "Id рецепта обязателен." )
+            .NotEmpty().WithMessage( "Идентификатор рецепта обязателен." )
             .GreaterThan( 0 ).WithMessage( "Идентификатор должен быть положительным числом." );
     }
 }

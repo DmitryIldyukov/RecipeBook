@@ -7,7 +7,7 @@ public class DeleteRecipeCommandValidator : AbstractValidator<DeleteRecipeComman
     public DeleteRecipeCommandValidator()
     {
         RuleFor( s => s.RecipeId )
-            .NotNull().WithMessage( "Id рецепта обязателен." )
+            .NotNull().WithMessage( "Идентификатор рецепта обязателен." )
             .GreaterThan( 0 ).WithMessage( "Идентификатор должен быть положительным числом." );
     }
 }

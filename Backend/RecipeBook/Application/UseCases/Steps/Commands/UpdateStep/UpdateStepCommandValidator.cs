@@ -8,7 +8,7 @@ public class UpdateStepCommandValidator : AbstractValidator<UpdateStepCommand>
     public UpdateStepCommandValidator()
     {
         RuleFor( s => s.StepId )
-            .NotNull().WithMessage( "Id шага обязателен." )
+            .NotNull().WithMessage( "Идентификатор шага обязателен." )
             .GreaterThan( 0 ).WithMessage( "Идентификатор должен быть положительным числом." );
 
         RuleFor( s => s.Description )

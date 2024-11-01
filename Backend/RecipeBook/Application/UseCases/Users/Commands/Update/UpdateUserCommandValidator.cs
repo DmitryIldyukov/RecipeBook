@@ -12,7 +12,7 @@ public class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand>
         _repository = repo;
 
         RuleFor( x => x.UserId )
-            .NotEmpty().WithMessage( "Id автора обязателен." )
+            .NotEmpty().WithMessage( "Идентификатор автора обязателен." )
             .GreaterThan( 0 ).WithMessage( "Идентификатор должен быть положительным числом." );
 
         RuleFor( command => command.Name )

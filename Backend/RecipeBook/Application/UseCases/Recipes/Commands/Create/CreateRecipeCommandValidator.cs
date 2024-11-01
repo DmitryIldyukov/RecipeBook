@@ -12,7 +12,7 @@ public class CreateRecipeCommandValidator : AbstractValidator<CreateRecipeComman
         _repository = repo;
 
         RuleFor( r => r.AuthorId )
-            .NotEmpty().WithMessage( "Id автора обязателен." )
+            .NotEmpty().WithMessage( "Идентификатор автора обязателен." )
             .MustAsync( UserIsExists ).WithMessage( $"Пользователь не найден." )
             .GreaterThan( 0 ).WithMessage( "Идентификатор должен быть положительным числом." );
 

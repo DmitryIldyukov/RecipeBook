@@ -7,6 +7,6 @@ public class DeleteTagsCommandValidator : AbstractValidator<DeleteTagsCommand>
     public DeleteTagsCommandValidator()
     {
         RuleFor( t => t.RecipeId )
-            .NotEmpty().WithMessage( "Id рецепта обязателен." );
+            .NotEmpty().WithMessage( "Идентификатор рецепта обязателен." );
     }
 }
