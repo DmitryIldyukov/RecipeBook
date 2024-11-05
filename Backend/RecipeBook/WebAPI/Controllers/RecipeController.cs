@@ -88,7 +88,6 @@ public class RecipeController(
         {
             RecipeId = recipeId
         };
-
         ResultT<GetImageQueryDto> result = await getImageHandler.Handle( query );
 
         if ( result.IsSuccess )

@@ -26,8 +26,8 @@ public class UserController(
     public async Task<IActionResult> Register( [FromBody] UserRegisterDto dto )
     {
         CreateUserCommand command = mapper.Map<CreateUserCommand>( dto );
-
         Result result = await createUserCommandHandler.Handle( command );
+
         if ( result.IsSuccess )
         {
             return Ok();
@@ -41,9 +41,12 @@ public class UserController(
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
     public async Task<IActionResult> GetUserById( [FromRoute] int userId )
     {
-        GetUserByIdQuery query = new GetUserByIdQuery() { Id = userId };
-
+        GetUserByIdQuery query = new GetUserByIdQuery()
+        {
+            Id = userId
+        };
         ResultT<GetUserQueryDto> result = await getUserByIdHandler.Handle( query );
+
         if ( result.IsSuccess )
         {
             return Ok( result.Value );
@@ -65,7 +68,6 @@ public class UserController(
             Password = dto.Password,
             Information = dto.Information
         };
-
         Result result = await updateUserCommandHandler.Handle( command );
 
         if ( result.IsSuccess )

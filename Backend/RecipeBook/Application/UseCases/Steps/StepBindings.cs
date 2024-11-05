@@ -17,7 +17,7 @@ public static class StepBindings
         services.AddScoped<IValidator<UpdateStepCommand>, UpdateStepCommandValidator>();
         services.AddScoped<IValidator<UpdateRecipeStepsCommand>, UpdateRecipeStepsCommandValidator>();
 
-        services.AddScoped<ICommandHandler<CreateStepCommand, ResultT<Step>>, CreateStepCommandHandler>();
+        services.AddScoped<ICommandHandler<CreateStepCommand, Result>, CreateStepCommandHandler>();
         services.AddScoped<ICommandHandler<UpdateStepCommand, Result>, UpdateStepCommandHandler>();
         services.AddScoped<ICommandHandler<UpdateRecipeStepsCommand, Result>, UpdateRecipeStepsCommandHandler>();
     }

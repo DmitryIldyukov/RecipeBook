@@ -17,7 +17,7 @@ public class StepRepository( RecipeBookDbContext dbContext ) : IStepRepository
         dbContext.Steps.Remove( entity );
     }
 
-    public async Task<IReadOnlyList<Step>> GetRecipeSteps( int recipeId )
+    public async Task<IReadOnlyList<Step>> GetStepsByRecipeId( int recipeId )
     {
         return await dbContext.Steps.Where( s => s.RecipeId == recipeId ).ToListAsync();
     }

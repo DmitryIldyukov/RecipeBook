@@ -10,20 +10,22 @@ namespace Application.UseCases.Steps.Commands.Create;
 public class CreateStepCommandHandler(
     IStepRepository stepRepository,
     IValidator<CreateStepCommand> validator
-) : ICommandHandler<CreateStepCommand, ResultT<Step>>
+) : ICommandHandler<CreateStepCommand, Result>
 {
-    public async Task<ResultT<Step>> Handle( CreateStepCommand command )
+    public async Task<Result> Handle( CreateStepCommand command )
     {
         ValidationResult validationResult = await validator.ValidateAsync( command );
         if ( !validationResult.IsValid )
         {
-            return ResultT<Step>.Failure( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
-        Step step = new( command.RecipeId, command.Description );
+        Step step = new( command.Recipe.Id, command.Description );
 
         await stepRepository.Create( step );
 
-        return ResultT<Step>.Success( step, "Шаг успешно добавлен." );
+        command.Recipe.Steps.Add( step );
+
+        return Result.Success( "Шаг успешно добавлен." );
     }
 }

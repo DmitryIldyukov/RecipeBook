@@ -19,13 +19,13 @@ public class GetUserByIdQueryHandler(
         ValidationResult validationResult = await validator.ValidateAsync( query );
         if ( !validationResult.IsValid )
         {
-            return ResultT<GetUserQueryDto>.Failure( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return ResultT<GetUserQueryDto>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
         User user = await userRepository.GetById( query.Id );
         if ( user is null )
         {
-            return ResultT<GetUserQueryDto>.Failure( $"Пользователь с id {query.Id} не найден." );
+            return ResultT<GetUserQueryDto>.Fail( $"Пользователь с id {query.Id} не найден." );
         }
 
         await unitOfWork.Commit();

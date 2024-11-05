@@ -6,8 +6,8 @@ public class CreateStepCommandValidator : AbstractValidator<CreateStepCommand>
 {
     public CreateStepCommandValidator()
     {
-        RuleFor( s => s.RecipeId )
-            .NotNull().WithMessage( "Идентификатор рецепта обязателен." );
+        RuleFor( s => s.Recipe )
+            .NotNull().WithMessage( "Рецепт обязателен." );
 
         RuleFor( s => s.Description )
             .NotEmpty().WithMessage( "Описание шага обязательно." );

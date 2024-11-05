@@ -17,7 +17,7 @@ public static class IngredientBindings
         services.AddScoped<IValidator<UpdateRecipeIngredientsCommand>, UpdateRecipeIngredientsCommandValidator>();
         services.AddScoped<IValidator<UpdateIngredientCommand>, UpdateIngredientCommandValidator>();
 
-        services.AddScoped<ICommandHandler<CreateIngredientCommand, ResultT<Ingredient>>, CreateIngredientCommandHandler>();
+        services.AddScoped<ICommandHandler<CreateIngredientCommand, Result>, CreateIngredientCommandHandler>();
         services.AddScoped<ICommandHandler<UpdateRecipeIngredientsCommand, Result>, UpdateRecipeIngredientsCommandHandler>();
         services.AddScoped<ICommandHandler<UpdateIngredientCommand, Result>, UpdateIngredientCommandHandler>();
     }

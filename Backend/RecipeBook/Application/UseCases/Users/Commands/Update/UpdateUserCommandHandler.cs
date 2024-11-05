@@ -18,13 +18,13 @@ public class UpdateUserCommandHandler(
         ValidationResult validationResult = await validator.ValidateAsync( command );
         if ( !validationResult.IsValid )
         {
-            return Result.Failure( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
         User user = await userRepository.GetById( command.UserId );
         if ( user is null )
         {
-            return Result.Failure( $"Пользователь с Id {command.UserId} не найден." );
+            return Result.Fail( $"Пользователь с Id {command.UserId} не найден." );
         }
 
         user.Name = command.Name;

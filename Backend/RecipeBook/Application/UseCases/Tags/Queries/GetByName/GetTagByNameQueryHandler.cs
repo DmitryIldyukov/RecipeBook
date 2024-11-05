@@ -18,13 +18,13 @@ public class GetTagByNameQueryHandler(
         ValidationResult validationResult = await validator.ValidateAsync( query );
         if ( !validationResult.IsValid )
         {
-            return ResultT<GetTagDto>.Failure( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return ResultT<GetTagDto>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
         Tag tag = await tagRepository.GetByName( query.Tag );
         if ( tag is null )
         {
-            return ResultT<GetTagDto>.Failure( "Тэг не найден." );
+            return ResultT<GetTagDto>.Fail( "Тэг не найден." );
         }
 
         return ResultT<GetTagDto>.Success( mapper.Map<GetTagDto>( tag ), $"Тэг {tag.Name} найден." );

@@ -18,7 +18,7 @@ public class GetAllTagsQueryHandler(
         ValidationResult validationResult = await validator.ValidateAsync( query );
         if ( !validationResult.IsValid )
         {
-            return ResultT<IReadOnlyList<GetTagDto>>.Failure( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return ResultT<IReadOnlyList<GetTagDto>>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
         IReadOnlyList<Tag> tags = await tagRepository.GetAll();
