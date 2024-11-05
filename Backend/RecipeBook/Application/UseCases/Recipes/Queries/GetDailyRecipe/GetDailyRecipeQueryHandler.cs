@@ -18,7 +18,7 @@ public class GetDailyRecipeQueryHandler(
 
         if ( dailyRecipe is null )
         {
-            return ResultT<DailyRecipeDto>.Failure( "Рецепт дня не найден." );
+            return ResultT<DailyRecipeDto>.Fail( "Рецепт дня не найден." );
         }
 
         return ResultT<DailyRecipeDto>.Success( mapper.Map<DailyRecipeDto>( dailyRecipe ), "Рецепт дня найден." );

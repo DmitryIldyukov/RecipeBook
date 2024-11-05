@@ -22,19 +22,19 @@ public class CreateFavoriteCommandHandler(
         ValidationResult validationResult = await validator.ValidateAsync( command );
         if ( !validationResult.IsValid )
         {
-            return Result.Failure( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
         bool recipeIsExists = await recipeRepository.ContainsAsync( r => r.Id == command.RecipeId );
         if ( !recipeIsExists )
         {
-            return Result.Failure( $"Рецепт с Id {command.RecipeId} не найден." );
+            return Result.Fail( $"Рецепт с Id {command.RecipeId} не найден." );
         }
 
         bool userHasRecipeInFavorites = await favoriteRepository.UserHasRecipeInFavorites( command.UserId, command.RecipeId );
         if ( userHasRecipeInFavorites )
         {
-            return Result.Failure( "Этот рецепт уже добавлен в избранное." );
+            return Result.Fail( "Этот рецепт уже добавлен в избранное." );
         }
 
         Favorite favorite = mapper.Map<Favorite>( command );

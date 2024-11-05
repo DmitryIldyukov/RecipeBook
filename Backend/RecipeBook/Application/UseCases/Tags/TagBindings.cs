@@ -20,7 +20,6 @@ public static class TagBindings
         services.AddScoped<IValidator<CreateTagCommand>, CreateTagCommandValidator>();
         services.AddScoped<IValidator<UpdateRecipeTagsCommand>, UpdateRecipeTagsCommandValidator>();
         services.AddScoped<IValidator<DeleteTagsCommand>, DeleteTagsCommandValidator>();
-        services.AddScoped<IValidator<GetAllTagsQuery>, GetAllTagsQueryValidator>();
         services.AddScoped<IValidator<GetTagByNameQuery>, GetTagByNameQueryValidator>();
 
         services.AddScoped<ICommandHandler<CreateTagCommand, Result>, CreateTagCommandHandler>();

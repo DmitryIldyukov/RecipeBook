@@ -6,6 +6,10 @@ public class CreateFavoriteCommandValidator : AbstractValidator<CreateFavoriteCo
 {
     public CreateFavoriteCommandValidator()
     {
+        RuleFor( f => f.RecipeId )
+            .NotEmpty().WithMessage( "Идентификатор рецепта обязателен." );
 
+        RuleFor( f => f.UserId )
+            .NotEmpty().WithMessage( "Идентификатор пользователя обязателен." );
     }
 }

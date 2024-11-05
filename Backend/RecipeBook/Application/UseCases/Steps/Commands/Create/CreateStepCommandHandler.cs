@@ -26,6 +26,6 @@ public class CreateStepCommandHandler(
 
         command.Recipe.Steps.Add( step );
 
-        return Result.Success( "Шаг успешно добавлен." );
+        return Result.Success();
     }
 }

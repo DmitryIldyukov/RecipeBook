@@ -31,14 +31,14 @@ public class UpdateRecipeCommandHandler(
         ValidationResult validationResult = await validator.ValidateAsync( command );
         if ( !validationResult.IsValid )
         {
-            return Result.Failure( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
         Recipe recipe = await recipeRepository.GetById( command.RecipeId );
 
         if ( recipe is null )
         {
-            return Result.Failure( $"Рецепт с Id {command.RecipeId} не найден." );
+            return Result.Fail( $"Рецепт с Id {command.RecipeId} не найден." );
         }
 
         recipe.Name = command.Name;
@@ -49,7 +49,7 @@ public class UpdateRecipeCommandHandler(
         Result updateTagsResult = await UpdateTags( recipe, command.Tags );
         if ( !updateTagsResult.IsSuccess )
         {
-            return Result.Failure( updateTagsResult.ErrorMessages );
+            return Result.Fail( updateTagsResult.ErrorMessages );
         }
 
         await UpdateTags( recipe, command.Tags );
@@ -82,7 +82,7 @@ public class UpdateRecipeCommandHandler(
 
         Result result = await updateRecipeTagsHandler.Handle( updateRecipeTagsCommand );
 
-        return result.IsSuccess ? Result.Success() : Result.Failure( result.ErrorMessages );
+        return result.IsSuccess ? Result.Success() : Result.Fail( result.ErrorMessages );
     }
 
     private async Task<Result> UpdateSteps( Recipe recipe, ICollection<RecipeStepDto> steps )
@@ -95,7 +95,7 @@ public class UpdateRecipeCommandHandler(
 
         Result result = await updateRecipeStepsHandler.Handle( updateRecipeStepsCommand );
 
-        return result.IsSuccess ? Result.Success() : Result.Failure( result.ErrorMessages );
+        return result.IsSuccess ? Result.Success() : Result.Fail( result.ErrorMessages );
     }
 
     private async Task<Result> UpdateIngredients( Recipe recipe, ICollection<RecipeIngredientDto> ingredients )
@@ -108,7 +108,7 @@ public class UpdateRecipeCommandHandler(
 
         Result result = await updateRecipeIngredientsHandler.Handle( updateRecipeIngredientsCommand );
 
-        return result.IsSuccess ? Result.Success() : Result.Failure( result.ErrorMessages );
+        return result.IsSuccess ? Result.Success() : Result.Fail( result.ErrorMessages );
     }
 
     private void DeleteOldImage( Recipe recipe, string oldImageName )

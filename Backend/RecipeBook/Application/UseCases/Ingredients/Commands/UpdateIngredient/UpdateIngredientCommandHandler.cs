@@ -17,14 +17,13 @@ public class UpdateIngredientCommandHandler(
         ValidationResult validationResult = await validator.ValidateAsync( command );
         if ( !validationResult.IsValid )
         {
-            return Result.Failure( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
         Ingredient ingredient = await ingredientRepository.GetById( command.IngredientId );
-
         if ( ingredient is null )
         {
-            return Result.Failure( $"Ингредиент с Id {command.IngredientId} не найден." );
+            return Result.Fail( $"Ингредиент с Id {command.IngredientId} не найден." );
         }
 
         ingredient.Title = command.Title;

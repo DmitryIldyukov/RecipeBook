@@ -16,11 +16,14 @@ public class RecipeProfile : Profile
     public RecipeProfile()
     {
         CreateMap<RecipeDto, CreateRecipeCommand>();
-        CreateMap<TagDto, RecipeTagDto>();
-        CreateMap<StepDto, RecipeStepDto>();
-        CreateMap<IngredientDto, RecipeIngredientDto>();
         CreateMap<UpdateRecipeDto, UpdateRecipeCommand>();
         CreateMap<FavoriteRecipesDto, GetUserFavoriteRecipesQuery>();
         CreateMap<RecipesByFilterDto, GetRecipesByFilterQuery>();
+        CreateMap<TagDto, RecipeTagDto>();
+        CreateMap<StepDto, RecipeStepDto>();
+        CreateMap<IngredientDto, RecipeIngredientDto>();
+        CreateMap<UpdateTagDto, RecipeTagDto>();
+        CreateMap<UpdateStepDto, RecipeStepDto>();
+        CreateMap<UpdateIngredientDto, RecipeIngredientDto>();
     }
 }

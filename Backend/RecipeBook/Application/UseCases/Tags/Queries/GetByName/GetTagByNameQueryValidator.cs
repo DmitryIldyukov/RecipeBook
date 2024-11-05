@@ -6,6 +6,7 @@ public class GetTagByNameQueryValidator : AbstractValidator<GetTagByNameQuery>
 {
     public GetTagByNameQueryValidator()
     {
-
+        RuleFor( f => f.Tag )
+           .NotEmpty().WithMessage( "Тег обязателен." );
     }
 }

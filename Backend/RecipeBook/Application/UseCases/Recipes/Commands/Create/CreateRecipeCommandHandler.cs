@@ -7,6 +7,7 @@ using Application.UseCases.Ingredients.Commands.Create;
 using Application.UseCases.Recipes.Dtos;
 using Application.UseCases.Steps.Commands.Create;
 using Application.UseCases.Tags.Commands.Create;
+using AutoMapper;
 using Domain.Entities;
 using FluentValidation;
 using FluentValidation.Results;
@@ -23,7 +24,8 @@ public class CreateRecipeCommandHandler(
     ICommandHandler<CreateIngredientCommand, Result> createIngredientHandler,
     IValidator<CreateRecipeCommand> validator,
     IFileHelper fileHelper,
-    IConfiguration configuration
+    IConfiguration configuration,
+    IMapper mapper
 ) : ICommandHandler<CreateRecipeCommand, Result>
 {
     public async Task<Result> Handle( CreateRecipeCommand command )

@@ -23,7 +23,6 @@ public static class RecipeBindings
         services.AddScoped<IValidator<UpdateRecipeCommand>, UpdateRecipeCommandValidator>();
         services.AddScoped<IValidator<DeleteRecipeCommand>, DeleteRecipeCommandValidator>();
         services.AddScoped<IValidator<GetRecipeImageQuery>, GetRecipeImageQueryValidator>();
-        services.AddScoped<IValidator<GetDailyRecipeQuery>, GetDailyRecipeQueryValidator>();
         services.AddScoped<IValidator<GetRecipeByIdQuery>, GetRecipeByIdQueryValidator>();
         services.AddScoped<IValidator<GetUserFavoriteRecipesQuery>, GetUserFavoriteRecipesQueryValidator>();
         services.AddScoped<IValidator<GetRecipesByFilterQuery>, GetRecipesByFilterQueryValidator>();

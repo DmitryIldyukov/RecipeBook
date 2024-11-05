@@ -29,10 +29,8 @@ public class CreateTagCommandHandler(
             await tagRepository.Create( tag );
 
             command.Recipe.Tags.Add( tag );
-
-            return Result.Success( $"Тэг {tag.Name} успешно добавлен." );
         }
 
-        return Result.Success( $"Тэг {tag.Name} найден." );
+        return Result.Success();
     }
 }

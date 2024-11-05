@@ -2,6 +2,8 @@
 using Application.Common.Result;
 using Application.Interfaces.Repositories;
 using Application.UseCases.Recipes.Dtos;
+using Application.UseCases.Tags.Commands.Create;
+using Application.UseCases.Tags.Commands.Delete;
 using Domain.Entities;
 using FluentValidation;
 using FluentValidation.Results;
@@ -9,8 +11,9 @@ using FluentValidation.Results;
 namespace Application.UseCases.Tags.Commands.UpdateRecipeTags;
 
 public class UpdateRecipeTagsCommandHandler(
-    ITagRepository tagRepository,
-    IValidator<UpdateRecipeTagsCommand> validator
+    IValidator<UpdateRecipeTagsCommand> validator,
+    ICommandHandler<CreateTagCommand, Result> createTagHandler,
+    ICommandHandler<DeleteTagsCommand, Result> deleteTagHandler
 ) : ICommandHandler<UpdateRecipeTagsCommand, Result>
 {
     public async Task<Result> Handle( UpdateRecipeTagsCommand command )
@@ -18,57 +21,58 @@ public class UpdateRecipeTagsCommandHandler(
         ValidationResult validationResult = await validator.ValidateAsync( command );
         if ( !validationResult.IsValid )
         {
-            return Result.Failure( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
         ICollection<Tag> recipeTags = command.Recipe.Tags;
 
-        await RemoveTags( recipeTags, command );
+        Result removeResult = await RemoveTags( recipeTags, command );
+        if ( !removeResult.IsSuccess )
+        {
+            return Result.Fail( removeResult.ErrorMessages );
+        }
 
-        await AddTags( recipeTags, command );
+        Result addResult = await AddTags( recipeTags, command );
+        if ( !addResult.IsSuccess )
+        {
+            return Result.Fail( addResult.ErrorMessages );
+        }
 
         return Result.Success();
     }
 
-    private async Task RemoveTags( ICollection<Tag> recipeTags, UpdateRecipeTagsCommand command )
+    private async Task<Result> RemoveTags( ICollection<Tag> recipeTags, UpdateRecipeTagsCommand command )
     {
-        List<Tag> tagsToRemove = new List<Tag>();
+        List<Tag> tagsToRemove = recipeTags
+            .Where( tag => !command.Tags.Any( t => t.Name == tag.Name ) )
+            .ToList();
 
-        foreach ( Tag tag in recipeTags.ToList() )
+        DeleteTagsCommand deleteTagsCommand = new DeleteTagsCommand()
         {
-            if ( !command.Tags.Any( t => t.Name == tag.Name ) )
-            {
-                tagsToRemove.Add( tag );
-            }
-        }
+            RecipeId = command.Recipe.Id,
+            Tags = tagsToRemove
+        };
 
-        foreach ( Tag tag in tagsToRemove )
-        {
-            recipeTags.Remove( tag );
-
-            bool isUsedInOtherRecipes = await tagRepository.IsUsedInOtherRecipes( tag.Id, command.Recipe.Id );
-            if ( !isUsedInOtherRecipes )
-            {
-                tagRepository.Delete( tag );
-            }
-        }
+        return await deleteTagHandler.Handle( deleteTagsCommand );
     }
 
-    private async Task AddTags( ICollection<Tag> recipeTags, UpdateRecipeTagsCommand command )
+    private async Task<Result> AddTags( ICollection<Tag> recipeTags, UpdateRecipeTagsCommand command )
     {
         foreach ( RecipeTagDto tag in command.Tags )
         {
-            Tag tagEntity = await tagRepository.GetByName( tag.Name );
-            if ( tagEntity is null )
+            CreateTagCommand createTagCommand = new CreateTagCommand()
             {
-                tagEntity = new Tag( tag.Name );
-                await tagRepository.Create( tagEntity );
-            }
+                Recipe = command.Recipe,
+                Name = tag.Name
+            };
+            Result createResult = await createTagHandler.Handle( createTagCommand );
 
-            if ( !recipeTags.Any( t => t.Id == tagEntity.Id ) )
+            if ( !createResult.IsSuccess )
             {
-                recipeTags.Add( tagEntity );
+                return Result.Fail( createResult.ErrorMessages );
             }
         }
+
+        return Result.Success();
     }
 }

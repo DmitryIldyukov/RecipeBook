@@ -17,14 +17,14 @@ public class UpdateStepCommandHandler(
         ValidationResult validationResult = await validator.ValidateAsync( command );
         if ( !validationResult.IsValid )
         {
-            return Result.Failure( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
         Step step = await stepRepository.GetById( command.StepId );
 
         if ( step is null )
         {
-            return Result.Failure( $"Шаг с Id {command.StepId} не найден." );
+            return Result.Fail( $"Шаг с Id {command.StepId} не найден." );
         }
 
         step.Description = command.Description;

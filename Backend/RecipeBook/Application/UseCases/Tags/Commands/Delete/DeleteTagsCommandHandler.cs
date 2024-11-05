@@ -9,7 +9,8 @@ namespace Application.UseCases.Tags.Commands.Delete;
 
 public class DeleteTagsCommandHandler(
     IValidator<DeleteTagsCommand> validator,
-    ITagRepository tagRepository
+    ITagRepository tagRepository,
+    IRecipeRepository recipeRepository
 ) : ICommandHandler<DeleteTagsCommand, Result>
 {
     public async Task<Result> Handle( DeleteTagsCommand command )
@@ -17,12 +18,19 @@ public class DeleteTagsCommandHandler(
         ValidationResult validationResult = await validator.ValidateAsync( command );
         if ( !validationResult.IsValid )
         {
-            return Result.Failure( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+        }
+
+        Recipe recipe = await recipeRepository.GetById( command.RecipeId );
+        if ( recipe is null )
+        {
+            return Result.Fail( $"Рецет с Id {command.RecipeId} не найден." );
         }
 
         foreach ( Tag tag in command.Tags )
         {
-            if ( !await tagRepository.IsUsedInOtherRecipes( tag.Id, command.RecipeId ) )
+            recipe.Tags.Remove( tag );
+            if ( !await tagRepository.IsUsedInOtherRecipes( tag.Id, recipe.Id ) )
             {
                 tagRepository.Delete( tag );
             }

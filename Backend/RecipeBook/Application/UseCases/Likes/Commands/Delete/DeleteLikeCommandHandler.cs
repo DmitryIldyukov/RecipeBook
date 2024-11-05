@@ -19,19 +19,19 @@ public class DeleteLikeCommandHandler(
         ValidationResult validationResult = await validator.ValidateAsync( command );
         if ( !validationResult.IsValid )
         {
-            return Result.Failure( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
         Like like = await likeRepository.GetById( command.LikeId );
 
         if ( like is null )
         {
-            return Result.Failure( "Понравившийся рецепт не найден." );
+            return Result.Fail( "Понравившийся рецепт не найден." );
         }
 
         if ( like.UserId != command.UserId )
         {
-            return Result.Failure( "Невозможно удалить рецепт из понравившихся рецептов у другого пользователя." );
+            return Result.Fail( "Невозможно удалить рецепт из понравившихся рецептов у другого пользователя." );
         }
 
         likeRepository.Delete( like );

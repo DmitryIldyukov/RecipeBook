@@ -19,19 +19,19 @@ public class DeleteFavoriteCommandHandler(
         ValidationResult validationResult = await validator.ValidateAsync( command );
         if ( !validationResult.IsValid )
         {
-            return Result.Failure( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
         Favorite favorite = await favoriteRepository.GetById( command.FavoriteId );
 
         if ( favorite is null )
         {
-            return Result.Failure( "Избранный рецепт не найден." );
+            return Result.Fail( "Избранный рецепт не найден." );
         }
 
         if ( favorite.UserId != command.UserId )
         {
-            return Result.Failure( "Невозможно удалить рецепт из избранного у другого пользователя." );
+            return Result.Fail( "Невозможно удалить рецепт из избранного у другого пользователя." );
         }
 
         favoriteRepository.Delete( favorite );

@@ -20,14 +20,14 @@ public class GetRecipeByIdQueryHandler(
         ValidationResult validationResult = await validator.ValidateAsync( query );
         if ( !validationResult.IsValid )
         {
-            return ResultT<GetRecipeQueryDto>.Failure( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return ResultT<GetRecipeQueryDto>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
         Recipe recipe = await recipeRepository.GetById( query.RecipeId );
 
         if ( recipe is null )
         {
-            return ResultT<GetRecipeQueryDto>.Failure( $"Рецепт с Id {query.RecipeId} не найден." );
+            return ResultT<GetRecipeQueryDto>.Fail( $"Рецепт с Id {query.RecipeId} не найден." );
         }
 
         return ResultT<GetRecipeQueryDto>.Success( mapper.Map<GetRecipeQueryDto>( recipe ), "Рецепт найден." );

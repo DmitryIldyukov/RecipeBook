@@ -23,13 +23,13 @@ public class DeleteRecipeCommandHandler(
         ValidationResult validationResult = await validator.ValidateAsync( command );
         if ( !validationResult.IsValid )
         {
-            return Result.Failure( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
         Recipe recipe = await recipeRepository.GetById( command.RecipeId );
         if ( recipe is null )
         {
-            return Result.Failure( $"Рецепт с Id {command.RecipeId} не найден." );
+            return Result.Fail( $"Рецепт с Id {command.RecipeId} не найден." );
         }
 
         DeleteTagsCommand deleteTagsCommand = new DeleteTagsCommand()

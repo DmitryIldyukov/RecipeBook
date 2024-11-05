@@ -13,7 +13,7 @@ public class UpdateRecipeDto
     public string ImageName { get; init; }
     public IFormFile ImageFile { get; init; }
 
-    public ICollection<TagDto> Tags { get; init; }
-    public ICollection<StepDto> Steps { get; init; }
-    public ICollection<IngredientDto> Ingredients { get; init; }
+    public ICollection<UpdateTagDto> Tags { get; init; }
+    public ICollection<UpdateStepDto> Steps { get; init; }
+    public ICollection<UpdateIngredientDto> Ingredients { get; init; }
 }
