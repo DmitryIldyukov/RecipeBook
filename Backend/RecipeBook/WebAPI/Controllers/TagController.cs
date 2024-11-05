@@ -9,7 +9,7 @@ namespace WebAPI.Controllers;
 [ApiController]
 [Route( "api/[controller]" )]
 public class TagController(
-    IQueryHandler<GetAllTagsQuery, ResultT<IReadOnlyList<GetTagDto>>> getTagshandler
+    IQueryHandler<GetAllTagsQuery, ResultT<IReadOnlyList<GetTagDto>>> getTagsHandler
 ) : ControllerBase
 {
     [HttpGet]
@@ -18,8 +18,7 @@ public class TagController(
     public async Task<IActionResult> GetAll()
     {
         GetAllTagsQuery query = new();
-
-        ResultT<IReadOnlyList<GetTagDto>> result = await getTagshandler.Handle( query );
+        ResultT<IReadOnlyList<GetTagDto>> result = await getTagsHandler.Handle( query );
 
         if ( result.IsSuccess )
         {

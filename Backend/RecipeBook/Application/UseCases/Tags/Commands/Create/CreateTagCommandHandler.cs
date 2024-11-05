@@ -8,15 +8,16 @@ using FluentValidation.Results;
 namespace Application.UseCases.Tags.Commands.Create;
 
 public class CreateTagCommandHandler(
-    ITagRepository tagRepository, IValidator<CreateTagCommand> validator
-) : ICommandHandler<CreateTagCommand, ResultT<Tag>>
+    ITagRepository tagRepository,
+    IValidator<CreateTagCommand> validator
+    ) : ICommandHandler<CreateTagCommand, Result>
 {
-    public async Task<ResultT<Tag>> Handle( CreateTagCommand command )
+    public async Task<Result> Handle( CreateTagCommand command )
     {
         ValidationResult validationResult = await validator.ValidateAsync( command );
         if ( !validationResult.IsValid )
         {
-            return ResultT<Tag>.Failure( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
         Tag tag = await tagRepository.GetByName( command.Name );
@@ -27,9 +28,11 @@ public class CreateTagCommandHandler(
 
             await tagRepository.Create( tag );
 
-            return ResultT<Tag>.Success( tag, $"Тэг {tag.Name} успешно добавлен." );
+            command.Recipe.Tags.Add( tag );
+
+            return Result.Success( $"Тэг {tag.Name} успешно добавлен." );
         }
 
-        return ResultT<Tag>.Success( tag, $"Тэг {tag.Name} найден." );
+        return Result.Success( $"Тэг {tag.Name} найден." );
     }
 }

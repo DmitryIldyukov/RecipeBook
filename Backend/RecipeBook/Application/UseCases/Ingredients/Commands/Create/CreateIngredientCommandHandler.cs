@@ -12,20 +12,22 @@ public class CreateIngredientCommandHandler(
     IIngredientRepository ingredientRepository,
     IValidator<CreateIngredientCommand> validator,
     IMapper mapper
-) : ICommandHandler<CreateIngredientCommand, ResultT<Ingredient>>
+) : ICommandHandler<CreateIngredientCommand, Result>
 {
-    public async Task<ResultT<Ingredient>> Handle( CreateIngredientCommand command )
+    public async Task<Result> Handle( CreateIngredientCommand command )
     {
         ValidationResult validationResult = await validator.ValidateAsync( command );
         if ( !validationResult.IsValid )
         {
-            return ResultT<Ingredient>.Failure( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
         Ingredient ingredient = mapper.Map<Ingredient>( command );
 
         await ingredientRepository.Create( ingredient );
 
-        return ResultT<Ingredient>.Success( ingredient, $"Ингредиент {ingredient.Title} успешно добавлен." );
+        command.Recipe.Ingredients.Add( ingredient );
+
+        return Result.Success( $"Ингредиент {ingredient.Title} успешно добавлен." );
     }
 }

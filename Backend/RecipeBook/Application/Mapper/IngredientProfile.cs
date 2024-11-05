@@ -11,6 +11,7 @@ public class IngredientProfile : Profile
     {
         CreateMap<RecipeIngredientDto, CreateIngredientCommand>();
         CreateMap<RecipeIngredientDto, Ingredient>();
-        CreateMap<CreateIngredientCommand, Ingredient>();
+        CreateMap<CreateIngredientCommand, Ingredient>()
+            .ForMember( dest => dest.Id, opt => opt.MapFrom( src => src.Recipe.Id ) );
     }
 }

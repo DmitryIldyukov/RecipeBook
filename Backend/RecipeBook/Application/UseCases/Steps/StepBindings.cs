@@ -13,6 +13,6 @@ public static class StepBindings
     {
         services.AddScoped<IValidator<CreateStepCommand>, CreateStepCommandValidator>();
 
-        services.AddScoped<ICommandHandler<CreateStepCommand, ResultT<Step>>, CreateStepCommandHandler>();
+        services.AddScoped<ICommandHandler<CreateStepCommand, Result>, CreateStepCommandHandler>();
     }
 }

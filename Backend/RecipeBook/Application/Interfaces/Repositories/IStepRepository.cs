@@ -5,5 +5,5 @@ namespace Application.Interfaces.Repositories;
 
 public interface IStepRepository : ICreateRepository<Step>, IDeleteRepository<Step>
 {
-    Task<IReadOnlyList<Step>> GetRecipeSteps( int recipeId );
+    Task<IReadOnlyList<Step>> GetStepsByRecipeId( int recipeId );
 }

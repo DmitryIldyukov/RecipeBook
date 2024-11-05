@@ -3,8 +3,8 @@
 public class Result
 {
     public IReadOnlyList<string> ErrorMessages { get; }
-    public bool IsSuccess => ErrorMessages.Count == 0;
     public string SuccessMessage { get; }
+    public bool IsSuccess => ErrorMessages.Count == 0;
 
     private Result( List<string> errorMessages, string successMessage )
     {
@@ -17,12 +17,12 @@ public class Result
         return new Result( null, successMessage );
     }
 
-    public static Result Failure( IEnumerable<string> errorMessages )
+    public static Result Fail( IEnumerable<string> errorMessages )
     {
         return new Result( new List<string>( errorMessages ), null );
     }
 
-    public static Result Failure( string errorMessage )
+    public static Result Fail( string errorMessage )
     {
         return new Result( new List<string> { errorMessage }, null );
     }

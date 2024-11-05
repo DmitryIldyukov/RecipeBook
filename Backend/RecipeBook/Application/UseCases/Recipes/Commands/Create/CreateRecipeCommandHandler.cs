@@ -7,7 +7,6 @@ using Application.UseCases.Ingredients.Commands.Create;
 using Application.UseCases.Recipes.Dtos;
 using Application.UseCases.Steps.Commands.Create;
 using Application.UseCases.Tags.Commands.Create;
-using AutoMapper;
 using Domain.Entities;
 using FluentValidation;
 using FluentValidation.Results;
@@ -19,13 +18,12 @@ namespace Application.UseCases.Recipes.Commands.Create;
 public class CreateRecipeCommandHandler(
     IRecipeRepository recipeRepository,
     IUnitOfWork unitOfWork,
-    ICommandHandler<CreateTagCommand, ResultT<Tag>> createTagHandler,
-    ICommandHandler<CreateStepCommand, ResultT<Step>> createStepHandler,
-    ICommandHandler<CreateIngredientCommand, ResultT<Ingredient>> createIngredientHandler,
+    ICommandHandler<CreateTagCommand, Result> createTagHandler,
+    ICommandHandler<CreateStepCommand, Result> createStepHandler,
+    ICommandHandler<CreateIngredientCommand, Result> createIngredientHandler,
     IValidator<CreateRecipeCommand> validator,
     IFileHelper fileHelper,
-    IConfiguration configuration,
-    IMapper mapper
+    IConfiguration configuration
 ) : ICommandHandler<CreateRecipeCommand, Result>
 {
     public async Task<Result> Handle( CreateRecipeCommand command )
@@ -33,7 +31,7 @@ public class CreateRecipeCommandHandler(
         ValidationResult validationResult = await validator.ValidateAsync( command );
         if ( !validationResult.IsValid )
         {
-            return Result.Failure( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
         Recipe recipe = new Recipe(
@@ -47,19 +45,19 @@ public class CreateRecipeCommandHandler(
         Result addTagsResult = await AddTags( recipe, command.Tags );
         if ( !addTagsResult.IsSuccess )
         {
-            return Result.Failure( addTagsResult.ErrorMessages );
+            return Result.Fail( addTagsResult.ErrorMessages );
         }
 
         Result addStepsResult = await AddSteps( recipe, command.Steps );
         if ( !addStepsResult.IsSuccess )
         {
-            return Result.Failure( addStepsResult.ErrorMessages );
+            return Result.Fail( addStepsResult.ErrorMessages );
         }
 
         Result addIngredientsResult = await AddIngredients( recipe, command.Ingredients );
         if ( !addIngredientsResult.IsSuccess )
         {
-            return Result.Failure( addIngredientsResult.ErrorMessages );
+            return Result.Fail( addIngredientsResult.ErrorMessages );
         }
 
         await recipeRepository.Create( recipe );
@@ -75,15 +73,17 @@ public class CreateRecipeCommandHandler(
     {
         foreach ( RecipeTagDto tag in tags )
         {
-            CreateTagCommand createTagCommand = mapper.Map<CreateTagCommand>( tag );
-            ResultT<Tag> tagResult = await createTagHandler.Handle( createTagCommand );
+            CreateTagCommand createTagCommand = new CreateTagCommand()
+            {
+                Recipe = recipe,
+                Name = tag.Name,
+            };
+            Result tagResult = await createTagHandler.Handle( createTagCommand );
 
             if ( !tagResult.IsSuccess )
             {
-                return Result.Failure( tagResult.ErrorMessages );
+                return Result.Fail( tagResult.ErrorMessages );
             }
-
-            recipe.Tags.Add( tagResult.Value );
         }
 
         return Result.Success( "Тэги успешно добавлены." );
@@ -95,18 +95,16 @@ public class CreateRecipeCommandHandler(
         {
             CreateStepCommand createStepCommand = new CreateStepCommand()
             {
-                RecipeId = recipe.Id,
+                Recipe = recipe,
                 Description = step.Description,
             };
 
-            ResultT<Step> stepResult = await createStepHandler.Handle( createStepCommand );
+            Result stepResult = await createStepHandler.Handle( createStepCommand );
 
             if ( !stepResult.IsSuccess )
             {
-                return Result.Failure( stepResult.ErrorMessages );
+                return Result.Fail( stepResult.ErrorMessages );
             }
-
-            recipe.Steps.Add( stepResult.Value );
         }
 
         return Result.Success( "Шаги успешно добавлены." );
@@ -118,19 +116,17 @@ public class CreateRecipeCommandHandler(
         {
             CreateIngredientCommand createIngredientCommand = new CreateIngredientCommand()
             {
-                RecipeId = recipe.Id,
+                Recipe = recipe,
                 Title = ingredient.Title,
                 Description = ingredient.Description,
             };
 
-            ResultT<Ingredient> ingredientResult = await createIngredientHandler.Handle( createIngredientCommand );
+            Result ingredientResult = await createIngredientHandler.Handle( createIngredientCommand );
 
             if ( !ingredientResult.IsSuccess )
             {
-                return Result.Failure( ingredientResult.ErrorMessages );
+                return Result.Fail( ingredientResult.ErrorMessages );
             }
-
-            recipe.Ingredients.Add( ingredientResult.Value );
         }
 
         return Result.Success( "Ингредиенты успешно добавлены." );

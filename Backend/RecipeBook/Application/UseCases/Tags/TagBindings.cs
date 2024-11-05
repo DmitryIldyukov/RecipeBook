@@ -19,7 +19,7 @@ public static class TagBindings
         services.AddScoped<IValidator<GetAllTagsQuery>, GetAllTagsQueryValidator>();
         services.AddScoped<IValidator<GetTagByNameQuery>, GetTagByNameQueryValidator>();
 
-        services.AddScoped<ICommandHandler<CreateTagCommand, ResultT<Tag>>, CreateTagCommandHandler>();
+        services.AddScoped<ICommandHandler<CreateTagCommand, Result>, CreateTagCommandHandler>();
 
         services.AddScoped<IQueryHandler<GetTagByNameQuery, ResultT<GetTagDto>>, GetTagByNameQueryHandler>();
         services.AddScoped<IQueryHandler<GetAllTagsQuery, ResultT<IReadOnlyList<GetTagDto>>>, GetAllTagsQueryHandler>();

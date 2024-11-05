@@ -22,13 +22,13 @@ public class GetRecipeImageQueryHandler(
         ValidationResult validationResult = await validator.ValidateAsync( query );
         if ( !validationResult.IsValid )
         {
-            return ResultT<GetImageQueryDto>.Failure( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return ResultT<GetImageQueryDto>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
         Recipe recipe = await recipeRepository.GetById( query.RecipeId );
         if ( recipe is null )
         {
-            return ResultT<GetImageQueryDto>.Failure( "Рецепт не найден." );
+            return ResultT<GetImageQueryDto>.Fail( "Рецепт не найден." );
         }
 
         var fullPath = BuildImagePath( recipe );
