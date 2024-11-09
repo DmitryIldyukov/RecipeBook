@@ -25,7 +25,13 @@ public class GetRecipesByFilterQueryHandler(
 
         IReadOnlyList<Recipe> recipes = await recipeRepository.GetRecipesByFilter( query.SearchString, query.Page );
 
-        IReadOnlyList<GetRecipeQueryDto> response = mapper.Map<IReadOnlyList<GetRecipeQueryDto>>( recipes );
+        IReadOnlyList<GetRecipeQueryDto> response = recipes.Select( recipe =>
+        {
+            bool isLiked = recipe.Likes.Any( l => l.UserId == query.UserId );
+            bool isFavorite = recipe.Favorites.Any( f => f.UserId == query.UserId );
+            GetRecipeQueryDto dto = mapper.Map<GetRecipeQueryDto>( recipe ) with { IsLiked = isLiked, IsFavorite = isFavorite };
+            return dto;
+        } ).ToList();
 
         return ResultT<IReadOnlyList<GetRecipeQueryDto>>.Success( response, "Рецепты найдены." );
     }

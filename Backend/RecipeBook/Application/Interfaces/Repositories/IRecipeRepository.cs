@@ -11,5 +11,6 @@ public interface IRecipeRepository : ICreateRepository<Recipe>, IDeleteRepositor
     Task<Recipe> GetDailyRecipe();
     Task<IReadOnlyList<Recipe>> GetUserFavoriteRecipesByPage( int userId, Page page );
     Task<IReadOnlyList<Recipe>> GetRecipesByFilter( string searchString, Page page );
+    Task<IReadOnlyList<Recipe>> GetUserRecipes( int userId );
     Task<bool> ContainsAsync( Expression<Func<Recipe, bool>> predicate );
 }

@@ -7,15 +7,15 @@ using Domain.Entities;
 using FluentValidation;
 using FluentValidation.Results;
 
-namespace Application.UseCases.Recipes.Queries.GetFavoriteRecipes;
+namespace Application.UseCases.Recipes.Queries.GetUserRecipes;
 
-public class GetUserFavoriteRecipesQueryHandler(
+public class GetUserRecipesQueryHandler(
     IRecipeRepository recipeRepository,
-    IValidator<GetUserFavoriteRecipesQuery> validator,
+    IValidator<GetUserRecipesQuery> validator,
     IMapper mapper
-) : IQueryHandler<GetUserFavoriteRecipesQuery, ResultT<IReadOnlyList<GetRecipeQueryDto>>>
+) : IQueryHandler<GetUserRecipesQuery, ResultT<IReadOnlyList<GetRecipeQueryDto>>>
 {
-    public async Task<ResultT<IReadOnlyList<GetRecipeQueryDto>>> Handle( GetUserFavoriteRecipesQuery query )
+    public async Task<ResultT<IReadOnlyList<GetRecipeQueryDto>>> Handle( GetUserRecipesQuery query )
     {
         ValidationResult validationResult = await validator.ValidateAsync( query );
         if ( !validationResult.IsValid )
@@ -23,9 +23,9 @@ public class GetUserFavoriteRecipesQueryHandler(
             return ResultT<IReadOnlyList<GetRecipeQueryDto>>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
-        IReadOnlyList<Recipe> recipes = await recipeRepository.GetUserFavoriteRecipesByPage( query.UserId, query.Page );
+        IReadOnlyList<Recipe> userRecipes = await recipeRepository.GetUserRecipes( query.UserId );
 
-        IReadOnlyList<GetRecipeQueryDto> response = recipes.Select( recipe =>
+        IReadOnlyList<GetRecipeQueryDto> response = userRecipes.Select( recipe =>
         {
             bool isLiked = recipe.Likes.Any( l => l.UserId == query.UserId );
             bool isFavorite = recipe.Favorites.Any( f => f.UserId == query.UserId );
@@ -33,6 +33,6 @@ public class GetUserFavoriteRecipesQueryHandler(
             return dto;
         } ).ToList();
 
-        return ResultT<IReadOnlyList<GetRecipeQueryDto>>.Success( response, $"Избранные рецепты пользователя с id {query.UserId} найдены." );
+        return ResultT<IReadOnlyList<GetRecipeQueryDto>>.Success( response, "Рецепты пользователя получены." );
     }
 }

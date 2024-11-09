@@ -4,6 +4,7 @@ using Application.Interfaces.Repositories;
 using Application.UseCases.Recipes.Dtos;
 using AutoMapper;
 using Domain.Entities;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Application.UseCases.Recipes.Queries.GetDailyRecipe;
 
@@ -12,7 +13,7 @@ public class GetDailyRecipeQueryHandler(
     IMapper mapper
 ) : IQueryHandler<GetDailyRecipeQuery, ResultT<DailyRecipeDto>>
 {
-    public async Task<ResultT<DailyRecipeDto>> Handle( GetDailyRecipeQuery command )
+    public async Task<ResultT<DailyRecipeDto>> Handle( GetDailyRecipeQuery query )
     {
         Recipe dailyRecipe = await recipeRepository.GetDailyRecipe();
 

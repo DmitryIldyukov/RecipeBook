@@ -34,15 +34,15 @@ public class FavoriteController(
         return BadRequest( result.ErrorMessages );
     }
 
-    [HttpDelete( "{userId:int}/{favoriteId:int}" )]
+    [HttpDelete( "{userId:int}/{recipeId:int}" )]
     [ProducesResponseType( StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
-    public async Task<IActionResult> DeleteFavorite( [FromRoute] int userId, [FromRoute] int favoriteId )
+    public async Task<IActionResult> DeleteFavorite( [FromRoute] int userId, [FromRoute] int recipeId )
     {
         DeleteFavoriteCommand command = new DeleteFavoriteCommand()
         {
             UserId = userId,
-            FavoriteId = favoriteId
+            RecipeId = recipeId
         };
 
         Result result = await deleteFavoriteCommand.Handle( command );

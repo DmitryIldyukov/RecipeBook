@@ -26,4 +26,13 @@ public class UserRepository( RecipeBookDbContext dbContext ) : IUserRepository
             .Include( u => u.Favorites )
             .FirstOrDefaultAsync( u => u.Id == id );
     }
+
+    public async Task<User> GetByLogin( string login )
+    {
+        return await dbContext.Users
+            .Include( u => u.Recipes )
+            .Include( u => u.Likes )
+            .Include( u => u.Favorites )
+            .FirstOrDefaultAsync( u => u.Login == login );
+    }
 }

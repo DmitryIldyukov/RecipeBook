@@ -2,6 +2,7 @@
 using Application.Common.CQRS.Query;
 using Application.Common.Result;
 using Application.UseCases.Users.Commands.Create;
+using Application.UseCases.Users.Commands.Login;
 using Application.UseCases.Users.Commands.Update;
 using Application.UseCases.Users.Dtos;
 using Application.UseCases.Users.Queries.GetById;
@@ -16,11 +17,12 @@ namespace WebAPI.Controllers;
 public class UserController(
     ICommandHandler<CreateUserCommand, Result> createUserCommandHandler,
     ICommandHandler<UpdateUserCommand, Result> updateUserCommandHandler,
+    ICommandHandler<LoginUserCommand, ResultT<int>> loginUserCommandHandler,
     IQueryHandler<GetUserByIdQuery, ResultT<GetUserQueryDto>> getUserByIdHandler,
     IMapper mapper
 ) : ControllerBase
 {
-    [HttpPost]
+    [HttpPost( "Registration" )]
     [ProducesResponseType( StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
     public async Task<IActionResult> Register( [FromBody] UserRegisterDto dto )
@@ -73,6 +75,23 @@ public class UserController(
         if ( result.IsSuccess )
         {
             return Ok();
+        }
+
+        return BadRequest( result.ErrorMessages );
+    }
+
+    [HttpPost( "Login" )]
+    [ProducesResponseType( typeof( int ), StatusCodes.Status200OK )]
+    [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
+    public async Task<IActionResult> Login( [FromBody] LoginDto dto )
+    {
+        LoginUserCommand command = mapper.Map<LoginUserCommand>( dto );
+
+        ResultT<int> result = await loginUserCommandHandler.Handle( command );
+
+        if ( result.IsSuccess )
+        {
+            return Ok( result.Value );
         }
 
         return BadRequest( result.ErrorMessages );

@@ -34,15 +34,15 @@ public class LikeController(
         return BadRequest( result.ErrorMessages );
     }
 
-    [HttpDelete( "{userId:int}/{LikeId:int}" )]
+    [HttpDelete( "{userId:int}/{recipeId:int}" )]
     [ProducesResponseType( StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
-    public async Task<IActionResult> DeleteLike( [FromRoute] int userId, [FromRoute] int LikeId )
+    public async Task<IActionResult> DeleteLike( [FromRoute] int userId, [FromRoute] int recipeId )
     {
         DeleteLikeCommand command = new DeleteLikeCommand()
         {
             UserId = userId,
-            LikeId = LikeId
+            RecipeId = recipeId
         };
 
         Result result = await deleteLikeCommand.Handle( command );
