@@ -1,0 +1,41 @@
+@import "../../../index.scss";
+
+.container {
+  max-width: $content-width;
+  margin: 127px auto 0;
+}
+
+.backBtn {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 15px;
+  font-family: $primary-font;
+  font-weight: 500;
+  font-size: 18px;
+  color: $primary-color;
+  margin-bottom: 10px;
+  padding-left: 2px;
+}
+
+.recipeInfoBlock {
+  padding: 52px 0px 100px;
+}
+
+.recipeSecondaryInfoBlock {
+  display: flex;
+  margin-top: 40px;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 50px;
+}
+
+.notFoundText {
+  font-family: $primary-font;
+  font-weight: 600;
+  font-size: 20px;
+  color: #4a525a;
+  line-height: 30px;
+  width: 100%;
+  text-align: center;
+}

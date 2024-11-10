@@ -1,0 +1,15 @@
+@import "../../../index.scss";
+
+.subHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-bottom: 52px;
+}
+
+.title {
+  font-family: $primary-font;
+  font-weight: 700;
+  font-size: 42px;
+  line-height: 62px;
+}

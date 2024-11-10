@@ -7,6 +7,29 @@ export default class RecipeService {
     return fetchClient<Recipe>("/api/Recipe/DailyRecipe");
   }
 
+  async getRecipeList(searchString: string, page: Page): Promise<Recipe[]> {
+    return fetchClient<Recipe[]>("/api/Recipe/GetRecipes", {
+      method: "POST",
+      body: JSON.stringify({
+        searchString,
+        page,
+      }),
+    });
+  }
+
+  async getFavoriteRecipes(userId: number, page: Page): Promise<Recipe[]> {
+    return fetchClient<Recipe[]>(`/api/Recipe/FavoriteRecipes/${userId.toString()}`, {
+      method: "POST",
+      body: JSON.stringify({
+        page,
+      }),
+    });
+  }
+
+  async getRecipeById(recipeId: number): Promise<Recipe> {
+    return fetchClient<Recipe>(`/api/Recipe/${recipeId.toString()}`);
+  }
+
   async getRecipeImage(recipeId: number): Promise<string> {
     return fetchClient<string>(`/api/Recipe/RecipeImage/${recipeId.toString()}`);
   }
@@ -35,4 +58,17 @@ export default class RecipeService {
     });
   }
 
+  async createRecipe(recipe: FormData): Promise<Response> {
+    return fetchClient("/api/Recipe", {
+      method: "POST",
+      body: recipe,
+    });
+  }
+
+  async updateRecipe(recipeId: number, recipe: FormData): Promise<Response> {
+    return fetchClient(`/api/Recipe/${recipeId.toString()}`, {
+      method: "POST",
+      body: recipe,
+    });
+  }
 }

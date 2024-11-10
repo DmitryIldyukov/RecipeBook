@@ -24,6 +24,9 @@ function App() {
         <div className="container">
           <Routes>
             <Route path={ROUTES.HOME} element={<HomePage />} />
+            <Route path={ROUTES.RECIPES} element={<RecipesPage />} />
+            <Route path={`${ROUTES.RECIPE_INFO}/:recipeId`} element={<RecipeFullInfo />} />
+            <Route path="*" element={<Navigate to={ROUTES.HOME} replace />} />
           </Routes>
         </div>
         <Footer />
