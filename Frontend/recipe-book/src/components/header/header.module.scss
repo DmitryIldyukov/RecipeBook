@@ -1,0 +1,80 @@
+@import "../../index.scss";
+
+.content {
+  position: absolute;
+  display: flex;
+  margin: 0 auto;
+  width: 100%;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.container {
+  display: flex;
+  padding: 40px 0;
+  height: 118px;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: $content-width;
+}
+
+.menu {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 524px;
+}
+
+.mainBtn {
+  font-family: $primary-font;
+  font-weight: 700;
+  font-size: 24px;
+  color: $primary-color;
+}
+
+.menuButtons {
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+}
+
+.menuBtn {
+  font-family: $primary-font;
+  font-weight: 400;
+  font-size: 18px;
+}
+
+.bold {
+  font-weight: 700;
+}
+
+.regular {
+  font-weight: 400;
+  color: $secondary-color-light;
+}
+
+.loginBtn {
+  font-family: $primary-font;
+  font-weight: 700;
+  font-size: 18px;
+  color: $primary-color;
+}
+
+.loginContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 14px;
+}
+
+.line {
+  color: $primary-color;
+  font-family: $primary-font;
+  font-weight: 400;
+  font-size: 18px;
+}
+
+.logoutBtn {
+  cursor: pointer;
+}
