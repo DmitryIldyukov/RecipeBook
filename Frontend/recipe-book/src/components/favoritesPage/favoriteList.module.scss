@@ -1,0 +1,33 @@
+@import "../../index.scss";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  width: $content-width;
+  margin: 150px auto 150px;
+}
+
+.header {
+  font-family: $primary-font;
+  font-weight: 700;
+  font-size: 42px;
+  line-height: 62px;
+  margin-bottom: 50px;
+}
+
+.recipeList {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.notFoundText {
+  font-family: $primary-font;
+  opacity: 50%;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 30px;
+  color: #fdb100;
+  margin-top: 70px;
+}

@@ -1,0 +1,332 @@
+@import "../../index.scss";
+
+.container {
+  width: $content-width;
+  margin: 127px auto 0;
+}
+
+.backBtn {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 15px;
+  font-family: $primary-font;
+  font-weight: 500;
+  font-size: 18px;
+  color: $primary-color;
+  margin-bottom: 10px;
+  padding-left: 2px;
+}
+
+.row {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  font-family: $primary-font;
+  font-weight: 700;
+  font-size: 42px;
+  line-height: 52px;
+  color: $secondary-color-dark;
+}
+
+.recipeMainInfoBlock {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 106px;
+}
+
+.card {
+  display: flex;
+  flex-direction: row;
+  margin-top: 50px;
+  margin-bottom: 40px;
+  width: $content-width;
+  height: 430px;
+  background-color: #ffffff;
+  border-radius: 72px 24px 24px 24px;
+  box-shadow: 0px 16px 72px #22272f0d;
+  justify-content: space-between;
+}
+
+.uploadInput {
+  width: 430px;
+  height: 430px;
+  background-color: #ffefcc;
+  border-radius: 72px 0px 72px 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}
+
+.recipeInfo {
+  display: flex;
+  flex-direction: column;
+  padding: 50px 70px;
+  width: 770px;
+  gap: 20px;
+}
+
+.area {
+  min-height: 117px;
+  width: 100%;
+  font-family: $primary-font;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 28px;
+  color: #25292d80;
+  border: solid 1px;
+  border-color: $secondary-color-light;
+  border-radius: 16px;
+  resize: none;
+  padding: 11px 24px;
+}
+
+.secInfoBox {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 64px;
+}
+
+.gap10 {
+  gap: 10px;
+}
+
+.text {
+  font-family: $primary-font;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 28px;
+  color: #25292d;
+}
+
+.uploadPlaceholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: dashed 1px;
+  border-color: #f29e1f;
+  border-radius: 20px;
+  width: 269px;
+  height: 269px;
+  gap: 30px;
+}
+
+.downloadIcon {
+  width: 42px;
+  height: 42px;
+}
+
+.downloadText {
+  width: 170px;
+  font-family: $primary-font;
+  font-weight: 400;
+  font-size: 16px;
+  color: #f29e1f;
+  text-align: center;
+}
+
+.recipeSecondaryInfoBlock {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+}
+
+.ingredientBlock {
+  display: flex;
+  flex-direction: column;
+  width: 380px;
+}
+
+.ingredientBlockTitle {
+  width: 170px;
+  font-family: $primary-font;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 30px;
+  color: #4a525a;
+}
+
+.closeIconBox {
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+}
+
+.closeIconBox:hover {
+  cursor: pointer;
+}
+
+.closeIcon {
+  width: 14px;
+  height: 14px;
+}
+
+.ingredientTitle {
+  width: 100%;
+  font-family: $primary-font;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 28px;
+  color: #25292d80;
+  border: solid 1px;
+  border-color: $secondary-color-light;
+  border-radius: 16px;
+  padding: 11px 18px;
+}
+
+.ingredientDescription {
+  min-height: 230px;
+  width: 100%;
+  font-family: $primary-font;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 28px;
+  color: #25292d80;
+  border: solid 1px;
+  border-color: $secondary-color-light;
+  border-radius: 16px;
+  resize: none;
+  padding: 11px 18px;
+}
+
+.ingredientInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ingredientData {
+  display: flex;
+  flex-direction: column;
+  padding: 36px 30px;
+  background-color: #ffffff;
+  gap: 20px;
+  border-radius: 24px;
+  box-shadow: 0px 16px 72px #22272f0d;
+}
+
+.stepsBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.stepInfo {
+  display: flex;
+  flex-direction: column;
+  padding: 45px 74px;
+  width: 790px;
+  background-color: #ffffff;
+  box-shadow: 0px 16px 72px #22272f0d;
+  border-radius: 24px;
+  gap: 6px;
+}
+
+.stepTitle {
+  font-family: $primary-font;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 30px;
+  text-wrap: nowrap;
+}
+
+.notFoundText {
+  font-family: $primary-font;
+  font-weight: 600;
+  font-size: 20px;
+  color: #4a525a;
+  line-height: 30px;
+  width: 100%;
+  text-align: center;
+}
+
+.bonAppetitText {
+  margin-top: 20px;
+  font-family: $primary-font;
+  font-weight: 600;
+  font-size: 24px;
+  color: #fdb100;
+  line-height: 30px;
+  opacity: 50%;
+}
+
+.stepTitleBox {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stepDescription {
+  min-height: 166px;
+  width: 100%;
+  font-family: $primary-font;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 28px;
+  color: #25292d80;
+  border: solid 1px;
+  border-color: $secondary-color-light;
+  border-radius: 16px;
+  resize: none;
+  padding: 11px 18px;
+}
+
+.ingredientBlockContent {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 40px;
+}
+
+.selectInput {
+  height: 52px;
+  width: 220px;
+  font-family: $primary-font;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 28px;
+  color: #25292d80;
+  border: solid 1px;
+  border-color: $secondary-color-light;
+  border-radius: 16px;
+  padding: 11px 24px;
+}
+
+.selectInput:hover {
+  cursor: pointer;
+}
+
+.inputText {
+  width: 100%;
+  font-family: $primary-font;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 28px;
+  color: #25292d80;
+  border: solid 1px;
+  border-color: $secondary-color-light;
+  border-radius: 16px;
+  padding: 11px 24px;
+}
+
+.image {
+  border-radius: 72px 0px 72px 0px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

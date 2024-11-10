@@ -26,6 +26,8 @@ function App() {
             <Route path={ROUTES.HOME} element={<HomePage />} />
             <Route path={ROUTES.RECIPES} element={<RecipesPage />} />
             <Route path={`${ROUTES.RECIPE_INFO}/:recipeId`} element={<RecipeFullInfo />} />
+            <Route path={`${ROUTES.EDIT_RECIPE}/:recipeId?`} element={<EditRecipePage />} />
+            <Route path={ROUTES.FAVORITES} element={<FavoriteList />} />
             <Route path="*" element={<Navigate to={ROUTES.HOME} replace />} />
           </Routes>
         </div>
