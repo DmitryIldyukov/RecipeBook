@@ -1,7 +1,9 @@
-﻿using Application.Common.CQRS.Command;
-using Application.UseCases.Commands.Recipe.Create;
-using Application.UseCases.Commands.Users.Create;
-using FluentValidation;
+﻿using System.Reflection;
+using Application.UseCases.Ingredients;
+using Application.UseCases.Recipes;
+using Application.UseCases.Steps;
+using Application.UseCases.Tags;
+using Application.UseCases.Users;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application;
@@ -10,11 +12,13 @@ public static class Bindings
 {
     public static IServiceCollection AddApplication( this IServiceCollection services )
     {
-        services.AddScoped<IValidator<CreateRecipeCommand>, CreateRecipeCommandValidator>();
-        services.AddScoped<IValidator<CreateUserCommand>, CreateUserCommandValidator>();
+        services.AddAutoMapper( Assembly.GetExecutingAssembly() );
 
-        services.AddScoped<ICommandHandler<CreateRecipeCommand>, CreateRecipeCommandHandler>();
-        services.AddScoped<ICommandHandler<CreateUserCommand>, CreateUserCommandHandler>();
+        services.AddIngredientBindings();
+        services.AddRecipeBindings();
+        services.AddUserBindings();
+        services.AddStepBindings();
+        services.AddTagBindings();
 
         return services;
     }

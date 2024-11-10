@@ -5,9 +5,3 @@ public interface ICommandHandler<in TCommand, TResponse>
 {
     Task<TResponse> Handle( TCommand command );
 }
-
-public interface ICommandHandler<in TCommand>
-    where TCommand : class
-{
-    Task Handle( TCommand command );
-}

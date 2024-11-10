@@ -1,6 +1,6 @@
 ﻿namespace Application.Common.CQRS.Query;
 
-public interface IQueryHandler<in TQuery, TResponse> 
+public interface IQueryHandler<in TQuery, TResponse>
     where TQuery : class
     where TResponse : class
 {
