@@ -15,12 +15,16 @@ import { LoginOrRegistrationPopup } from "./components/popups/loginOrRegistraion
 import { LoginPopup } from "./components/popups/loginPopup/loginPopup";
 
 function App() {
+  const { isLoginPopupOpen, isRegistrationPopupOpen, isLoginOrRegistraionPopupOpen } = usePopupStore();
 
   return (
     <BrowserRouter>
       <div className="app">
         <Header />
         <Footer />
+        {isLoginOrRegistraionPopupOpen && <LoginOrRegistrationPopup />}
+        {isLoginPopupOpen && <LoginPopup />}
+        {isRegistrationPopupOpen && <RegistrationPopup />}
       </div>
     </BrowserRouter>
   );

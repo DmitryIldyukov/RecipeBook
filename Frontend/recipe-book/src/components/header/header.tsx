@@ -17,6 +17,7 @@ export const Header = () => {
   const [user, setUser] = useState<User | null>(null);
 
   const { isLogged, userId, logout, login } = useAppStore();
+  const { setIsLoginPopupOpen } = usePopupStore();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,6 +36,9 @@ export const Header = () => {
     void fetchData();
   }, [userId, isLogged]);
 
+  const navigateToLogin = () => {
+    setIsLoginPopupOpen(true);
+  };
 
   return (
     <div className={styles.content}>
@@ -92,6 +96,10 @@ export const Header = () => {
             <>
               <button
                 className={styles.loginBtn}
+                onClick={() => {
+                  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                  navigate(`${ROUTES.PROFILE}/${userId}`);
+                }}
               >
                 Привет, {user?.name}
               </button>
