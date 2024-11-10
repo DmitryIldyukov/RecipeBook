@@ -23,13 +23,13 @@
 .deleteBtn {
   border-radius: 16px;
   border: solid 1px;
-  border-color: $secondary-color-dark;
+  border-color: $secondary-color-light;
   width: 60px;
   height: 60px;
 }
 
 .deleteBtn:hover {
-  background-color: rgb(255, 43, 43);
+  background-color: #f80000;
 }
 
 .p18 {

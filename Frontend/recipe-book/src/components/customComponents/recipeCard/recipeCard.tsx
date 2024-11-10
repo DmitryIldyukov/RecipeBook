@@ -6,7 +6,7 @@ import likeIcon from "../../../assets/like.svg";
 import favoriteIcon from "../../../assets/favorite.svg";
 import portionIcon from "../../../assets/portionIcon.svg";
 import cookTimeIcon from "../../../assets/cookTimeIcon.svg";
-import RecipeService from "../../../services/recipeService";
+import { recipeService } from "../../../services/recipeService";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppStore } from "../../../hooks/useStore";
@@ -17,14 +17,16 @@ type RecipeCardProps = {
 };
 
 export const RecipeCard = ({ recipe }: RecipeCardProps) => {
-  const recipeService = new RecipeService();
-
-  const { isLogged, userId } = useAppStore();
+  const { userId } = useAppStore();
   const { setIsLoginPopupOpen } = usePopupStore();
 
   const navigate = useNavigate();
   const [image, setImage] = useState<string>("");
   const [loadingImage, setLoadingImage] = useState<boolean>(true);
+  const [likesCount, setLikesCount] = useState<number>(recipe.likesCount);
+  const [isLiked, setIsLiked] = useState<boolean>(recipe.isLiked);
+  const [favoritesCount, setFavoritesCount] = useState<number>(recipe.favoritesCount);
+  const [isFavorite, setIsFavorite] = useState<boolean>(recipe.isFavorite);
 
   const getRecipeImage = async (recipeId: number) => {
     try {
@@ -38,17 +40,21 @@ export const RecipeCard = ({ recipe }: RecipeCardProps) => {
   };
 
   const addLike = async (recipeId: number) => {
-    if (!isLogged) {
+    if (!userId) {
       setIsLoginPopupOpen(true);
       return;
     }
 
     try {
       if (userId) {
-        if (recipe.isLiked) {
+        if (isLiked) {
           await recipeService.removeLike(userId, recipeId);
+          setLikesCount((prev) => prev - 1);
+          setIsLiked(false);
         } else {
           await recipeService.addLike(userId, recipeId);
+          setLikesCount((prev) => prev + 1);
+          setIsLiked(true);
         }
       }
     } catch (error) {
@@ -57,17 +63,21 @@ export const RecipeCard = ({ recipe }: RecipeCardProps) => {
   };
 
   const addFavorite = async (recipeId: number) => {
-    if (!isLogged) {
+    if (!userId) {
       setIsLoginPopupOpen(true);
       return;
     }
 
     try {
       if (userId) {
-        if (recipe.isFavorite) {
+        if (isFavorite) {
           await recipeService.removeFavorite(userId, recipeId);
+          setFavoritesCount((prev) => prev - 1);
+          setIsFavorite(false);
         } else {
           await recipeService.addFavorite(userId, recipeId);
+          setFavoritesCount((prev) => prev + 1);
+          setIsFavorite(true);
         }
       }
     } catch (error) {
@@ -103,13 +113,25 @@ export const RecipeCard = ({ recipe }: RecipeCardProps) => {
             ))}
           </div>
           <div className={styles.actionBtnBox}>
-            <button onClick={() => void addFavorite(recipe.recipeId)} className={styles.actionBtn}>
-              <img src={recipe.isFavorite ? favoriteIcon : emptyFavoriteIcon} alt="favorite icon" />
-              <span>{recipe.favoritesCount}</span>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                void addFavorite(recipe.recipeId);
+              }}
+              className={styles.actionBtn}
+            >
+              <img src={isFavorite ? favoriteIcon : emptyFavoriteIcon} alt="favorite icon" />
+              <span>{favoritesCount}</span>
             </button>
-            <button onClick={() => void addLike(recipe.recipeId)} className={styles.actionBtn}>
-              <img src={recipe.isLiked ? likeIcon : emptyLikeIcon} alt="like icon" />
-              <span>{recipe.likesCount}</span>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                void addLike(recipe.recipeId);
+              }}
+              className={styles.actionBtn}
+            >
+              <img src={isLiked ? likeIcon : emptyLikeIcon} alt="like icon" />
+              <span>{likesCount}</span>
             </button>
           </div>
         </div>

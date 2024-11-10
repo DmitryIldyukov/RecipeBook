@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Recipe } from "../../types/recipe";
-import { RecipeCard } from "../recipesPage/recipeCard/recipeCard";
+import { RecipeCard } from "../customComponents/recipeCard/recipeCard";
 import { useAppStore } from "../../hooks/useStore";
-import RecipeService from "../../services/recipeService";
+import { recipeService } from "../../services/recipeService";
 import styles from "./favoriteList.module.scss";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../constants/constants";
@@ -10,7 +10,6 @@ import { usePopupStore } from "../../hooks/usePopupStore";
 
 export const FavoriteList = () => {
   const defaultPageSize = 4;
-  const recipeService = new RecipeService();
 
   const { userId } = useAppStore();
   const { setIsLoginPopupOpen } = usePopupStore();

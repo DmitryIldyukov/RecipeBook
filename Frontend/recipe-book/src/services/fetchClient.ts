@@ -10,13 +10,17 @@ export async function fetchClient<T>(url: string, options?: RequestInit): Promis
   });
 
   if (!response.ok) {
-    throw new Error(`HTTP error! Status: ${response.status.toString()}`);
+    const errorText = await response.text();
+    throw new Error(errorText);
   }
 
-  if (response.headers.get("Content-Type")?.includes("image")) {
+  const contentType = response.headers.get("Content-Type");
+
+  if (contentType?.includes("image")) {
     return URL.createObjectURL(await response.blob()) as unknown as T;
+  } else if (contentType?.includes("application/json")) {
+    return (await response.json()) as T;
+  } else {
+    return (await response.text()) as unknown as T;
   }
-
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  return response.json();
 }

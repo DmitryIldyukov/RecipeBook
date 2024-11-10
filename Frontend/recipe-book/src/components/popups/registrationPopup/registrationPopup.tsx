@@ -2,17 +2,19 @@ import MyButton from "../../customComponents/myButton/myButton";
 import closeIcon from "../../../assets/close.svg";
 import styles from "./registrationPopup.module.scss";
 import { usePopupStore } from "../../../hooks/usePopupStore";
-import AuthService from "../../../services/authService";
 import { useState } from "react";
-import { RegistrationInfo } from "../../../types/auth";
-
-const authService = new AuthService();
+import { LoginInfo, RegistrationInfo } from "../../../types/auth";
+import { useAppStore } from "../../../hooks/useStore";
+import { authService } from "../../../services/authService";
+import { handleError } from "../../../utils/errorHandler";
+import toast from "react-hot-toast";
 
 export const RegistrationPopup = () => {
   const { setIsRegistrationPopupOpen, setIsLoginPopupOpen } = usePopupStore();
+  const { login } = useAppStore();
 
   const [name, setName] = useState("");
-  const [login, setLogin] = useState("");
+  const [loginData, setLoginData] = useState("");
   const [password, setPassword] = useState("");
   const [chechPassword, setChechPassword] = useState("");
 
@@ -26,23 +28,33 @@ export const RegistrationPopup = () => {
   };
 
   const handleRegistration = async () => {
-    const data: RegistrationInfo = { name: name, login: login, password: password };
+    const data: RegistrationInfo = { name: name, login: loginData, password: password };
 
     if (password !== chechPassword) {
+      toast.error("Пароли не совпадают");
       return;
     }
 
-    try {
-      const response = await authService.Registration(data);
-      if (response.ok) {
+    await authService
+      .Registration(data)
+      .then(handleLogin)
+      .catch((error: unknown) => {
+        handleError(error, "Произошла ошибка при регистрации");
+      });
+  };
+
+  const handleLogin = () => {
+    const data: LoginInfo = { login: loginData, password: password };
+
+    authService
+      .login(data)
+      .then((response) => {
+        login(response);
         handleClosePopup();
-      } else {
-        const errorMessages = await response.json();
-        console.error(errorMessages);
-      }
-    } catch (error) {
-      console.error(error);
-    }
+      })
+      .catch((error: unknown) => {
+        handleError(error, "Произошла ошибка при авторизации");
+      });
   };
 
   return (
@@ -68,9 +80,9 @@ export const RegistrationPopup = () => {
             placeholder="Логин"
             className={styles.input}
             id="login"
-            value={login}
+            value={loginData}
             onChange={(e) => {
-              setLogin(e.target.value);
+              setLoginData(e.target.value);
             }}
           />
 

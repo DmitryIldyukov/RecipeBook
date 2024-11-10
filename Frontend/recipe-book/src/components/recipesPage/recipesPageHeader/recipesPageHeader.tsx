@@ -8,11 +8,11 @@ import { useAppStore } from "../../../hooks/useStore";
 
 export const RecipesPageHeader = () => {
   const navigate = useNavigate();
-  const { isLogged } = useAppStore();
+  const { userId } = useAppStore();
   const { setIsLoginOrRegistraionPopupOpen } = usePopupStore();
 
   const navigateToAddRecipe = () => {
-    if (isLogged) {
+    if (userId) {
       navigate(ROUTES.EDIT_RECIPE);
     } else {
       setIsLoginOrRegistraionPopupOpen(true);

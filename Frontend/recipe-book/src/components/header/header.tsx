@@ -16,13 +16,13 @@ export const Header = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
 
-  const { isLogged, userId, logout, login } = useAppStore();
+  const { userId, logout, login } = useAppStore();
   const { setIsLoginPopupOpen } = usePopupStore();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (isLogged && userId) {
+        if (userId) {
           await userService.getUser(userId).then((user) => {
             setUser(user);
             login(user.id);
@@ -34,7 +34,7 @@ export const Header = () => {
     };
 
     void fetchData();
-  }, [userId, isLogged]);
+  }, [userId]);
 
   const navigateToLogin = () => {
     setIsLoginPopupOpen(true);
@@ -88,7 +88,7 @@ export const Header = () => {
         </div>
         <div className={styles.loginContainer}>
           <img src={loginImg} alt="login" />
-          {!isLogged && !userId ? (
+          {!userId ? (
             <button className={styles.loginBtn} onClick={navigateToLogin}>
               Войти
             </button>

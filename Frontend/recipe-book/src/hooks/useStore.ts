@@ -1,7 +1,7 @@
 import { create } from "zustand";
+import { ROUTES } from "../constants/constants";
 
 type ApplicationStore = {
-  isLogged: boolean;
   userId: number | null;
 
   login: (userId: number | null) => void;
@@ -9,14 +9,17 @@ type ApplicationStore = {
 };
 
 export const useAppStore = create<ApplicationStore>((set) => ({
-  isLogged: false,
-  userId: null,
+  userId: localStorage.getItem("userId") ? Number(localStorage.getItem("userId")) : null,
 
   login: (userId: number | null) => {
-    set({ isLogged: true, userId: userId });
+    set({ userId: userId });
+    if (userId !== null) {
+      localStorage.setItem("userId", userId.toString());
+    }
   },
 
   logout: () => {
-    set({ isLogged: false, userId: null });
+    set({ userId: null });
+    localStorage.removeItem("userId");
   },
 }));

@@ -5,22 +5,20 @@ import icon from "../../../assets/yummy.svg";
 import likeIcon from "../../../assets/like.svg";
 import emptyLikeIcon from "../../../assets/emptyLikeIcon.svg";
 import timeIcon from "../../../assets/time.svg";
-import RecipeService from "../../../services/recipeService";
+import { recipeService } from "../../../services/recipeService";
 import { useAppStore } from "../../../hooks/useStore";
 import { usePopupStore } from "../../../hooks/usePopupStore";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../../constants/constants";
 
 export const RecipeOfDay = () => {
-  const recipeService = new RecipeService();
-
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [image, setImage] = useState<string>("");
   const [loadingImage, setLoadingImage] = useState<boolean>(true);
 
-  const { isLogged, userId } = useAppStore();
+  const { userId } = useAppStore();
   const { setIsLoginPopupOpen } = usePopupStore();
 
   const navigate = useNavigate();
@@ -64,7 +62,7 @@ export const RecipeOfDay = () => {
   const setLike = (event: React.MouseEvent) => {
     event.stopPropagation();
 
-    if (!isLogged) {
+    if (!userId) {
       setIsLoginPopupOpen(true);
       return;
     }

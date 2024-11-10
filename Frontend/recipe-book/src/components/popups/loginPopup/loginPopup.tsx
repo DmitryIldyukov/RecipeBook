@@ -2,14 +2,13 @@ import MyButton from "../../customComponents/myButton/myButton";
 import closeIcon from "../../../assets/close.svg";
 import styles from "./loginPopup.module.scss";
 import { usePopupStore } from "../../../hooks/usePopupStore";
-import AuthService from "../../../services/authService";
+import { authService } from "../../../services/authService";
 import { LoginInfo } from "../../../types/auth";
 import { useState } from "react";
 import { useAppStore } from "../../../hooks/useStore";
+import { handleError } from "../../../utils/errorHandler";
 
 export const LoginPopup = () => {
-  const authService = new AuthService();
-
   const { login } = useAppStore();
   const { setIsLoginPopupOpen, setIsRegistrationPopupOpen } = usePopupStore();
 
@@ -25,16 +24,18 @@ export const LoginPopup = () => {
     setIsRegistrationPopupOpen(true);
   };
 
-  const handleLogin = async () => {
+  const handleLogin = () => {
     const data: LoginInfo = { login: loginData, password: password };
 
-    try {
-      const response = await authService.Login(data);
-      login(response);
-      handleClosePopup();
-    } catch (error) {
-      console.error(error);
-    }
+    authService
+      .login(data)
+      .then((response) => {
+        login(response);
+        handleClosePopup();
+      })
+      .catch((error: unknown) => {
+        handleError(error, "Произошла ошибка при авторизации");
+      });
   };
 
   return (
@@ -67,7 +68,7 @@ export const LoginPopup = () => {
           />
 
           <div className={styles.buttons}>
-            <MyButton isPrimary={true} onClick={() => void handleLogin()} width="278px" height="60px">
+            <MyButton isPrimary={true} onClick={handleLogin} width="278px" height="60px">
               Войти
             </MyButton>
             <MyButton isPrimary={false} onClick={handleClosePopup} width="278px" height="60px">

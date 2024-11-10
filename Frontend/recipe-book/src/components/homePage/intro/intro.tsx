@@ -9,11 +9,11 @@ import { usePopupStore } from "../../../hooks/usePopupStore";
 
 export const Intro = () => {
   const navigate = useNavigate();
-  const { isLogged } = useAppStore();
+  const { userId } = useAppStore();
   const { setIsLoginPopupOpen, setIsLoginOrRegistraionPopupOpen } = usePopupStore();
 
   const navigateToAddRecipe = () => {
-    if (isLogged) {
+    if (userId) {
       navigate(ROUTES.EDIT_RECIPE);
     } else {
       setIsLoginOrRegistraionPopupOpen(true);
@@ -21,7 +21,9 @@ export const Intro = () => {
   };
 
   const navigateToLogin = () => {
-    setIsLoginPopupOpen(true);
+    if (!userId) {
+      setIsLoginPopupOpen(true);
+    }
   };
 
   return (

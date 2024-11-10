@@ -7,3 +7,10 @@ export type User = {
   likesCount: number;
   favoritesCount: number;
 };
+
+export type UserUpdateDto = {
+  name: string;
+  login: string;
+  password: string;
+  information: string;
+};

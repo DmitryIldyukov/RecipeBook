@@ -4,23 +4,22 @@ import icon1 from "../../assets/ic-menu.svg";
 import icon2 from "../../assets/ic-cook.svg";
 import icon3 from "../../assets/ic-chef.svg";
 import icon4 from "../../assets/ic-hlop.svg";
-import RecipeService from "../../services/recipeService";
+import { recipeService } from "../../services/recipeService";
 import { useEffect, useState } from "react";
 import { Recipe } from "../../types/recipe";
 import { Page } from "../../types/page";
-import { RecipeCard } from "./recipeCard/recipeCard";
 import { useLocation } from "react-router";
 import { SearchBar } from "../customComponents/mySearchBar/searchBar";
 import { RecipesPageHeader } from "./recipesPageHeader/recipesPageHeader";
 import { RecipeTagCard } from "./tagsPanel/recipeTagCard";
+import { useAppStore } from "../../hooks/useStore";
+import { RecipeCard } from "../customComponents/recipeCard/recipeCard";
 
 type RecipesPageProps = {
   searchString: string;
 };
 
 export const RecipesPage = () => {
-  const recipeService = new RecipeService();
-
   const defaultPageSize = 4;
   const location = useLocation();
 
@@ -29,33 +28,38 @@ export const RecipesPage = () => {
   const [searchString, setSearchString] = useState("");
   const [loading, setLoading] = useState<boolean>(false);
 
+  const { userId } = useAppStore();
+
   useEffect(() => {
     const initialSearchString = (location.state as RecipesPageProps | undefined)?.searchString ?? "";
     setSearchString(initialSearchString);
-    void getAllRecipes(initialSearchString, { pageNumber: 1, pageSize: defaultPageSize });
-  }, []);
+    getAllRecipes(initialSearchString, { pageNumber: 1, pageSize: defaultPageSize });
+  }, [userId]);
 
-  const getAllRecipes = async (searchQuery: string, currentPage: Page) => {
+  const getAllRecipes = (searchQuery: string, currentPage: Page) => {
     setLoading(true);
-    try {
-      const response = await recipeService.getRecipeList(searchQuery, currentPage);
-      setRecipes(response);
-    } catch (error) {
-      console.error("Ошибка загрузки рецептов:", error);
-    } finally {
-      setLoading(false);
-    }
+    recipeService
+      .getRecipeList(searchQuery, currentPage, userId ? userId : undefined)
+      .then((response) => {
+        setRecipes(response);
+      })
+      .catch((error: unknown) => {
+        console.error("Ошибка загрузки рецептов:", error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const handleLoadMore = () => {
     setPageNumber((prev) => prev + 1);
-    void getAllRecipes(searchString, { pageNumber: pageNumber, pageSize: defaultPageSize });
+    getAllRecipes(searchString, { pageNumber: pageNumber, pageSize: defaultPageSize });
   };
 
   const handleTagClick = (tag: string) => {
     setSearchString(tag);
     setPageNumber(1);
-    void getAllRecipes(tag, { pageNumber: 1, pageSize: defaultPageSize });
+    getAllRecipes(tag, { pageNumber: 1, pageSize: defaultPageSize });
   };
 
   const tagCards = [
@@ -85,7 +89,9 @@ export const RecipesPage = () => {
         <p className={styles.searchPanelTitle}>Поиск рецепта</p>
         <SearchBar
           searchQuery={searchString}
-          onSearch={() => void getAllRecipes(searchString, { pageNumber: 1, pageSize: defaultPageSize })}
+          onSearch={() => {
+            getAllRecipes(searchString, { pageNumber: 1, pageSize: defaultPageSize });
+          }}
           setSearchQuery={setSearchString}
         />
       </div>
