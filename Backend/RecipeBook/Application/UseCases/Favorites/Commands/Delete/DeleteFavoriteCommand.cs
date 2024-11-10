@@ -3,5 +3,5 @@
 public record DeleteFavoriteCommand
 {
     public int UserId { get; init; }
-    public int FavoriteId { get; init; }
+    public int RecipeId { get; init; }
 }

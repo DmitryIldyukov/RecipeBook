@@ -2,6 +2,7 @@
 using Application.Common.CQRS.Query;
 using Application.Common.Result;
 using Application.UseCases.Users.Commands.Create;
+using Application.UseCases.Users.Commands.Login;
 using Application.UseCases.Users.Commands.Update;
 using Application.UseCases.Users.Dtos;
 using Application.UseCases.Users.Queries.GetById;
@@ -16,10 +17,12 @@ public static class UserBindings
     {
         services.AddScoped<IValidator<CreateUserCommand>, CreateUserCommandValidator>();
         services.AddScoped<IValidator<UpdateUserCommand>, UpdateUserCommandValidator>();
+        services.AddScoped<IValidator<LoginUserCommand>, LoginUserCommandValidator>();
         services.AddScoped<IValidator<GetUserByIdQuery>, GetUserByIdQueryValidator>();
 
         services.AddScoped<ICommandHandler<CreateUserCommand, Result>, CreateUserCommandHandler>();
         services.AddScoped<ICommandHandler<UpdateUserCommand, Result>, UpdateUserCommandHandler>();
+        services.AddScoped<ICommandHandler<LoginUserCommand, ResultT<int>>, LoginUserCommandHandler>();
 
         services.AddScoped<IQueryHandler<GetUserByIdQuery, ResultT<GetUserQueryDto>>, GetUserByIdQueryHandler>();
     }

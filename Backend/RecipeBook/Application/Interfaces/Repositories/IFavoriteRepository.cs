@@ -5,6 +5,6 @@ namespace Application.Interfaces.Repositories;
 
 public interface IFavoriteRepository : ICreateRepository<Favorite>, IDeleteRepository<Favorite>
 {
-    Task<Favorite> GetById( int id );
+    Task<Favorite> GetByUserAndRecipeId( int userId, int recipeId );
     Task<bool> UserHasRecipeInFavorites( int userId, int recipeId );
 }

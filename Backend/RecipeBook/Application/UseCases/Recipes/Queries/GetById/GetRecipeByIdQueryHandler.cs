@@ -30,6 +30,15 @@ public class GetRecipeByIdQueryHandler(
             return ResultT<GetRecipeQueryDto>.Fail( $"Рецепт с Id {query.RecipeId} не найден." );
         }
 
+        if ( query.UserId is not null )
+        {
+            bool isLiked = recipe.Likes.Any( l => l.UserId == query.UserId );
+            bool isFavorite = recipe.Favorites.Any( l => l.UserId == query.UserId );
+            return ResultT<GetRecipeQueryDto>.Success( mapper.Map<GetRecipeQueryDto>( recipe )
+                with
+            { IsLiked = isLiked, IsFavorite = isFavorite }, "Рецепт найден." );
+        }
+
         return ResultT<GetRecipeQueryDto>.Success( mapper.Map<GetRecipeQueryDto>( recipe ), "Рецепт найден." );
     }
 }

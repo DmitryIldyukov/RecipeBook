@@ -10,6 +10,7 @@ using Application.UseCases.Recipes.Queries.GetDailyRecipe;
 using Application.UseCases.Recipes.Queries.GetFavoriteRecipes;
 using Application.UseCases.Recipes.Queries.GetRecipeImage;
 using Application.UseCases.Recipes.Queries.GetRecipesByFilter;
+using Application.UseCases.Recipes.Queries.GetUserRecipes;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Dtos.Recipe;
@@ -27,6 +28,7 @@ public class RecipeController(
     IQueryHandler<GetUserFavoriteRecipesQuery, ResultT<IReadOnlyList<GetRecipeQueryDto>>> getFavoriteRecipesHandler,
     IQueryHandler<GetRecipesByFilterQuery, ResultT<IReadOnlyList<GetRecipeQueryDto>>> getRecipesByFilterHandler,
     IQueryHandler<GetRecipeByIdQuery, ResultT<GetRecipeQueryDto>> getByIdHandler,
+    IQueryHandler<GetUserRecipesQuery, ResultT<IReadOnlyList<GetRecipeQueryDto>>> getUserRecipesHandler,
     IMapper mapper
 ) : ControllerBase
 {
@@ -45,10 +47,10 @@ public class RecipeController(
         return BadRequest( result.ErrorMessages );
     }
 
-    [HttpPost( "FavoriteUsers/{userId:int}" )]
+    [HttpPost( "FavoriteRecipes/{userId:int}" )]
     [ProducesResponseType( typeof( IReadOnlyList<GetRecipeQueryDto> ), StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
-    public async Task<IActionResult> GetUserFavoritesRecipes( [FromRoute] int userId, [FromBody] FavoriteRecipesDto recipesDto )
+    public async Task<IActionResult> GetUserFavoritesRecipes( [FromBody] FavoriteRecipesDto recipesDto, [FromRoute] int userId )
     {
         GetUserFavoriteRecipesQuery query = mapper.Map<GetUserFavoriteRecipesQuery>( recipesDto ) with { UserId = userId };
 
@@ -62,12 +64,12 @@ public class RecipeController(
         return BadRequest( result.ErrorMessages );
     }
 
-    [HttpPost( "GetRecipesByFilter" )]
+    [HttpPost( "GetRecipes" )]
     [ProducesResponseType( typeof( IReadOnlyList<GetRecipeQueryDto> ), StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
-    public async Task<IActionResult> GetRecipesByFilters( [FromBody] RecipesByFilterDto recipesDto )
+    public async Task<IActionResult> GetRecipesByFilters( [FromBody] RecipesByFilterDto recipesDto, [FromQuery] int? userId )
     {
-        GetRecipesByFilterQuery query = mapper.Map<GetRecipesByFilterQuery>( recipesDto );
+        GetRecipesByFilterQuery query = mapper.Map<GetRecipesByFilterQuery>( recipesDto ) with { UserId = userId };
 
         ResultT<IReadOnlyList<GetRecipeQueryDto>> result = await getRecipesByFilterHandler.Handle( query );
 
@@ -118,14 +120,35 @@ public class RecipeController(
     [HttpGet( "{recipeId:int}" )]
     [ProducesResponseType( typeof( IReadOnlyList<GetRecipeQueryDto> ), StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
-    public async Task<IActionResult> GetRecipeById( [FromRoute] int recipeId )
+    public async Task<IActionResult> GetRecipeById( [FromRoute] int recipeId, [FromQuery] int? userId )
     {
         GetRecipeByIdQuery query = new GetRecipeByIdQuery()
         {
+            UserId = userId,
             RecipeId = recipeId
         };
 
         ResultT<GetRecipeQueryDto> result = await getByIdHandler.Handle( query );
+
+        if ( result.IsSuccess )
+        {
+            return Ok( result.Value );
+        }
+
+        return BadRequest( result.ErrorMessages );
+    }
+
+    [HttpGet( "user/{userId:int}" )]
+    [ProducesResponseType( typeof( IReadOnlyList<GetRecipeQueryDto> ), StatusCodes.Status200OK )]
+    [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
+    public async Task<IActionResult> GetUserRecipes( [FromRoute] int userId )
+    {
+        GetUserRecipesQuery query = new GetUserRecipesQuery()
+        {
+            UserId = userId
+        };
+
+        ResultT<IReadOnlyList<GetRecipeQueryDto>> result = await getUserRecipesHandler.Handle( query );
 
         if ( result.IsSuccess )
         {

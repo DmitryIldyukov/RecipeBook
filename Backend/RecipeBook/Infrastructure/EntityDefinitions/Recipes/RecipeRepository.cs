@@ -35,6 +35,7 @@ public class RecipeRepository( RecipeBookDbContext dbContext ) : IRecipeReposito
     {
         return await dbContext.Recipes
             .Include( r => r.Likes )
+            .Include( r => r.Author )
             .OrderByDescending( r => r.Likes.Where( l => l.CreatedAt > DateTime.Now.AddDays( -1 ) ).Count() )
             .FirstOrDefaultAsync();
     }
@@ -85,5 +86,18 @@ public class RecipeRepository( RecipeBookDbContext dbContext ) : IRecipeReposito
             .Take( page.PageSize );
 
         return await recipes.ToListAsync();
+    }
+
+    public async Task<IReadOnlyList<Recipe>> GetUserRecipes( int userId )
+    {
+        return await dbContext.Recipes
+           .Include( r => r.Ingredients )
+           .Include( r => r.Steps )
+           .Include( r => r.Tags )
+           .Include( r => r.Likes )
+           .Include( r => r.Favorites )
+           .Include( r => r.Author )
+           .Where( r => r.AuthorId == userId )
+           .ToListAsync();
     }
 }

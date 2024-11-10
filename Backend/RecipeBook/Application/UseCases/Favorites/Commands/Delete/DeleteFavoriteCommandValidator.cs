@@ -6,8 +6,8 @@ public class DeleteFavoriteCommandValidator : AbstractValidator<DeleteFavoriteCo
 {
     public DeleteFavoriteCommandValidator()
     {
-        RuleFor( f => f.FavoriteId )
-            .NotEmpty().WithMessage( "Идентификатор избранного рецепта обязателен." );
+        RuleFor( f => f.RecipeId )
+            .NotEmpty().WithMessage( "Идентификатор рецепта обязателен." );
 
         RuleFor( f => f.UserId )
             .NotEmpty().WithMessage( "Идентификатор пользователя обязателен." );

@@ -8,4 +8,5 @@ public interface IUserRepository : ICreateRepository<User>
 {
     Task<bool> ContainsAsync( Expression<Func<User, bool>> predicate );
     Task<User> GetById( int id );
+    Task<User> GetByLogin( string login );
 }
