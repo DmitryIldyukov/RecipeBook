@@ -21,6 +21,11 @@ function App() {
     <BrowserRouter>
       <div className="app">
         <Header />
+        <div className="container">
+          <Routes>
+            <Route path={ROUTES.HOME} element={<HomePage />} />
+          </Routes>
+        </div>
         <Footer />
         {isLoginOrRegistraionPopupOpen && <LoginOrRegistrationPopup />}
         {isLoginPopupOpen && <LoginPopup />}
