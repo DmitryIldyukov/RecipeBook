@@ -13,12 +13,23 @@ import { EditRecipePage } from "./components/editRecipePage/editRecipePage";
 import { UserProfilePage } from "./components/userProfilePage/userProfilePage";
 import { LoginOrRegistrationPopup } from "./components/popups/loginOrRegistraionPopup/loginOrRegistrationPopup";
 import { LoginPopup } from "./components/popups/loginPopup/loginPopup";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   const { isLoginPopupOpen, isRegistrationPopupOpen, isLoginOrRegistraionPopupOpen } = usePopupStore();
 
   return (
     <BrowserRouter>
+      <Toaster
+        toastOptions={{
+          style: {
+            fontFamily: "Montserrat",
+            fontSize: "14px",
+          },
+        }}
+        position="top-center"
+        reverseOrder={false}
+      />
       <div className="app">
         <Header />
         <div className="container">
@@ -27,6 +38,7 @@ function App() {
             <Route path={ROUTES.RECIPES} element={<RecipesPage />} />
             <Route path={`${ROUTES.RECIPE_INFO}/:recipeId`} element={<RecipeFullInfo />} />
             <Route path={`${ROUTES.EDIT_RECIPE}/:recipeId?`} element={<EditRecipePage />} />
+            <Route path={`${ROUTES.PROFILE}/:userId`} element={<UserProfilePage />} />
             <Route path={ROUTES.FAVORITES} element={<FavoriteList />} />
             <Route path="*" element={<Navigate to={ROUTES.HOME} replace />} />
           </Routes>
