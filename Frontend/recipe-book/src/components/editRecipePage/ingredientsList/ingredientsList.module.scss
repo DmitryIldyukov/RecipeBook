@@ -1,0 +1,82 @@
+@import "../../../index.scss";
+
+.ingredientBlock {
+  display: flex;
+  flex-direction: column;
+  width: 380px;
+}
+
+.ingredientInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ingredientBlockTitle {
+  width: 170px;
+  font-family: $primary-font;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 30px;
+  color: #4a525a;
+}
+
+.ingredientBlockContent {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 40px;
+}
+
+.closeIconBox {
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+}
+
+.closeIconBox:hover {
+  cursor: pointer;
+}
+
+.closeIcon {
+  width: 14px;
+  height: 14px;
+}
+
+.ingredientData {
+  display: flex;
+  flex-direction: column;
+  padding: 36px 30px;
+  background-color: #ffffff;
+  gap: 20px;
+  border-radius: 24px;
+  box-shadow: 0px 16px 72px #22272f0d;
+}
+
+.ingredientTitle {
+  width: 100%;
+  font-family: $primary-font;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 28px;
+  color: $secondary-color;
+  border: solid 1px;
+  border-color: $secondary-color-light;
+  border-radius: 16px;
+  padding: 11px 18px;
+}
+
+.ingredientDescription {
+  min-height: 230px;
+  width: 100%;
+  font-family: $primary-font;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 28px;
+  color: $secondary-color;
+  border: solid 1px;
+  border-color: $secondary-color-light;
+  border-radius: 16px;
+  resize: none;
+  padding: 11px 18px;
+}
