@@ -27,17 +27,26 @@ public class TagRepository( RecipeBookDbContext dbContext ) : ITagRepository
         return await dbContext.Tags.FirstOrDefaultAsync( t => t.Name == name );
     }
 
-    public async Task<bool> IsUsedInOtherRecipes( int tagId, int recipeId )
+    public async Task<IReadOnlyList<Tag>> GetPopularTags( int count )
     {
-        var tag = await dbContext.Tags
+        if ( count < 0 )
+        {
+            return new List<Tag>();
+        }
+
+        return await dbContext.Tags
+            .Include( t => t.Recipes )
+            .OrderByDescending( t => t.Recipes.Count() )
+            .Take( count )
+            .ToListAsync();
+    }
+
+    public async Task<bool> IsUsedInMultipleRecipes( int tagId )
+    {
+        Tag tag = await dbContext.Tags
             .Include( t => t.Recipes )
             .FirstOrDefaultAsync( t => t.Id == tagId );
 
-        if ( tag == null )
-        {
-            return false;
-        }
-
-        return tag.Recipes.Any( r => r.Id != recipeId );
+        return tag != null && tag.Recipes.Count() > 1;
     }
 }

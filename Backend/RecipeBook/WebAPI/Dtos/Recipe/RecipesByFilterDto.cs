@@ -4,6 +4,6 @@ namespace WebAPI.Dtos.Recipe;
 
 public class RecipesByFilterDto
 {
-    public string SearchString { get; init; }
+    public List<string> SearchQueries { get; init; }
     public Page Page { get; init; }
 }

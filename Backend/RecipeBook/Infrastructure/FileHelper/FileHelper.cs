@@ -36,7 +36,7 @@ public class FileHelper : IFileHelper
 
         string fullPath = Path.Combine( path, fileName );
 
-        using ( var fileOut = File.Create( fullPath ) )
+        using ( FileStream fileOut = File.Create( fullPath ) )
         {
             file.Seek( 0, SeekOrigin.Begin );
             file.CopyTo( fileOut );

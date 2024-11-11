@@ -10,6 +10,6 @@ public class UpdateRecipeTagsCommandValidator : AbstractValidator<UpdateRecipeTa
             .NotNull().WithMessage( "Рецепт обязателен." );
 
         RuleFor( command => command.Tags )
-            .NotEmpty().WithMessage( "Тэги обязательны." );
+            .NotEmpty().WithMessage( "Теги обязательны." );
     }
 }

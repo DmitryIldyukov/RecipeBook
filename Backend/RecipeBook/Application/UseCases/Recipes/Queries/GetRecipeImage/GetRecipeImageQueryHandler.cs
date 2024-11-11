@@ -31,7 +31,7 @@ public class GetRecipeImageQueryHandler(
             return ResultT<GetImageQueryDto>.Fail( "Рецепт не найден." );
         }
 
-        var fullPath = BuildImagePath( recipe );
+        string fullPath = BuildImagePath( recipe );
 
         FileData file = fileHelper.Get( fullPath );
 
@@ -42,8 +42,8 @@ public class GetRecipeImageQueryHandler(
 
     private string BuildImagePath( Recipe recipe )
     {
-        var fileName = $"{recipe.Id}{Path.GetExtension( recipe.ImageName )}";
-        var storagePath = Path.Combine(
+        string fileName = $"{recipe.Id}{Path.GetExtension( recipe.ImageName )}";
+        string storagePath = Path.Combine(
             Directory.GetCurrentDirectory(),
             configuration.GetSection( "RecipeImages" ).Value
         );

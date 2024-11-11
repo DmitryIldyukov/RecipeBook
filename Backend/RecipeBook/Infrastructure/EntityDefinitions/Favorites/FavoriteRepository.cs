@@ -17,13 +17,13 @@ public class FavoriteRepository( RecipeBookDbContext dbContext ) : IFavoriteRepo
         dbContext.Remove( favorite );
     }
 
-    public async Task<Favorite> GetByUserAndRecipeId( int userId, int recipeId )
+    public async Task<Favorite> GetByUserIdAndRecipeId( int userId, int recipeId )
     {
         return await dbContext.Favorites
             .FirstOrDefaultAsync( f => f.UserId == userId && f.RecipeId == recipeId );
     }
 
-    public async Task<bool> UserHasRecipeInFavorites( int userId, int recipeId )
+    public async Task<bool> IsUserFavoriteRecipe( int userId, int recipeId )
     {
         return await dbContext.Favorites.AnyAsync( f => f.UserId == userId && f.RecipeId == recipeId );
     }
