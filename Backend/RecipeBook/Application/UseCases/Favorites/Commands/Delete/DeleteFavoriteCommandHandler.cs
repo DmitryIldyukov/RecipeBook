@@ -22,7 +22,7 @@ public class DeleteFavoriteCommandHandler(
             return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
-        Favorite favorite = await favoriteRepository.GetByUserAndRecipeId( command.UserId, command.RecipeId );
+        Favorite favorite = await favoriteRepository.GetByUserIdAndRecipeId( command.UserId, command.RecipeId );
 
         if ( favorite is null )
         {

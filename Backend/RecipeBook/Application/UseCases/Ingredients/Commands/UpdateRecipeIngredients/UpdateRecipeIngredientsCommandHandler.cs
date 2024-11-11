@@ -38,14 +38,20 @@ public class UpdateRecipeIngredientsCommandHandler(
         return Result.Success();
     }
 
-    private List<Ingredient> IdentifyIngredientsToRemove( ICollection<Ingredient> recipeIngredients, IEnumerable<RecipeIngredientDto> commandIngredients )
+    private List<Ingredient> IdentifyIngredientsToRemove(
+        ICollection<Ingredient> recipeIngredients,
+        ICollection<RecipeIngredientDto> commandIngredients
+    )
     {
         return recipeIngredients
             .Where( ingredient => !commandIngredients.Any( i => i.IngredientId == ingredient.Id ) )
             .ToList();
     }
 
-    private void RemoveIngredientsAsync( IEnumerable<Ingredient> ingredientsToRemove, ICollection<Ingredient> recipeIngredients )
+    private void RemoveIngredientsAsync(
+        IEnumerable<Ingredient> ingredientsToRemove,
+        ICollection<Ingredient> recipeIngredients
+    )
     {
         foreach ( Ingredient ingredient in ingredientsToRemove )
         {
@@ -54,13 +60,16 @@ public class UpdateRecipeIngredientsCommandHandler(
         }
     }
 
-    private async Task<Result> UpdateAndCreateIngredientsAsync( UpdateRecipeIngredientsCommand command, ICollection<Ingredient> recipeIngredients )
+    private async Task<Result> UpdateAndCreateIngredientsAsync(
+        UpdateRecipeIngredientsCommand command,
+        ICollection<Ingredient> recipeIngredients
+    )
     {
-        foreach ( RecipeIngredientDto ingredientDto in command.Ingredients )
+        foreach ( RecipeIngredientDto ingredient in command.Ingredients )
         {
-            if ( ingredientDto.IngredientId is not null )
+            if ( ingredient.IngredientId is not null )
             {
-                Result updateResult = await UpdateExistingIngredientAsync( ingredientDto, recipeIngredients );
+                Result updateResult = await UpdateExistingIngredientAsync( ingredient, recipeIngredients );
                 if ( !updateResult.IsSuccess )
                 {
                     return updateResult;
@@ -68,7 +77,7 @@ public class UpdateRecipeIngredientsCommandHandler(
             }
             else
             {
-                Result createResult = await CreateNewIngredientAsync( ingredientDto, command.Recipe );
+                Result createResult = await CreateNewIngredientAsync( ingredient, command.Recipe );
                 if ( !createResult.IsSuccess )
                 {
                     return createResult;
@@ -79,7 +88,10 @@ public class UpdateRecipeIngredientsCommandHandler(
         return Result.Success();
     }
 
-    private async Task<Result> UpdateExistingIngredientAsync( RecipeIngredientDto ingredientDto, ICollection<Ingredient> recipeIngredients )
+    private async Task<Result> UpdateExistingIngredientAsync(
+        RecipeIngredientDto ingredientDto,
+        ICollection<Ingredient> recipeIngredients
+    )
     {
         Ingredient ingredientEntity = recipeIngredients.FirstOrDefault( i => i.Id == ingredientDto.IngredientId );
         if ( ingredientEntity == null )

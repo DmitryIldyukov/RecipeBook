@@ -17,13 +17,13 @@ public class LikeRepository( RecipeBookDbContext dbContext ) : ILikeRepository
         dbContext.Remove( Like );
     }
 
-    public async Task<Like> GetByUserAndRecipeId( int userId, int recipeId )
+    public async Task<Like> GetByUserIdAndRecipeId( int userId, int recipeId )
     {
         return await dbContext.Likes
             .FirstOrDefaultAsync( f => f.UserId == userId && f.RecipeId == recipeId );
     }
 
-    public async Task<bool> UserHasRecipeInLikes( int userId, int recipeId )
+    public async Task<bool> IsRecipeLikedByUser( int userId, int recipeId )
     {
         return await dbContext.Likes.AnyAsync( f => f.UserId == userId && f.RecipeId == recipeId );
     }

@@ -23,7 +23,7 @@ public class GetRecipesByFilterQueryHandler(
             return ResultT<IReadOnlyList<GetRecipeQueryDto>>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
-        IReadOnlyList<Recipe> recipes = await recipeRepository.GetRecipesByFilter( query.SearchString, query.Page );
+        IReadOnlyList<Recipe> recipes = await recipeRepository.GetRecipesByFilter( query.SearchQueries, query.Page );
 
         IReadOnlyList<GetRecipeQueryDto> response = recipes.Select( recipe =>
         {

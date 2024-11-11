@@ -16,6 +16,6 @@ public class GetAllTagsQueryHandler(
     {
         IReadOnlyList<Tag> tags = await tagRepository.GetAll();
 
-        return ResultT<IReadOnlyList<GetTagDto>>.Success( mapper.Map<IReadOnlyList<GetTagDto>>( tags ), "Тэги успешно получены." );
+        return ResultT<IReadOnlyList<GetTagDto>>.Success( mapper.Map<IReadOnlyList<GetTagDto>>( tags ), "Теги успешно получены." );
     }
 }

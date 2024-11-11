@@ -7,5 +7,6 @@ public interface ITagRepository : ICreateRepository<Tag>, IDeleteRepository<Tag>
 {
     Task<Tag> GetByName( string name );
     Task<IReadOnlyList<Tag>> GetAll();
-    Task<bool> IsUsedInOtherRecipes( int tagId, int RecipeId );
+    Task<IReadOnlyList<Tag>> GetPopularTags( int count );
+    Task<bool> IsUsedInMultipleRecipes( int tagId );
 }

@@ -31,7 +31,7 @@ public class CreateLikeCommandHandler(
             return Result.Fail( $"Рецепт с Id {command.RecipeId} не найден." );
         }
 
-        bool userHasRecipeInLikes = await likeRepository.UserHasRecipeInLikes( command.UserId, command.RecipeId );
+        bool userHasRecipeInLikes = await likeRepository.IsRecipeLikedByUser( command.UserId, command.RecipeId );
         if ( userHasRecipeInLikes )
         {
             return Result.Fail( "Этот рецепт уже добавлен в понравившееся." );

@@ -52,11 +52,17 @@ public class UpdateRecipeCommandHandler(
             return Result.Fail( updateTagsResult.ErrorMessages );
         }
 
-        await UpdateTags( recipe, command.Tags );
+        Result updateStepsResult = await UpdateSteps( recipe, command.Steps );
+        if ( !updateStepsResult.IsSuccess )
+        {
+            return Result.Fail( updateStepsResult.ErrorMessages );
+        }
 
-        await UpdateSteps( recipe, command.Steps );
-
-        await UpdateIngredients( recipe, command.Ingredients );
+        Result updateIngredientsResult = await UpdateIngredients( recipe, command.Ingredients );
+        if ( !updateIngredientsResult.IsSuccess )
+        {
+            return Result.Fail( updateIngredientsResult.ErrorMessages );
+        }
 
         if ( command.ImageFile is not null )
         {

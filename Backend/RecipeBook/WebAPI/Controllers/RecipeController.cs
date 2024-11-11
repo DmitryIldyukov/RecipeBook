@@ -138,7 +138,7 @@ public class RecipeController(
         return BadRequest( result.ErrorMessages );
     }
 
-    [HttpGet( "user/{userId:int}" )]
+    [HttpGet( "User/{userId:int}" )]
     [ProducesResponseType( typeof( IReadOnlyList<GetRecipeQueryDto> ), StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
     public async Task<IActionResult> GetUserRecipes( [FromRoute] int userId )

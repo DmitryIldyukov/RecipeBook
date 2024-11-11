@@ -22,7 +22,7 @@ public class DeleteLikeCommandHandler(
             return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
-        Like like = await likeRepository.GetByUserAndRecipeId( command.UserId, command.RecipeId );
+        Like like = await likeRepository.GetByUserIdAndRecipeId( command.UserId, command.RecipeId );
 
         if ( like is null )
         {
