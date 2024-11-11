@@ -37,7 +37,8 @@ export const SortByTags = () => {
   const navigate = useNavigate();
 
   const handleTagClick = (searchString: string) => {
-    navigate(ROUTES.RECIPES, { state: { searchString } });
+    const searchQueries = [searchString];
+    navigate(ROUTES.RECIPES, { state: { searchQueries } });
   };
 
   return (

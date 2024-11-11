@@ -3,15 +3,18 @@ import MyButton from "../../customComponents/myButton/myButton";
 import styles from "./searchBar.module.scss";
 import { Tag } from "../../../types/recipe";
 import TagService from "../../../services/tagService";
+import muliply from "../../../assets/multiply.svg";
+import { handleError } from "../../../utils/errorHandler";
 
 type SearchBarProps = {
-  searchQuery: string;
   onSearch: () => void;
-  setSearchQuery: (query: string) => void;
+  searchQueries: string[];
+  setSearchQueries: (searchQueries: string[]) => void;
 };
 
-export const SearchBar = ({ searchQuery, onSearch, setSearchQuery }: SearchBarProps) => {
+export const SearchBar = ({ onSearch, searchQueries, setSearchQueries }: SearchBarProps) => {
   const [tags, setTags] = useState<Tag[]>([]);
+  const [inputValue, setInputValue] = useState("");
   const tagService = new TagService();
 
   useEffect(() => {
@@ -21,42 +24,79 @@ export const SearchBar = ({ searchQuery, onSearch, setSearchQuery }: SearchBarPr
         setTags(tags);
       })
       .catch((error: unknown) => {
-        console.error(error);
+        handleError(error, "Произошла ошибка при получении популярных тегов");
       });
   }, []);
 
+  const handleRemoveOption = (query: string) => {
+    setSearchQueries(searchQueries.filter((s) => s !== query));
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter" && inputValue.trim() !== "") {
+      setSearchQueries([...searchQueries, inputValue.trim()]);
+      setInputValue("");
+    }
+  };
+
+  const handleSearch = () => {
+    if (inputValue.trim() !== "" && !searchQueries.includes(inputValue.trim())) {
+      setSearchQueries([...searchQueries, inputValue.trim()]);
+    }
+
+    onSearch();
+  };
+
   return (
     <div className={styles.container}>
-      <div className={styles.line}>
-        <div className={styles.searchBar}>
-          <div className={styles.line}>
+      <div className={styles.searchBar}>
+        <div className={styles.line}>
+          <div className={styles.inputBox}>
+            {searchQueries.length > 0 && (
+              <ul className={styles.selectedTags}>
+                {searchQueries.map((query, index) => (
+                  <li key={index} className={styles.selectedTag}>
+                    {query}
+                    <button
+                      onClick={() => {
+                        handleRemoveOption(query);
+                      }}
+                      className={styles.removeButton}
+                    >
+                      <img src={muliply} alt="" className={styles.removeIcon} />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
             <input
               type="text"
               placeholder="Название Блюда...."
               className={styles.searchBarInput}
-              value={searchQuery}
+              value={inputValue}
               onChange={(e) => {
-                setSearchQuery(e.target.value);
+                setInputValue(e.target.value);
               }}
+              onKeyDown={handleKeyDown}
             />
-            <div className={styles.tagBar}>
-              {tags.map((tag) => (
-                <p
-                  key={tag.id}
-                  className={styles.tag}
-                  onClick={() => {
-                    setSearchQuery(tag.name);
-                  }}
-                >
-                  {tag.name}
-                </p>
-              ))}
-            </div>
           </div>
-          <MyButton isPrimary={true} onClick={onSearch} width="152px" height="73px">
-            Поиск
-          </MyButton>
+          <div className={styles.tagBar}>
+            {tags.map((query, index) => (
+              <p
+                key={index}
+                className={styles.tag}
+                onClick={() => {
+                  setSearchQueries([...searchQueries, query.name]);
+                }}
+              >
+                {query.name}
+              </p>
+            ))}
+          </div>
         </div>
+        <MyButton isPrimary={true} onClick={handleSearch} width="152px" height="73px">
+          Поиск
+        </MyButton>
       </div>
     </div>
   );

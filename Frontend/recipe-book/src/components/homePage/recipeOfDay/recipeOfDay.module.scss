@@ -98,6 +98,10 @@
 }
 
 .loader {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 40px 0;
   font-family: $primary-font;
   color: $secondary-color;
   font-weight: 400;

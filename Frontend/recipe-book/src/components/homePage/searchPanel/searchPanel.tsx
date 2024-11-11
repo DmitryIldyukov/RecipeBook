@@ -5,12 +5,12 @@ import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../../constants/constants";
 
 export const SearchPanel = () => {
-  const [searchString, setSearchString] = useState("");
+  const [searchQueries, setSearchQueries] = useState<string[]>([]);
   const navigate = useNavigate();
 
   const handleSearch = useCallback(() => {
-    navigate(ROUTES.RECIPES, { state: { searchString } });
-  }, [navigate, searchString]);
+    navigate(ROUTES.RECIPES, { state: { searchQueries } });
+  }, [searchQueries]);
 
   return (
     <div className={styles.container}>
@@ -19,7 +19,7 @@ export const SearchPanel = () => {
         <p className={styles.description}>Введите примерное название блюда, а мы по тегам найдем его</p>
       </div>
       <div className={styles.searchPanel}>
-        <SearchBar searchQuery={searchString} onSearch={handleSearch} setSearchQuery={setSearchString} />
+        <SearchBar onSearch={handleSearch} searchQueries={searchQueries} setSearchQueries={setSearchQueries} />
       </div>
     </div>
   );

@@ -82,48 +82,36 @@ export const TagEditor = ({ tags, setTags }: TagEditorProps) => {
 
   return (
     <div className={styles.tagEditor} ref={tagEditorRef}>
-      {tags.length > 3 ? (
-        <div className={styles.selectedTags}>
-          <div>...{tags.length - 1}</div>
-          <div className={styles.selectedTag}>
-            {tags[tags.length - 1].name}
-            <button
-              onClick={() => {
-                handleRemoveOption(tags[tags.length - 1]);
-              }}
-              className={styles.removeButton}
-            >
-              <img src={muliply} alt="" className={styles.removeIcon} />
-            </button>
-          </div>
-        </div>
-      ) : (
-        <ul className={styles.selectedTags}>
-          {tags.map((tag, index) => (
-            <li key={index} className={styles.selectedTag}>
-              <p className={styles.selectedTagName}>{tag.name}</p>
-              <button
-                onClick={() => {
-                  handleRemoveOption(tag);
-                }}
-              >
-                <img src={muliply} alt="" className={styles.removeIcon} />
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
-      <input
-        type="text"
-        value={inputValue}
-        className={tags.length > 0 ? styles.tagInput : styles.tagInputSmall}
-        onChange={handleInputChange}
-        onKeyDown={handleKeyDown}
-        onFocus={() => {
-          setShowDropdown(true);
-        }}
-        placeholder="Добавить теги"
-      />
+      <div className={styles.inputBox}>
+        {tags.length > 0 && (
+          <ul className={styles.selectedTags}>
+            {tags.map((tag, index) => (
+              <li key={index} className={styles.selectedTag}>
+                {tag.name}
+                <button
+                  type="button"
+                  onClick={() => {
+                    handleRemoveOption(tag);
+                  }}
+                >
+                  <img src={muliply} alt="" className={styles.removeIcon} />
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+        <input
+          type="text"
+          value={inputValue}
+          className={styles.tagInput}
+          onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
+          onFocus={() => {
+            setShowDropdown(true);
+          }}
+          placeholder="Добавить теги"
+        />
+      </div>
       {showDropdown && filteredTags.length > 0 && (
         <ul className={styles.dropdown}>
           {filteredTags.map((tag) => (

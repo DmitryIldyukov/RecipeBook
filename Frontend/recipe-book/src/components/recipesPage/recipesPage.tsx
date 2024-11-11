@@ -16,7 +16,7 @@ import { useAppStore } from "../../hooks/useStore";
 import { RecipeCard } from "../customComponents/recipeCard/recipeCard";
 
 type RecipesPageProps = {
-  searchString: string;
+  searchQueries: string[];
 };
 
 export const RecipesPage = () => {
@@ -25,23 +25,34 @@ export const RecipesPage = () => {
 
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [pageNumber, setPageNumber] = useState(1);
-  const [searchString, setSearchString] = useState("");
+  const [searchQueries, setSearchQueries] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [isCanLoadMore, setIsCanLoadMore] = useState<boolean>(false);
 
   const { userId } = useAppStore();
 
   useEffect(() => {
-    const initialSearchString = (location.state as RecipesPageProps | undefined)?.searchString ?? "";
-    setSearchString(initialSearchString);
-    getAllRecipes(initialSearchString, { pageNumber: 1, pageSize: defaultPageSize });
+    const initialSearchQuery = (location.state as RecipesPageProps | undefined)?.searchQueries ?? [];
+    setSearchQueries(initialSearchQuery);
+    getAllRecipes(initialSearchQuery, { pageNumber: 1, pageSize: defaultPageSize });
   }, [userId]);
 
-  const getAllRecipes = (searchQuery: string, currentPage: Page) => {
+  useEffect(() => {
+    setPageNumber(1);
+    setIsCanLoadMore(false);
+  }, [searchQueries]);
+
+  const getAllRecipes = (searchQuery: string[], currentPage: Page) => {
     setLoading(true);
     recipeService
       .getRecipeList(searchQuery, currentPage, userId ? userId : undefined)
       .then((response) => {
-        setRecipes(response);
+        if (currentPage.pageNumber === 1) {
+          setRecipes(response);
+        } else {
+          setRecipes((prevRecipes) => [...prevRecipes, ...response]);
+        }
+        setIsCanLoadMore(response.length === defaultPageSize);
       })
       .catch((error: unknown) => {
         console.error("Ошибка загрузки рецептов:", error);
@@ -51,15 +62,20 @@ export const RecipesPage = () => {
       });
   };
 
-  const handleLoadMore = () => {
-    setPageNumber((prev) => prev + 1);
-    getAllRecipes(searchString, { pageNumber: pageNumber, pageSize: defaultPageSize });
+  const handleSearch = () => {
+    setPageNumber(1);
+    getAllRecipes(searchQueries, { pageNumber: 1, pageSize: defaultPageSize });
   };
 
-  const handleTagClick = (tag: string) => {
-    setSearchString(tag);
+  const handleLoadMore = () => {
+    const nextPageNumber = pageNumber + 1;
+    setPageNumber(nextPageNumber);
+    getAllRecipes(searchQueries, { pageNumber: nextPageNumber, pageSize: defaultPageSize });
+  };
+
+  const handleTagClick = (searchString: string) => {
+    setSearchQueries([...searchQueries, searchString]);
     setPageNumber(1);
-    getAllRecipes(tag, { pageNumber: 1, pageSize: defaultPageSize });
   };
 
   const tagCards = [
@@ -88,28 +104,26 @@ export const RecipesPage = () => {
       <div className={styles.searchPanel}>
         <p className={styles.searchPanelTitle}>Поиск рецепта</p>
         <SearchBar
-          searchQuery={searchString}
+          searchQueries={searchQueries}
           onSearch={() => {
-            getAllRecipes(searchString, { pageNumber: 1, pageSize: defaultPageSize });
+            handleSearch();
           }}
-          setSearchQuery={setSearchString}
+          setSearchQueries={setSearchQueries}
         />
       </div>
 
-      {loading && <p className={styles.emptyRecipeListText}>Загрузка рецептов...</p>}
-
       <ul className={styles.recipeListBox}>
-        {recipes.length > 0 ? (
-          recipes.map((recipe) => <RecipeCard recipe={recipe} key={recipe.recipeId} />)
-        ) : (
-          <p className={styles.emptyRecipeListText}>Рецепты не найдены</p>
-        )}
+        {recipes.length > 0
+          ? recipes.map((recipe) => <RecipeCard recipe={recipe} key={recipe.recipeId} />)
+          : loading && <p className={styles.emptyRecipeListText}>Рецепты не найдены</p>}
       </ul>
 
       <div className={styles.loadBtn}>
-        <MyButton onClick={handleLoadMore} isPrimary={false} width="309px" height="60px">
-          Загрузить еще
-        </MyButton>
+        {isCanLoadMore && (
+          <MyButton onClick={handleLoadMore} isPrimary={false} width="309px" height="60px">
+            Загрузить еще
+          </MyButton>
+        )}
       </div>
     </div>
   );

@@ -7,13 +7,13 @@ class RecipeService {
     return fetchClient<Recipe>("/api/Recipe/DailyRecipe");
   }
 
-  async getRecipeList(searchString: string, page: Page, userId?: number): Promise<Recipe[]> {
+  async getRecipeList(searchQueries: string[], page: Page, userId?: number): Promise<Recipe[]> {
     const params = userId ? `?userId=${userId.toString()}` : "";
 
     return fetchClient<Recipe[]>(`/api/Recipe/GetRecipes${params}`, {
       method: "POST",
       body: JSON.stringify({
-        searchString,
+        searchQueries,
         page,
       }),
     });

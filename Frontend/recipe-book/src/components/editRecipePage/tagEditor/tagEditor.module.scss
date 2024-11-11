@@ -7,45 +7,39 @@
 }
 
 .tagInput {
-  position: absolute;
-  width: 100%;
   font-family: $primary-font;
   font-weight: 400;
   font-size: 16px;
   line-height: 28px;
   color: $secondary-color;
-  border: solid 1px;
-  border-color: $secondary-color-light;
-  border-radius: 16px;
-  padding: 18px 24px 4px;
+  padding: 11px 24px;
+  border: none;
+  background-color: transparent;
 }
 
-.tagInputSmall {
-  position: absolute;
-  width: 100%;
-  font-family: $primary-font;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 28px;
-  color: $secondary-color;
-  border: solid 1px;
-  border-color: $secondary-color-light;
-  border-radius: 16px;
-  padding: 11px 24px;
+.tagInput:focus {
+  outline: none;
+  outline-offset: 0;
 }
 
 .selectedTags {
-  position: absolute;
   z-index: 1;
   display: flex;
   flex-direction: row;
+  align-items: center;
+  white-space: nowrap;
   gap: 5px;
+  max-width: 300px;
   padding: 0px 24px;
   font-family: $primary-font;
   font-weight: 400;
   font-size: 14px;
   line-height: 28px;
   color: $secondary-color;
+  border-right: solid 1px #dddddd;
+  overflow-x: overlay;
+  scrollbar-width: thin;
+  scrollbar-color: hsl(0 0% 50%);
 }
 
 .selectedTag {
@@ -53,6 +47,15 @@
   flex-direction: row;
   align-items: center;
   gap: 3px;
+  font-family: $primary-font;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #4a525a;
+  white-space: nowrap;
+  padding: 2px 8px;
+  border-radius: 16px;
+  background-color: #fdb100;
 }
 
 .removeButton {
@@ -69,10 +72,8 @@
 }
 
 .dropdown {
-  position: absolute;
   display: flex;
   flex-direction: column;
-  margin-top: 50px;
   height: 120px;
   width: 100%;
   overflow-x: auto;
@@ -86,9 +87,20 @@
   border: solid 1px $secondary-color-light;
   border-radius: 16px;
   z-index: 1;
+  scrollbar-width: thin;
+  scrollbar-color: hsl(0 0% 50%);
 }
 
 .dropdownOption:hover {
   cursor: pointer;
   opacity: 0.8;
+}
+
+.inputBox {
+  display: flex;
+  flex-direction: row;
+
+  border: solid 1px;
+  border-color: $secondary-color-light;
+  border-radius: 16px;
 }

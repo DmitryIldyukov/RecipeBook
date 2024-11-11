@@ -30,9 +30,10 @@
 
 .searchPanel {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex-direction: row;
+  width: 884px;
   margin: 0 auto;
+  align-items: center;
 }
 
 .tagBar {

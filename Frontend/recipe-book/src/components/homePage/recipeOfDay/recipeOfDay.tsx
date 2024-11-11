@@ -90,10 +90,6 @@ export const RecipeOfDay = () => {
     return <div className={styles.loader}>Загрузка...</div>;
   }
 
-  if (error) {
-    return <div className={styles.error}>{error}</div>;
-  }
-
   return recipe ? (
     <div onClick={navigateToRecipeInfo} className={styles.container}>
       <div className={styles.imgBlock}>
@@ -123,6 +119,6 @@ export const RecipeOfDay = () => {
       </div>
     </div>
   ) : (
-    <p>Рецепт дня не найден</p>
+    <p className={styles.loader}>Рецепт дня не найден</p>
   );
 };
