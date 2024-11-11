@@ -4,6 +4,7 @@ using Application.Interfaces.Repositories;
 using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Infrastructure.EntityDefinitions.Recipes;
 
@@ -63,7 +64,7 @@ public class RecipeRepository( RecipeBookDbContext dbContext ) : IRecipeReposito
         return await dbContext.Recipes.AnyAsync( predicate );
     }
 
-    public async Task<IReadOnlyList<Recipe>> GetRecipesByFilter( string searchString, Page page )
+    public async Task<IReadOnlyList<Recipe>> GetRecipesByFilter( List<string> searchQueries, Page page )
     {
         IQueryable<Recipe> recipes = dbContext.Recipes
             .Include( r => r.Tags )
@@ -71,14 +72,13 @@ public class RecipeRepository( RecipeBookDbContext dbContext ) : IRecipeReposito
             .Include( r => r.Favorites )
             .Include( r => r.Author );
 
-        searchString = searchString.Trim();
-
-        if ( !string.IsNullOrEmpty( searchString ) )
+        if ( searchQueries is not null && searchQueries.Any() )
         {
-            recipes = recipes.Where( r =>
-                EF.Functions.Like( r.Name, $"%{searchString}%" ) ||
-                r.Tags.Any( t => EF.Functions.Like( t.Name, $"%{searchString}%" ) )
-            );
+            List<string> trimmedQuery = searchQueries.Select( s => s.ToLower().Trim() ).ToList();
+
+            recipes = recipes.Where( r => trimmedQuery.Any( q =>
+                r.Name.Contains( q ) ) ||
+                trimmedQuery.Any( q => r.Tags.Any( t => t.Name.Contains( q ) ) ) ).AsQueryable();
         }
 
         recipes = recipes
