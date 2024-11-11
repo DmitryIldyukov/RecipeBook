@@ -31,6 +31,6 @@ public class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeComman
             .NotEmpty().WithMessage( "Ингредиенты для приготовления обязательны." );
 
         RuleFor( r => r.Tags )
-            .NotEmpty().WithMessage( "Тэги обязательны." );
+            .NotEmpty().WithMessage( "Теги обязательны." );
     }
 }

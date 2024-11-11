@@ -88,7 +88,7 @@ public class CreateRecipeCommandHandler(
             }
         }
 
-        return Result.Success( "Тэги успешно добавлены." );
+        return Result.Success( "Теги успешно добавлены." );
     }
 
     private async Task<Result> AddSteps( Recipe recipe, ICollection<RecipeStepDto> steps )

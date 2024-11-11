@@ -10,7 +10,7 @@ public class CreateTagCommandValidator : AbstractValidator<CreateTagCommand>
             .NotNull().WithMessage( "Рецепт обязателен." );
 
         RuleFor( command => command.Name )
-            .NotEmpty().WithMessage( "Тэг не может быть пустым." )
-            .MaximumLength( 20 ).WithMessage( "Максимальная длина тэга 30 символов." );
+            .NotEmpty().WithMessage( "Тег не может быть пустым." )
+            .MaximumLength( 20 ).WithMessage( "Максимальная длина тега 30 символов." );
     }
 }

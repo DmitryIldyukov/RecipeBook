@@ -24,9 +24,9 @@ public class GetTagByNameQueryHandler(
         Tag tag = await tagRepository.GetByName( query.Tag );
         if ( tag is null )
         {
-            return ResultT<GetTagDto>.Fail( "Тэг не найден." );
+            return ResultT<GetTagDto>.Fail( "Тег не найден." );
         }
 
-        return ResultT<GetTagDto>.Success( mapper.Map<GetTagDto>( tag ), $"Тэг {tag.Name} найден." );
+        return ResultT<GetTagDto>.Success( mapper.Map<GetTagDto>( tag ), $"Тег {tag.Name} найден." );
     }
 }
