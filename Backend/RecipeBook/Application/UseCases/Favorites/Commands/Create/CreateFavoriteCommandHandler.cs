@@ -31,7 +31,7 @@ public class CreateFavoriteCommandHandler(
             return Result.Fail( $"Рецепт с Id {command.RecipeId} не найден." );
         }
 
-        bool userHasRecipeInFavorites = await favoriteRepository.UserHasRecipeInFavorites( command.UserId, command.RecipeId );
+        bool userHasRecipeInFavorites = await favoriteRepository.IsUserFavoriteRecipe( command.UserId, command.RecipeId );
         if ( userHasRecipeInFavorites )
         {
             return Result.Fail( "Этот рецепт уже добавлен в избранное." );

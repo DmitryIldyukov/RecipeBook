@@ -30,7 +30,7 @@ public class DeleteTagsCommandHandler(
         foreach ( Tag tag in command.Tags )
         {
             recipe.Tags.Remove( tag );
-            if ( !await tagRepository.IsUsedInOtherRecipes( tag.Id, recipe.Id ) )
+            if ( !await tagRepository.IsUsedInMultipleRecipes( tag.Id ) )
             {
                 tagRepository.Delete( tag );
             }
