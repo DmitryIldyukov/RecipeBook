@@ -13,7 +13,7 @@ type IngredientsListProps = {
 export const IngredientsList = ({ ingredients, setIngredients }: IngredientsListProps) => {
   const handleIngredientChange = (index: number, field: keyof Ingredient, value: string) => {
     const updatedIngredients = [...ingredients];
-    updatedIngredients[index][field] = value;
+    (updatedIngredients[index][field] as string) = value;
     setIngredients(updatedIngredients);
   };
 

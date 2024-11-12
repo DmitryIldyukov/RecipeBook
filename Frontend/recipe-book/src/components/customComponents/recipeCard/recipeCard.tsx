@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppStore } from "../../../hooks/useStore";
 import { usePopupStore } from "../../../hooks/usePopupStore";
+import { handleError } from "../../../utils/errorHandler";
 
 type RecipeCardProps = {
   recipe: Recipe;
@@ -33,7 +34,7 @@ export const RecipeCard = ({ recipe }: RecipeCardProps) => {
       const response = await recipeService.getRecipeImage(recipeId);
       setImage(response);
     } catch (error) {
-      console.error("Ошибка загрузки изображения рецепта:", error);
+      handleError(error, "Произошла ошибка при загрузке изображения рецепта");
     } finally {
       setLoadingImage(false);
     }
@@ -58,7 +59,7 @@ export const RecipeCard = ({ recipe }: RecipeCardProps) => {
         }
       }
     } catch (error) {
-      console.error("Ошибка добавления лайка:", error);
+      handleError(error, "Произошла ошибка при добавлении рецепта в понравившиеся");
     }
   };
 
@@ -81,7 +82,7 @@ export const RecipeCard = ({ recipe }: RecipeCardProps) => {
         }
       }
     } catch (error) {
-      console.error("Ошибка добавления в избранное:", error);
+      handleError(error, "Произошла ошибка при добавлении рецепта в избранное");
     }
   };
 

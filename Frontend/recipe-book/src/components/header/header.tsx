@@ -97,8 +97,7 @@ export const Header = () => {
               <button
                 className={styles.loginBtn}
                 onClick={() => {
-                  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                  navigate(`${ROUTES.PROFILE}/${userId}`);
+                  navigate(`${ROUTES.PROFILE}/${userId.toString()}`);
                 }}
               >
                 Привет, {user?.name}

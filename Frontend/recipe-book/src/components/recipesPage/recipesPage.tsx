@@ -34,6 +34,7 @@ export const RecipesPage = () => {
   useEffect(() => {
     const initialSearchQuery = (location.state as RecipesPageProps | undefined)?.searchQueries ?? [];
     setSearchQueries(initialSearchQuery);
+    setPageNumber(1);
     getAllRecipes(initialSearchQuery, { pageNumber: 1, pageSize: defaultPageSize });
   }, [userId]);
 

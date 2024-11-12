@@ -2,7 +2,6 @@ import { COOK_TIME_OPTIONS, PORTION_COUNT_OPTIONS } from "../../../constants/con
 import { Tag } from "../../../types/recipe";
 import { TagEditor } from "../tagEditor/tagEditor";
 import styles from "./recipeForm.module.scss";
-import selectIcon from "../../../assets/selectArrow.svg";
 
 type RecipeFormProps = {
   name: string;

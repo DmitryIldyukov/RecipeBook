@@ -10,11 +10,11 @@ import { useAppStore } from "../../../hooks/useStore";
 import { usePopupStore } from "../../../hooks/usePopupStore";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../../constants/constants";
+import { handleError } from "../../../utils/errorHandler";
 
 export const RecipeOfDay = () => {
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
   const [image, setImage] = useState<string>("");
   const [loadingImage, setLoadingImage] = useState<boolean>(true);
 
@@ -25,13 +25,11 @@ export const RecipeOfDay = () => {
 
   const getRecipeOfDay = async () => {
     setLoading(true);
-    setError(null);
     try {
       const data = await recipeService.getRecipeOfDay();
       setRecipe(data);
     } catch (error) {
-      setError("Ошибка загрузки рецепта.");
-      console.error(error);
+      handleError(error, "Произошла ошибка при загрузке рецепта дня");
     } finally {
       setLoading(false);
     }
