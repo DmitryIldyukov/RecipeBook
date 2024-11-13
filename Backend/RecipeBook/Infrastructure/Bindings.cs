@@ -1,4 +1,5 @@
 ﻿using Application.Common.FileHelper;
+using Application.Common.JwtProvider;
 using Application.Common.PasswordHasher;
 using Application.Interfaces;
 using Application.Interfaces.Repositories;
@@ -10,6 +11,7 @@ using Infrastructure.EntityDefinitions.Recipes;
 using Infrastructure.EntityDefinitions.Steps;
 using Infrastructure.EntityDefinitions.Tags;
 using Infrastructure.EntityDefinitions.Users;
+using Infrastructure.JwtProviders;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure;
@@ -27,6 +29,7 @@ public static class Bindings
         services.AddScoped<ILikeRepository, LikeRepository>();
 
         services.AddScoped<IPasswordHasher, PasswordHasher.PasswordHasher>();
+        services.AddScoped<IJwtProvider, JwtProvider>();
         services.AddScoped<IFileHelper, FileHelper.FileHelper>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();

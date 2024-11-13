@@ -7,6 +7,7 @@ using Application.UseCases.Users.Commands.Update;
 using Application.UseCases.Users.Dtos;
 using Application.UseCases.Users.Queries.GetById;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Dtos.User;
 
@@ -17,7 +18,7 @@ namespace WebAPI.Controllers;
 public class UserController(
     ICommandHandler<CreateUserCommand, Result> createUserCommandHandler,
     ICommandHandler<UpdateUserCommand, Result> updateUserCommandHandler,
-    ICommandHandler<LoginUserCommand, ResultT<int>> loginUserCommandHandler,
+    ICommandHandler<LoginUserCommand, ResultT<string>> loginUserCommandHandler,
     IQueryHandler<GetUserByIdQuery, ResultT<GetUserQueryDto>> getUserByIdHandler,
     IMapper mapper
 ) : ControllerBase
@@ -38,6 +39,7 @@ public class UserController(
         return BadRequest( result.ErrorMessages );
     }
 
+    [Authorize]
     [HttpGet( "{userId:int}" )]
     [ProducesResponseType( typeof( GetUserQueryDto ), StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
@@ -57,6 +59,7 @@ public class UserController(
         return BadRequest( result.ErrorMessages );
     }
 
+    [Authorize]
     [HttpPut( "{userId:int}" )]
     [ProducesResponseType( StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
@@ -87,7 +90,7 @@ public class UserController(
     {
         LoginUserCommand command = mapper.Map<LoginUserCommand>( dto );
 
-        ResultT<int> result = await loginUserCommandHandler.Handle( command );
+        ResultT<string> result = await loginUserCommandHandler.Handle( command );
 
         if ( result.IsSuccess )
         {
@@ -95,5 +98,17 @@ public class UserController(
         }
 
         return BadRequest( result.ErrorMessages );
+    }
+
+    [HttpGet( "Refresh" )]
+    public async Task<IActionResult> Refresh()
+    {
+        // Получает RefreshToken (который находится в куках)
+
+        // Сверяем с токеном в бд
+
+        // Если все ок, то возващаем новую пару Access и Refresh токенов
+
+        return Ok();
     }
 }

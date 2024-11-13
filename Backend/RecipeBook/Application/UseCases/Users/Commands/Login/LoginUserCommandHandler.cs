@@ -1,4 +1,5 @@
 ﻿using Application.Common.CQRS.Command;
+using Application.Common.JwtProvider;
 using Application.Common.PasswordHasher;
 using Application.Common.Result;
 using Application.Interfaces.Repositories;
@@ -11,30 +12,33 @@ namespace Application.UseCases.Users.Commands.Login;
 public class LoginUserCommandHandler(
     IUserRepository userRepository,
     IValidator<LoginUserCommand> validator,
-    IPasswordHasher passwordHasher
-) : ICommandHandler<LoginUserCommand, ResultT<int>>
+    IPasswordHasher passwordHasher,
+    IJwtProvider jwtProvider
+) : ICommandHandler<LoginUserCommand, ResultT<string>>
 {
     private const string errorMessage = "Неверный логин или пароль.";
 
-    public async Task<ResultT<int>> Handle( LoginUserCommand command )
+    public async Task<ResultT<string>> Handle( LoginUserCommand command )
     {
         ValidationResult validationResult = await validator.ValidateAsync( command );
         if ( !validationResult.IsValid )
         {
-            return ResultT<int>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return ResultT<string>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
         User user = await userRepository.GetByLogin( command.Login );
         if ( user == null )
         {
-            return ResultT<int>.Fail( errorMessage );
+            return ResultT<string>.Fail( errorMessage );
         }
 
         if ( !passwordHasher.VerifyPassword( command.Password, user.Password ) )
         {
-            return ResultT<int>.Fail( errorMessage );
+            return ResultT<string>.Fail( errorMessage );
         }
 
-        return ResultT<int>.Success( user.Id, "Успешный вход." );
+        string token = jwtProvider.GenerateToken( user );
+
+        return ResultT<string>.Success( token, "Успешный вход." );
     }
 }
