@@ -46,10 +46,8 @@ export const RegistrationPopup = () => {
   const handleLogin = () => {
     const data: LoginInfo = { login: loginData, password: password };
 
-    authService
-      .login(data)
-      .then((response) => {
-        login(response);
+    login(data)
+      .then(() => {
         handleClosePopup();
       })
       .catch((error: unknown) => {

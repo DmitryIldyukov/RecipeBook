@@ -1,7 +1,7 @@
 import { User, UserUpdateDto } from "../types/user";
 import { fetchClient } from "./fetchClient";
 
-export default class UserService {
+class UserService {
   async getUser(userId: number): Promise<User> {
     return fetchClient<User>(`/api/User/${userId.toString()}`);
   }
@@ -13,3 +13,5 @@ export default class UserService {
     });
   }
 }
+
+export const userService = new UserService();

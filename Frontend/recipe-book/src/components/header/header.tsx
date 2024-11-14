@@ -5,18 +5,17 @@ import { useAppStore } from "../../hooks/useStore";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ROUTES } from "../../constants/constants";
 import { useEffect, useState } from "react";
-import UserService from "../../services/userService";
 import { User } from "../../types/user";
 import { usePopupStore } from "../../hooks/usePopupStore";
-
-const userService = new UserService();
+import { userService } from "../../services/userService";
+import { handleError } from "../../utils/errorHandler";
 
 export const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
 
-  const { userId, logout, login } = useAppStore();
+  const { userId, logout } = useAppStore();
   const { setIsLoginPopupOpen } = usePopupStore();
 
   useEffect(() => {
@@ -25,11 +24,10 @@ export const Header = () => {
         if (userId) {
           await userService.getUser(userId).then((user) => {
             setUser(user);
-            login(user.id);
           });
         }
       } catch (error) {
-        console.error(error);
+        handleError(error, "Произошла ошибка при загрузке данных пользователя");
       }
     };
 
