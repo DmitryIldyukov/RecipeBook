@@ -3,6 +3,7 @@ using Application.UseCases.Favorites;
 using Application.UseCases.Ingredients;
 using Application.UseCases.Likes;
 using Application.UseCases.Recipes;
+using Application.UseCases.RefreshTokens;
 using Application.UseCases.Steps;
 using Application.UseCases.Tags;
 using Application.UseCases.Users;
@@ -23,6 +24,7 @@ public static class Bindings
         services.AddUserBindings();
         services.AddStepBindings();
         services.AddTagBindings();
+        services.AddRefreshTokenBindings();
 
         return services;
     }

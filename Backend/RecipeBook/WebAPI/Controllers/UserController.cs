@@ -1,6 +1,7 @@
 ﻿using Application.Common.CQRS.Command;
 using Application.Common.CQRS.Query;
 using Application.Common.Result;
+using Application.UseCases.RefreshTokens.Commands.Refresh;
 using Application.UseCases.Users.Commands.Create;
 using Application.UseCases.Users.Commands.Login;
 using Application.UseCases.Users.Commands.Update;
@@ -16,9 +17,10 @@ namespace WebAPI.Controllers;
 [ApiController]
 [Route( "api/[controller]" )]
 public class UserController(
-    ICommandHandler<CreateUserCommand, Result> createUserCommandHandler,
-    ICommandHandler<UpdateUserCommand, Result> updateUserCommandHandler,
-    ICommandHandler<LoginUserCommand, ResultT<string>> loginUserCommandHandler,
+    ICommandHandler<CreateUserCommand, Result> createUserHandler,
+    ICommandHandler<UpdateUserCommand, Result> updateUserHandler,
+    ICommandHandler<LoginUserCommand, ResultT<TokenInfoDto>> loginUserHandler,
+    ICommandHandler<RefreshTokenCommand, ResultT<TokenInfoDto>> refreshTokenHandler,
     IQueryHandler<GetUserByIdQuery, ResultT<GetUserQueryDto>> getUserByIdHandler,
     IMapper mapper
 ) : ControllerBase
@@ -29,7 +31,7 @@ public class UserController(
     public async Task<IActionResult> Register( [FromBody] UserRegisterDto dto )
     {
         CreateUserCommand command = mapper.Map<CreateUserCommand>( dto );
-        Result result = await createUserCommandHandler.Handle( command );
+        Result result = await createUserHandler.Handle( command );
 
         if ( result.IsSuccess )
         {
@@ -73,7 +75,7 @@ public class UserController(
             Password = dto.Password,
             Information = dto.Information
         };
-        Result result = await updateUserCommandHandler.Handle( command );
+        Result result = await updateUserHandler.Handle( command );
 
         if ( result.IsSuccess )
         {
@@ -84,16 +86,18 @@ public class UserController(
     }
 
     [HttpPost( "Login" )]
-    [ProducesResponseType( typeof( int ), StatusCodes.Status200OK )]
+    [ProducesResponseType( typeof( TokenInfoDto ), StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
     public async Task<IActionResult> Login( [FromBody] LoginDto dto )
     {
         LoginUserCommand command = mapper.Map<LoginUserCommand>( dto );
 
-        ResultT<string> result = await loginUserCommandHandler.Handle( command );
+        ResultT<TokenInfoDto> result = await loginUserHandler.Handle( command );
 
         if ( result.IsSuccess )
         {
+            Response.Cookies.Append( "refresh-token", result.Value.RefreshToken );
+
             return Ok( result.Value );
         }
 
@@ -101,14 +105,25 @@ public class UserController(
     }
 
     [HttpGet( "Refresh" )]
+    [ProducesResponseType( typeof( TokenInfoDto ), StatusCodes.Status200OK )]
+    [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
     public async Task<IActionResult> Refresh()
     {
-        // Получает RefreshToken (который находится в куках)
+        string requestRefreshToken = Request.Cookies[ "refresh-token" ];
 
-        // Сверяем с токеном в бд
+        RefreshTokenCommand command = new RefreshTokenCommand()
+        {
+            RefreshToken = requestRefreshToken
+        };
+        ResultT<TokenInfoDto> result = await refreshTokenHandler.Handle( command );
 
-        // Если все ок, то возващаем новую пару Access и Refresh токенов
+        if ( result.IsSuccess )
+        {
+            Response.Cookies.Append( "refresh-token", result.Value.RefreshToken );
 
-        return Ok();
+            return Ok( result.Value );
+        }
+
+        return BadRequest( result.ErrorMessages );
     }
 }

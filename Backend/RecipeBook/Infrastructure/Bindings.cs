@@ -8,6 +8,7 @@ using Infrastructure.EntityDefinitions.Favorites;
 using Infrastructure.EntityDefinitions.Ingredients;
 using Infrastructure.EntityDefinitions.Likes;
 using Infrastructure.EntityDefinitions.Recipes;
+using Infrastructure.EntityDefinitions.RefreshTokens;
 using Infrastructure.EntityDefinitions.Steps;
 using Infrastructure.EntityDefinitions.Tags;
 using Infrastructure.EntityDefinitions.Users;
@@ -27,6 +28,7 @@ public static class Bindings
         services.AddScoped<IStepRepository, StepRepository>();
         services.AddScoped<IFavoriteRepository, FavoriteRepository>();
         services.AddScoped<ILikeRepository, LikeRepository>();
+        services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
         services.AddScoped<IPasswordHasher, PasswordHasher.PasswordHasher>();
         services.AddScoped<IJwtProvider, JwtProvider>();

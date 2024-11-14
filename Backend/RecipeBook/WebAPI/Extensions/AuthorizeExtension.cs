@@ -5,7 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace WebAPI.Extensions;
 
-public static class AuthorizeExtensions
+public static class AuthorizeExtension
 {
     public static void AddApiAuthentication(
         this IServiceCollection services,

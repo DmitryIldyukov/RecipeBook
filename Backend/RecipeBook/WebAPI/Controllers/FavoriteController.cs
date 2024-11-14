@@ -2,10 +2,12 @@
 using Application.Common.Result;
 using Application.UseCases.Favorites.Commands.Create;
 using Application.UseCases.Favorites.Commands.Delete;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
 
+[Authorize]
 [ApiController]
 [Route( "api/[controller]" )]
 public class FavoriteController(

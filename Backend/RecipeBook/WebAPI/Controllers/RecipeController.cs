@@ -12,6 +12,7 @@ using Application.UseCases.Recipes.Queries.GetRecipeImage;
 using Application.UseCases.Recipes.Queries.GetRecipesByFilter;
 using Application.UseCases.Recipes.Queries.GetUserRecipes;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Dtos.Recipe;
 
@@ -32,6 +33,7 @@ public class RecipeController(
     IMapper mapper
 ) : ControllerBase
 {
+    [Authorize]
     [HttpPost]
     [ProducesResponseType( StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
@@ -47,6 +49,7 @@ public class RecipeController(
         return BadRequest( result.ErrorMessages );
     }
 
+    [Authorize]
     [HttpPost( "FavoriteRecipes/{userId:int}" )]
     [ProducesResponseType( typeof( IReadOnlyList<GetRecipeQueryDto> ), StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
@@ -138,6 +141,7 @@ public class RecipeController(
         return BadRequest( result.ErrorMessages );
     }
 
+    [Authorize]
     [HttpGet( "User/{userId:int}" )]
     [ProducesResponseType( typeof( IReadOnlyList<GetRecipeQueryDto> ), StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
@@ -158,6 +162,7 @@ public class RecipeController(
         return BadRequest( result.ErrorMessages );
     }
 
+    [Authorize]
     [HttpPut( "{recipeId:int}" )]
     [ProducesResponseType( StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
@@ -174,6 +179,7 @@ public class RecipeController(
         return BadRequest( result.ErrorMessages );
     }
 
+    [Authorize]
     [HttpDelete( "{recipeId:int}" )]
     [ProducesResponseType( StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]

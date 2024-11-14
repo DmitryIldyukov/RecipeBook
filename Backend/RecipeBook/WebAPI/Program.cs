@@ -3,6 +3,7 @@ using Application;
 using Infrastructure;
 using Infrastructure.Data;
 using Infrastructure.JwtProviders;
+using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Extensions;
 
@@ -46,8 +47,14 @@ public class Program
                 app.UseSwaggerUI();
             }
 
-            app.UseAuthentication();
+            app.UseCookiePolicy( new CookiePolicyOptions
+            {
+                MinimumSameSitePolicy = SameSiteMode.Strict,
+                HttpOnly = HttpOnlyPolicy.Always,
+                Secure = CookieSecurePolicy.Always,
+            } );
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();
