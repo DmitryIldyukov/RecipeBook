@@ -24,7 +24,18 @@ namespace Infrastructure.Migrations.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_refresh_tokens", x => x.refresh_token_id);
+                    table.ForeignKey(
+                        name: "FK_refresh_tokens_users_user_id",
+                        column: x => x.user_id,
+                        principalTable: "users",
+                        principalColumn: "user_id",
+                        onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_refresh_tokens_user_id",
+                table: "refresh_tokens",
+                column: "user_id");
         }
 
         /// <inheritdoc />

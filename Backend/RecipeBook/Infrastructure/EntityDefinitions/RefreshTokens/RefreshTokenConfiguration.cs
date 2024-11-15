@@ -31,5 +31,10 @@ public class RefreshTokenConfiguration : IEntityTypeConfiguration<RefreshToken>
             .HasComment( "Дата истечения срока действия токена" )
             .HasColumnName( "expiration_date" )
             .IsRequired();
+
+        builder.HasOne( t => t.User )
+            .WithMany( r => r.RefreshTokens )
+            .HasForeignKey( s => s.UserId )
+            .OnDelete( DeleteBehavior.Cascade );
     }
 }

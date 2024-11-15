@@ -202,6 +202,8 @@ namespace Infrastructure.Migrations.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("refresh_tokens", (string)null);
                 });
 
@@ -381,6 +383,17 @@ namespace Infrastructure.Migrations.Migrations
                     b.Navigation("Author");
                 });
 
+            modelBuilder.Entity("Domain.Entities.RefreshToken", b =>
+                {
+                    b.HasOne("Domain.Entities.User", "User")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Domain.Entities.Step", b =>
                 {
                     b.HasOne("Domain.Entities.Recipe", "Recipe")
@@ -425,6 +438,8 @@ namespace Infrastructure.Migrations.Migrations
                     b.Navigation("Likes");
 
                     b.Navigation("Recipes");
+
+                    b.Navigation("RefreshTokens");
                 });
 #pragma warning restore 612, 618
         }

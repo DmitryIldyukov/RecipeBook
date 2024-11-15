@@ -3,6 +3,7 @@
 public class RefreshToken : Entity
 {
     public int UserId { get; init; }
+    public User User { get; init; }
     public string Token { get; init; }
     public DateTime ExpirationDate { get; init; }
 
