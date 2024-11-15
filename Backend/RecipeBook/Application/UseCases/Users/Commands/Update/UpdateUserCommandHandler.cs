@@ -3,6 +3,7 @@ using Application.Common.PasswordHasher;
 using Application.Common.Result;
 using Application.Interfaces;
 using Application.Interfaces.Repositories;
+using Application.UseCases.Users.Commands.Create;
 using Domain.Entities;
 using FluentValidation;
 using FluentValidation.Results;
@@ -15,16 +16,22 @@ public class UpdateUserCommandHandler(
 {
     public async Task<Result> Handle( UpdateUserCommand command )
     {
-        ValidationResult validationResult = await validator.ValidateAsync( command );
-        if ( !validationResult.IsValid )
+        Result validationResult = await ValidateCommandAsync( command );
+        if ( !validationResult.IsSuccess )
         {
-            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return validationResult;
         }
 
         User user = await userRepository.GetById( command.UserId );
         if ( user is null )
         {
             return Result.Fail( $"Пользователь с Id {command.UserId} не найден." );
+        }
+
+        Result validationUserOwnershipResult = ValidateUserOwnership( user.Id, command.UserId );
+        if ( !validationUserOwnershipResult.IsSuccess )
+        {
+            return validationUserOwnershipResult;
         }
 
         user.Name = command.Name;
@@ -38,5 +45,26 @@ public class UpdateUserCommandHandler(
         await unitOfWork.Commit();
 
         return Result.Success( "Данные пользователя успешно изменены." );
+    }
+
+    private async Task<Result> ValidateCommandAsync( UpdateUserCommand command )
+    {
+        ValidationResult validationResult = await validator.ValidateAsync( command );
+        if ( !validationResult.IsValid )
+        {
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+        }
+
+        return Result.Success();
+    }
+
+    private Result ValidateUserOwnership( int userId, int currentUserId )
+    {
+        if ( userId != currentUserId )
+        {
+            return Result.Fail( "Невозможно изменить данные другого пользователя." );
+        }
+
+        return Result.Success();
     }
 }

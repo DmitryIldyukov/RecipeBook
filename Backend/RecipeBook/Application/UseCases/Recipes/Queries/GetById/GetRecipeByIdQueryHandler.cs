@@ -1,11 +1,13 @@
 ﻿using Application.Common.CQRS.Query;
 using Application.Common.Result;
 using Application.Interfaces.Repositories;
+using Application.UseCases.Ingredients.Commands.Create;
 using Application.UseCases.Recipes.Dtos;
 using AutoMapper;
 using Domain.Entities;
 using FluentValidation;
 using FluentValidation.Results;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Application.UseCases.Recipes.Queries.GetById;
 
@@ -17,10 +19,10 @@ public class GetRecipeByIdQueryHandler(
 {
     public async Task<ResultT<GetRecipeQueryDto>> Handle( GetRecipeByIdQuery query )
     {
-        ValidationResult validationResult = await validator.ValidateAsync( query );
-        if ( !validationResult.IsValid )
+        ResultT<GetRecipeQueryDto> validationResult = await ValidateCommandAsync( query );
+        if ( !validationResult.IsSuccess )
         {
-            return ResultT<GetRecipeQueryDto>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return validationResult;
         }
 
         Recipe recipe = await recipeRepository.GetById( query.RecipeId );
@@ -40,5 +42,16 @@ public class GetRecipeByIdQueryHandler(
         }
 
         return ResultT<GetRecipeQueryDto>.Success( mapper.Map<GetRecipeQueryDto>( recipe ), "Рецепт найден." );
+    }
+
+    private async Task<ResultT<GetRecipeQueryDto>> ValidateCommandAsync( GetRecipeByIdQuery query )
+    {
+        ValidationResult validationResult = await validator.ValidateAsync( query );
+        if ( !validationResult.IsValid )
+        {
+            return ResultT<GetRecipeQueryDto>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+        }
+
+        return ResultT<GetRecipeQueryDto>.Success( null );
     }
 }

@@ -16,10 +16,10 @@ public class DeleteLikeCommandHandler(
 {
     public async Task<Result> Handle( DeleteLikeCommand command )
     {
-        ValidationResult validationResult = await validator.ValidateAsync( command );
-        if ( !validationResult.IsValid )
+        Result validationResult = await ValidateCommandAsync( command );
+        if ( !validationResult.IsSuccess )
         {
-            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return validationResult;
         }
 
         Like like = await likeRepository.GetByUserIdAndRecipeId( command.UserId, command.RecipeId );
@@ -29,13 +29,35 @@ public class DeleteLikeCommandHandler(
             return Result.Fail( "Понравившийся рецепт не найден." );
         }
 
-        if ( like.UserId != command.UserId )
+        Result validationUserOwnershipResult = ValidateUserOwnership( like.UserId, command.UserId );
+        if ( !validationUserOwnershipResult.IsSuccess )
         {
-            return Result.Fail( "Невозможно удалить рецепт из понравившихся рецептов у другого пользователя." );
+            return validationUserOwnershipResult;
         }
 
         likeRepository.Delete( like );
         await unitOfWork.Commit();
+
+        return Result.Success();
+    }
+
+    private async Task<Result> ValidateCommandAsync( DeleteLikeCommand command )
+    {
+        ValidationResult validationResult = await validator.ValidateAsync( command );
+        if ( !validationResult.IsValid )
+        {
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+        }
+
+        return Result.Success();
+    }
+
+    private Result ValidateUserOwnership( int likeUserId, int currentUserId )
+    {
+        if ( likeUserId != currentUserId )
+        {
+            return Result.Fail( "Невозможно удалить рецепт из понравившихся рецептов у другого пользователя." );
+        }
 
         return Result.Success();
     }

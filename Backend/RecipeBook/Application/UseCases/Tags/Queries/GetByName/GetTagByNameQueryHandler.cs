@@ -15,10 +15,10 @@ public class GetTagByNameQueryHandler(
 {
     public async Task<ResultT<GetTagDto>> Handle( GetTagByNameQuery query )
     {
-        ValidationResult validationResult = await validator.ValidateAsync( query );
-        if ( !validationResult.IsValid )
+        ResultT<GetTagDto> validationResult = await ValidateCommandAsync( query );
+        if ( !validationResult.IsSuccess )
         {
-            return ResultT<GetTagDto>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return validationResult;
         }
 
         Tag tag = await tagRepository.GetByName( query.Tag );
@@ -28,5 +28,16 @@ public class GetTagByNameQueryHandler(
         }
 
         return ResultT<GetTagDto>.Success( mapper.Map<GetTagDto>( tag ), $"Тег {tag.Name} найден." );
+    }
+
+    private async Task<ResultT<GetTagDto>> ValidateCommandAsync( GetTagByNameQuery query )
+    {
+        ValidationResult validationResult = await validator.ValidateAsync( query );
+        if ( !validationResult.IsValid )
+        {
+            return ResultT<GetTagDto>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+        }
+
+        return ResultT<GetTagDto>.Success( null );
     }
 }

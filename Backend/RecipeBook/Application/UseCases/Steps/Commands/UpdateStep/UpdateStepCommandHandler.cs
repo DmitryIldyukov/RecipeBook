@@ -1,6 +1,7 @@
 ﻿using Application.Common.CQRS.Command;
 using Application.Common.Result;
 using Application.Interfaces.Repositories;
+using Application.UseCases.Steps.Commands.Create;
 using Domain.Entities;
 using FluentValidation;
 using FluentValidation.Results;
@@ -14,10 +15,10 @@ public class UpdateStepCommandHandler(
 {
     public async Task<Result> Handle( UpdateStepCommand command )
     {
-        ValidationResult validationResult = await validator.ValidateAsync( command );
-        if ( !validationResult.IsValid )
+        Result validationResult = await ValidateCommandAsync( command );
+        if ( !validationResult.IsSuccess )
         {
-            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return validationResult;
         }
 
         Step step = await stepRepository.GetById( command.StepId );
@@ -28,6 +29,17 @@ public class UpdateStepCommandHandler(
         }
 
         step.Description = command.Description;
+
+        return Result.Success();
+    }
+
+    private async Task<Result> ValidateCommandAsync( UpdateStepCommand command )
+    {
+        ValidationResult validationResult = await validator.ValidateAsync( command );
+        if ( !validationResult.IsValid )
+        {
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+        }
 
         return Result.Success();
     }

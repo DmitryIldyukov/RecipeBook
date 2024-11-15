@@ -2,6 +2,8 @@
 using Application.Common.Result;
 using Application.Interfaces;
 using Application.Interfaces.Repositories;
+using Application.UseCases.Tags.Dtos;
+using Application.UseCases.Tags.Queries.GetByName;
 using Application.UseCases.Users.Dtos;
 using AutoMapper;
 using Domain.Entities;
@@ -16,10 +18,10 @@ public class GetUserByIdQueryHandler(
 {
     public async Task<ResultT<GetUserQueryDto>> Handle( GetUserByIdQuery query )
     {
-        ValidationResult validationResult = await validator.ValidateAsync( query );
-        if ( !validationResult.IsValid )
+        ResultT<GetUserQueryDto> validationResult = await ValidateCommandAsync( query );
+        if ( !validationResult.IsSuccess )
         {
-            return ResultT<GetUserQueryDto>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return validationResult;
         }
 
         User user = await userRepository.GetById( query.Id );
@@ -33,5 +35,16 @@ public class GetUserByIdQueryHandler(
         GetUserQueryDto response = mapper.Map<GetUserQueryDto>( user );
 
         return ResultT<GetUserQueryDto>.Success( response, $"Пользователь с id {query.Id} найден." );
+    }
+
+    private async Task<ResultT<GetUserQueryDto>> ValidateCommandAsync( GetUserByIdQuery query )
+    {
+        ValidationResult validationResult = await validator.ValidateAsync( query );
+        if ( !validationResult.IsValid )
+        {
+            return ResultT<GetUserQueryDto>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+        }
+
+        return ResultT<GetUserQueryDto>.Success( null );
     }
 }

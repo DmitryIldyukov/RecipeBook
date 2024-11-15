@@ -4,6 +4,7 @@ using Application.Common.Result;
 using Application.Interfaces;
 using Application.Interfaces.Repositories;
 using Application.UseCases.Ingredients.Commands.UpdateRecipeIngredients;
+using Application.UseCases.Recipes.Commands.Delete;
 using Application.UseCases.Recipes.Dtos;
 using Application.UseCases.Steps.Commands.UpdateRecipeSteps;
 using Application.UseCases.Tags.Commands.UpdateRecipeTags;
@@ -28,14 +29,13 @@ public class UpdateRecipeCommandHandler(
 {
     public async Task<Result> Handle( UpdateRecipeCommand command )
     {
-        ValidationResult validationResult = await validator.ValidateAsync( command );
-        if ( !validationResult.IsValid )
+        Result validationResult = await ValidateCommandAsync( command );
+        if ( !validationResult.IsSuccess )
         {
-            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return validationResult;
         }
 
         Recipe recipe = await recipeRepository.GetById( command.RecipeId );
-
         if ( recipe is null )
         {
             return Result.Fail( $"Рецепт с Id {command.RecipeId} не найден." );
@@ -129,5 +129,16 @@ public class UpdateRecipeCommandHandler(
         string fileExtension = Path.GetExtension( recipe.ImageName );
         string fileNameOnDisk = recipe.Id + fileExtension;
         fileHelper.Save( configuration.GetSection( "RecipeImages" ).Value, fileNameOnDisk, image.OpenReadStream() );
+    }
+
+    private async Task<Result> ValidateCommandAsync( UpdateRecipeCommand command )
+    {
+        ValidationResult validationResult = await validator.ValidateAsync( command );
+        if ( !validationResult.IsValid )
+        {
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+        }
+
+        return Result.Success();
     }
 }

@@ -3,6 +3,7 @@ using Application.Common.FileHelper;
 using Application.Common.Result;
 using Application.Interfaces.Repositories;
 using Application.UseCases.Recipes.Dtos;
+using Application.UseCases.Recipes.Queries.GetById;
 using Domain.Entities;
 using FluentValidation;
 using FluentValidation.Results;
@@ -19,10 +20,10 @@ public class GetRecipeImageQueryHandler(
 {
     public async Task<ResultT<GetImageQueryDto>> Handle( GetRecipeImageQuery query )
     {
-        ValidationResult validationResult = await validator.ValidateAsync( query );
-        if ( !validationResult.IsValid )
+        ResultT<GetImageQueryDto> validationResult = await ValidateCommandAsync( query );
+        if ( !validationResult.IsSuccess )
         {
-            return ResultT<GetImageQueryDto>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return validationResult;
         }
 
         Recipe recipe = await recipeRepository.GetById( query.RecipeId );
@@ -49,5 +50,16 @@ public class GetRecipeImageQueryHandler(
         );
 
         return Path.Combine( storagePath, fileName );
+    }
+
+    private async Task<ResultT<GetImageQueryDto>> ValidateCommandAsync( GetRecipeImageQuery query )
+    {
+        ValidationResult validationResult = await validator.ValidateAsync( query );
+        if ( !validationResult.IsValid )
+        {
+            return ResultT<GetImageQueryDto>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+        }
+
+        return ResultT<GetImageQueryDto>.Success( null );
     }
 }

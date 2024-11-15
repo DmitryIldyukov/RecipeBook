@@ -19,10 +19,10 @@ public class UpdateRecipeIngredientsCommandHandler(
 {
     public async Task<Result> Handle( UpdateRecipeIngredientsCommand command )
     {
-        ValidationResult validationResult = await validator.ValidateAsync( command );
-        if ( !validationResult.IsValid )
+        Result validationResult = await ValidateCommandAsync( command );
+        if ( !validationResult.IsSuccess )
         {
-            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return validationResult;
         }
 
         ICollection<Ingredient> recipeIngredients = command.Recipe.Ingredients;
@@ -121,5 +121,16 @@ public class UpdateRecipeIngredientsCommandHandler(
         Result createResult = await createIngredientHandler.Handle( createIngredientCommand );
 
         return createResult.IsSuccess ? Result.Success() : Result.Fail( createResult.ErrorMessages );
+    }
+
+    private async Task<Result> ValidateCommandAsync( UpdateRecipeIngredientsCommand command )
+    {
+        ValidationResult validationResult = await validator.ValidateAsync( command );
+        if ( !validationResult.IsValid )
+        {
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+        }
+
+        return Result.Success();
     }
 }

@@ -19,10 +19,10 @@ public class CreateFavoriteCommandHandler(
 {
     public async Task<Result> Handle( CreateFavoriteCommand command )
     {
-        ValidationResult validationResult = await validator.ValidateAsync( command );
-        if ( !validationResult.IsValid )
+        Result validationResult = await ValidateCommandAsync( command );
+        if ( !validationResult.IsSuccess )
         {
-            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return validationResult;
         }
 
         bool recipeIsExists = await recipeRepository.ContainsAsync( r => r.Id == command.RecipeId );
@@ -41,6 +41,17 @@ public class CreateFavoriteCommandHandler(
 
         await favoriteRepository.Create( favorite );
         await unitOfWork.Commit();
+
+        return Result.Success();
+    }
+
+    private async Task<Result> ValidateCommandAsync( CreateFavoriteCommand command )
+    {
+        ValidationResult validationResult = await validator.ValidateAsync( command );
+        if ( !validationResult.IsValid )
+        {
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+        }
 
         return Result.Success();
     }

@@ -1,7 +1,7 @@
 ﻿using Application.Common.CQRS.Command;
 using Application.Common.Result;
-using Application.Interfaces.Repositories;
 using Application.Interfaces;
+using Application.Interfaces.Repositories;
 using AutoMapper;
 using Domain.Entities;
 using FluentValidation;
@@ -19,10 +19,10 @@ public class CreateLikeCommandHandler(
 {
     public async Task<Result> Handle( CreateLikeCommand command )
     {
-        ValidationResult validationResult = await validator.ValidateAsync( command );
-        if ( !validationResult.IsValid )
+        Result validationResult = await ValidateCommandAsync( command );
+        if ( !validationResult.IsSuccess )
         {
-            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return validationResult;
         }
 
         bool recipeIsExists = await recipeRepository.ContainsAsync( r => r.Id == command.RecipeId );
@@ -41,6 +41,17 @@ public class CreateLikeCommandHandler(
 
         await likeRepository.Create( like );
         await unitOfWork.Commit();
+
+        return Result.Success();
+    }
+
+    private async Task<Result> ValidateCommandAsync( CreateLikeCommand command )
+    {
+        ValidationResult validationResult = await validator.ValidateAsync( command );
+        if ( !validationResult.IsValid )
+        {
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+        }
 
         return Result.Success();
     }

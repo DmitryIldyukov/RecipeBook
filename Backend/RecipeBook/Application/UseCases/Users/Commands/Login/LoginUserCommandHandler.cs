@@ -18,10 +18,10 @@ public class LoginUserCommandHandler(
 
     public async Task<ResultT<int>> Handle( LoginUserCommand command )
     {
-        ValidationResult validationResult = await validator.ValidateAsync( command );
-        if ( !validationResult.IsValid )
+        ResultT<int> validationResult = await ValidateCommandAsync( command );
+        if ( !validationResult.IsSuccess )
         {
-            return ResultT<int>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return validationResult;
         }
 
         User user = await userRepository.GetByLogin( command.Login );
@@ -36,5 +36,16 @@ public class LoginUserCommandHandler(
         }
 
         return ResultT<int>.Success( user.Id, "Успешный вход." );
+    }
+
+    private async Task<ResultT<int>> ValidateCommandAsync( LoginUserCommand command )
+    {
+        ValidationResult validationResult = await validator.ValidateAsync( command );
+        if ( !validationResult.IsValid )
+        {
+            return ResultT<int>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+        }
+
+        return ResultT<int>.Success( 0 );
     }
 }

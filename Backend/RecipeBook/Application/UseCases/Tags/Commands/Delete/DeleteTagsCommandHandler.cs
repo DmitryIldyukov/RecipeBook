@@ -1,6 +1,7 @@
 ﻿using Application.Common.CQRS.Command;
 using Application.Common.Result;
 using Application.Interfaces.Repositories;
+using Application.UseCases.Steps.Commands.UpdateStep;
 using Domain.Entities;
 using FluentValidation;
 using FluentValidation.Results;
@@ -15,10 +16,10 @@ public class DeleteTagsCommandHandler(
 {
     public async Task<Result> Handle( DeleteTagsCommand command )
     {
-        ValidationResult validationResult = await validator.ValidateAsync( command );
-        if ( !validationResult.IsValid )
+        Result validationResult = await ValidateCommandAsync( command );
+        if ( !validationResult.IsSuccess )
         {
-            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return validationResult;
         }
 
         Recipe recipe = await recipeRepository.GetById( command.RecipeId );
@@ -34,6 +35,17 @@ public class DeleteTagsCommandHandler(
             {
                 tagRepository.Delete( tag );
             }
+        }
+
+        return Result.Success();
+    }
+
+    private async Task<Result> ValidateCommandAsync( DeleteTagsCommand command )
+    {
+        ValidationResult validationResult = await validator.ValidateAsync( command );
+        if ( !validationResult.IsValid )
+        {
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
         return Result.Success();

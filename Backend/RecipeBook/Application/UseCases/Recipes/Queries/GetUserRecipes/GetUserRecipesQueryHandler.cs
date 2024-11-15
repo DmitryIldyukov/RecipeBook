@@ -2,6 +2,7 @@
 using Application.Common.Result;
 using Application.Interfaces.Repositories;
 using Application.UseCases.Recipes.Dtos;
+using Application.UseCases.Recipes.Queries.GetFavoriteRecipes;
 using AutoMapper;
 using Domain.Entities;
 using FluentValidation;
@@ -17,10 +18,10 @@ public class GetUserRecipesQueryHandler(
 {
     public async Task<ResultT<IReadOnlyList<GetRecipeQueryDto>>> Handle( GetUserRecipesQuery query )
     {
-        ValidationResult validationResult = await validator.ValidateAsync( query );
-        if ( !validationResult.IsValid )
+        ResultT<IReadOnlyList<GetRecipeQueryDto>> validationResult = await ValidateCommandAsync( query );
+        if ( !validationResult.IsSuccess )
         {
-            return ResultT<IReadOnlyList<GetRecipeQueryDto>>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return validationResult;
         }
 
         IReadOnlyList<Recipe> userRecipes = await recipeRepository.GetUserRecipes( query.UserId );
@@ -34,5 +35,16 @@ public class GetUserRecipesQueryHandler(
         } ).ToList();
 
         return ResultT<IReadOnlyList<GetRecipeQueryDto>>.Success( response, "Рецепты пользователя получены." );
+    }
+
+    private async Task<ResultT<IReadOnlyList<GetRecipeQueryDto>>> ValidateCommandAsync( GetUserRecipesQuery query )
+    {
+        ValidationResult validationResult = await validator.ValidateAsync( query );
+        if ( !validationResult.IsValid )
+        {
+            return ResultT<IReadOnlyList<GetRecipeQueryDto>>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+        }
+
+        return ResultT<IReadOnlyList<GetRecipeQueryDto>>.Success( null );
     }
 }

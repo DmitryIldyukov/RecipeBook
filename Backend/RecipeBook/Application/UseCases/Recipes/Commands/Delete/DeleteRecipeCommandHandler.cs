@@ -20,10 +20,10 @@ public class DeleteRecipeCommandHandler(
 {
     public async Task<Result> Handle( DeleteRecipeCommand command )
     {
-        ValidationResult validationResult = await validator.ValidateAsync( command );
-        if ( !validationResult.IsValid )
+        Result validationResult = await ValidateCommandAsync( command );
+        if ( !validationResult.IsSuccess )
         {
-            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return validationResult;
         }
 
         Recipe recipe = await recipeRepository.GetById( command.RecipeId );
@@ -43,6 +43,17 @@ public class DeleteRecipeCommandHandler(
         await unitOfWork.Commit();
 
         fileHelper.Delete( recipe.ImageName );
+
+        return Result.Success();
+    }
+
+    private async Task<Result> ValidateCommandAsync( DeleteRecipeCommand command )
+    {
+        ValidationResult validationResult = await validator.ValidateAsync( command );
+        if ( !validationResult.IsValid )
+        {
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+        }
 
         return Result.Success();
     }

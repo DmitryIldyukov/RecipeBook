@@ -14,10 +14,10 @@ public class UpdateIngredientCommandHandler(
 {
     public async Task<Result> Handle( UpdateIngredientCommand command )
     {
-        ValidationResult validationResult = await validator.ValidateAsync( command );
-        if ( !validationResult.IsValid )
+        Result validationResult = await ValidateCommandAsync( command );
+        if ( !validationResult.IsSuccess )
         {
-            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return validationResult;
         }
 
         Ingredient ingredient = await ingredientRepository.GetById( command.IngredientId );
@@ -28,6 +28,17 @@ public class UpdateIngredientCommandHandler(
 
         ingredient.Title = command.Title;
         ingredient.Description = command.Description;
+
+        return Result.Success();
+    }
+
+    private async Task<Result> ValidateCommandAsync( UpdateIngredientCommand command )
+    {
+        ValidationResult validationResult = await validator.ValidateAsync( command );
+        if ( !validationResult.IsValid )
+        {
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+        }
 
         return Result.Success();
     }

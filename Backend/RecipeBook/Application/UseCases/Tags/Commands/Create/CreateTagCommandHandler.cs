@@ -1,6 +1,7 @@
 ﻿using Application.Common.CQRS.Command;
 using Application.Common.Result;
 using Application.Interfaces.Repositories;
+using Application.UseCases.Steps.Commands.UpdateStep;
 using Domain.Entities;
 using FluentValidation;
 using FluentValidation.Results;
@@ -14,10 +15,10 @@ public class CreateTagCommandHandler(
 {
     public async Task<Result> Handle( CreateTagCommand command )
     {
-        ValidationResult validationResult = await validator.ValidateAsync( command );
-        if ( !validationResult.IsValid )
+        Result validationResult = await ValidateCommandAsync( command );
+        if ( !validationResult.IsSuccess )
         {
-            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return validationResult;
         }
 
         string tagName = command.Name.ToLower().Trim();
@@ -32,6 +33,17 @@ public class CreateTagCommandHandler(
         }
 
         command.Recipe.Tags.Add( tag );
+
+        return Result.Success();
+    }
+
+    private async Task<Result> ValidateCommandAsync( CreateTagCommand command )
+    {
+        ValidationResult validationResult = await validator.ValidateAsync( command );
+        if ( !validationResult.IsValid )
+        {
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+        }
 
         return Result.Success();
     }
