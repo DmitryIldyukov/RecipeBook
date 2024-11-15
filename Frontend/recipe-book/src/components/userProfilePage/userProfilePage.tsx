@@ -15,11 +15,11 @@ export const UserProfilePage = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
 
-  const { userId, isAuth } = useAppStore();
+  const { isAuth } = useAppStore();
 
-  const getUserInfo = (userId: number) => {
+  const getUserInfo = () => {
     userService
-      .getUser(userId)
+      .getUser()
       .then((data) => {
         setUser(data);
       })
@@ -29,13 +29,13 @@ export const UserProfilePage = () => {
   };
 
   useEffect(() => {
-    if (!isAuth || !userId) {
+    if (!isAuth) {
       navigate(ROUTES.HOME);
       return;
     }
 
-    getUserInfo(userId);
-  }, [isAuth, userId]);
+    getUserInfo();
+  }, [isAuth]);
 
   return (
     <div className={styles.container}>

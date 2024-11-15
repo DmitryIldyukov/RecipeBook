@@ -33,7 +33,7 @@ export const EditRecipePage = () => {
     recipeService
       .getRecipeById(parseInt(recipeId))
       .then((data) => {
-        if (userId !== data.authorId) {
+        if (userId != data.authorId) {
           navigate(ROUTES.HOME);
         }
         setName(data.name);

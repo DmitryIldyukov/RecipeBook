@@ -46,7 +46,7 @@ export const RecipesPage = () => {
   const getAllRecipes = (searchQuery: string[], currentPage: Page) => {
     setLoading(true);
     recipeService
-      .getRecipeList(searchQuery, currentPage, userId ? userId : undefined)
+      .getRecipeList(searchQuery, currentPage)
       .then((response) => {
         if (currentPage.pageNumber === 1) {
           setRecipes(response);

@@ -33,7 +33,7 @@ export const FavoriteList = () => {
     }
 
     recipeService
-      .getFavoriteRecipes(userId, page)
+      .getFavoriteRecipes(page)
       .then((response) => {
         if (page.pageNumber === 1) {
           setRecipes(response);

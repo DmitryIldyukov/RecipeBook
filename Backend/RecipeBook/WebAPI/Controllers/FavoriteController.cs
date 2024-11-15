@@ -1,5 +1,6 @@
 ﻿using Application.Common.CQRS.Command;
 using Application.Common.Result;
+using Application.Interfaces.Services;
 using Application.UseCases.Favorites.Commands.Create;
 using Application.UseCases.Favorites.Commands.Delete;
 using Microsoft.AspNetCore.Authorization;
@@ -12,17 +13,25 @@ namespace WebAPI.Controllers;
 [Route( "api/[controller]" )]
 public class FavoriteController(
     ICommandHandler<CreateFavoriteCommand, Result> createFavoriteCommand,
-    ICommandHandler<DeleteFavoriteCommand, Result> deleteFavoriteCommand
+    ICommandHandler<DeleteFavoriteCommand, Result> deleteFavoriteCommand,
+    IUserContextService userContextService
 ) : ControllerBase
 {
-    [HttpPost( "{userId:int}/{recipeId:int}" )]
+    [HttpPost( "{recipeId:int}" )]
     [ProducesResponseType( StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
-    public async Task<IActionResult> CreateFavorite( [FromRoute] int userId, [FromRoute] int recipeId )
+    public async Task<IActionResult> CreateFavorite( [FromRoute] int recipeId )
     {
+        int? userId = userContextService.GetCurrentUserId();
+
+        if ( userId is null )
+        {
+            return BadRequest( "Id пользователя не найдено." );
+        }
+
         CreateFavoriteCommand command = new CreateFavoriteCommand()
         {
-            UserId = userId,
+            UserId = userId.Value,
             RecipeId = recipeId
         };
 
@@ -36,14 +45,21 @@ public class FavoriteController(
         return BadRequest( result.ErrorMessages );
     }
 
-    [HttpDelete( "{userId:int}/{recipeId:int}" )]
+    [HttpDelete( "{recipeId:int}" )]
     [ProducesResponseType( StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
-    public async Task<IActionResult> DeleteFavorite( [FromRoute] int userId, [FromRoute] int recipeId )
+    public async Task<IActionResult> DeleteFavorite( [FromRoute] int recipeId )
     {
+        int? userId = userContextService.GetCurrentUserId();
+
+        if ( userId is null )
+        {
+            return BadRequest( "Id пользователя не найдено." );
+        }
+
         DeleteFavoriteCommand command = new DeleteFavoriteCommand()
         {
-            UserId = userId,
+            UserId = userId.Value,
             RecipeId = recipeId
         };
 

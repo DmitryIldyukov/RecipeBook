@@ -15,14 +15,14 @@ export const Header = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
 
-  const { userId, logout } = useAppStore();
+  const { userId, isAuth, logout } = useAppStore();
   const { setIsLoginPopupOpen } = usePopupStore();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (userId) {
-          await userService.getUser(userId).then((user) => {
+        if (isAuth) {
+          await userService.getUser().then((user) => {
             setUser(user);
           });
         }
@@ -32,7 +32,7 @@ export const Header = () => {
     };
 
     void fetchData();
-  }, [userId]);
+  }, [isAuth]);
 
   const navigateToLogin = () => {
     setIsLoginPopupOpen(true);

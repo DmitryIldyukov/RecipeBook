@@ -1,6 +1,7 @@
 ﻿using Application.Common.CQRS.Command;
 using Application.Common.CQRS.Query;
 using Application.Common.Result;
+using Application.Interfaces.Services;
 using Application.UseCases.Recipes.Commands.Create;
 using Application.UseCases.Recipes.Commands.Delete;
 using Application.UseCases.Recipes.Commands.Update;
@@ -30,6 +31,7 @@ public class RecipeController(
     IQueryHandler<GetRecipesByFilterQuery, ResultT<IReadOnlyList<GetRecipeQueryDto>>> getRecipesByFilterHandler,
     IQueryHandler<GetRecipeByIdQuery, ResultT<GetRecipeQueryDto>> getByIdHandler,
     IQueryHandler<GetUserRecipesQuery, ResultT<IReadOnlyList<GetRecipeQueryDto>>> getUserRecipesHandler,
+    IUserContextService userContextService,
     IMapper mapper
 ) : ControllerBase
 {
@@ -50,12 +52,19 @@ public class RecipeController(
     }
 
     [Authorize]
-    [HttpPost( "FavoriteRecipes/{userId:int}" )]
+    [HttpPost( "FavoriteRecipes" )]
     [ProducesResponseType( typeof( IReadOnlyList<GetRecipeQueryDto> ), StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
-    public async Task<IActionResult> GetUserFavoritesRecipes( [FromBody] FavoriteRecipesDto recipesDto, [FromRoute] int userId )
+    public async Task<IActionResult> GetUserFavoritesRecipes( [FromBody] FavoriteRecipesDto recipesDto )
     {
-        GetUserFavoriteRecipesQuery query = mapper.Map<GetUserFavoriteRecipesQuery>( recipesDto ) with { UserId = userId };
+        int? userId = userContextService.GetCurrentUserId();
+
+        if ( userId is null )
+        {
+            return BadRequest( "Id пользователя не найдено." );
+        }
+
+        GetUserFavoriteRecipesQuery query = mapper.Map<GetUserFavoriteRecipesQuery>( recipesDto ) with { UserId = userId.Value };
 
         ResultT<IReadOnlyList<GetRecipeQueryDto>> result = await getFavoriteRecipesHandler.Handle( query );
 
@@ -70,8 +79,10 @@ public class RecipeController(
     [HttpPost( "GetRecipes" )]
     [ProducesResponseType( typeof( IReadOnlyList<GetRecipeQueryDto> ), StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
-    public async Task<IActionResult> GetRecipesByFilters( [FromBody] RecipesByFilterDto recipesDto, [FromQuery] int? userId )
+    public async Task<IActionResult> GetRecipesByFilters( [FromBody] RecipesByFilterDto recipesDto )
     {
+        int? userId = userContextService.GetCurrentUserId();
+
         GetRecipesByFilterQuery query = mapper.Map<GetRecipesByFilterQuery>( recipesDto ) with { UserId = userId };
 
         ResultT<IReadOnlyList<GetRecipeQueryDto>> result = await getRecipesByFilterHandler.Handle( query );
@@ -123,8 +134,10 @@ public class RecipeController(
     [HttpGet( "{recipeId:int}" )]
     [ProducesResponseType( typeof( IReadOnlyList<GetRecipeQueryDto> ), StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
-    public async Task<IActionResult> GetRecipeById( [FromRoute] int recipeId, [FromQuery] int? userId )
+    public async Task<IActionResult> GetRecipeById( [FromRoute] int recipeId )
     {
+        int? userId = userContextService.GetCurrentUserId();
+
         GetRecipeByIdQuery query = new GetRecipeByIdQuery()
         {
             UserId = userId,
@@ -142,14 +155,21 @@ public class RecipeController(
     }
 
     [Authorize]
-    [HttpGet( "User/{userId:int}" )]
+    [HttpGet( "MyRecipes" )]
     [ProducesResponseType( typeof( IReadOnlyList<GetRecipeQueryDto> ), StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
-    public async Task<IActionResult> GetUserRecipes( [FromRoute] int userId )
+    public async Task<IActionResult> GetUserRecipes()
     {
+        int? userId = userContextService.GetCurrentUserId();
+
+        if ( userId is null )
+        {
+            return BadRequest( "Id пользователя не найдено." );
+        }
+
         GetUserRecipesQuery query = new GetUserRecipesQuery()
         {
-            UserId = userId
+            UserId = userId.Value
         };
 
         ResultT<IReadOnlyList<GetRecipeQueryDto>> result = await getUserRecipesHandler.Handle( query );

@@ -3,6 +3,7 @@ using Application.Common.JwtProvider;
 using Application.Common.PasswordHasher;
 using Application.Interfaces;
 using Application.Interfaces.Repositories;
+using Application.Interfaces.Services;
 using Infrastructure.Data;
 using Infrastructure.EntityDefinitions.Favorites;
 using Infrastructure.EntityDefinitions.Ingredients;
@@ -13,6 +14,7 @@ using Infrastructure.EntityDefinitions.Steps;
 using Infrastructure.EntityDefinitions.Tags;
 using Infrastructure.EntityDefinitions.Users;
 using Infrastructure.JwtProviders;
+using Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure;
@@ -31,6 +33,7 @@ public static class Bindings
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
         services.AddScoped<IPasswordHasher, PasswordHasher.PasswordHasher>();
+        services.AddScoped<IUserContextService, UserContextService>();
         services.AddScoped<IJwtProvider, JwtProvider>();
         services.AddScoped<IFileHelper, FileHelper.FileHelper>();
 

@@ -40,7 +40,7 @@ export const UserProfileData = ({ user }: UserProfileDataProps) => {
   const saveUser = () => {
     if (userId) {
       userService
-        .saveUser(userId, {
+        .saveUser({
           name: name,
           login: login,
           password: password,

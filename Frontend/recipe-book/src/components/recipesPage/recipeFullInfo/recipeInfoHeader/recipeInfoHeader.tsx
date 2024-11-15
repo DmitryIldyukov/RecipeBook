@@ -41,7 +41,7 @@ export const RecipeInfoHeader = (props: RecipeInfoHeaderProps) => {
   return (
     <div className={styles.titleBar}>
       <h2 className={styles.recipeName}>{props.recipe?.name ? props.recipe.name : "Рецепт"}</h2>
-      {userId === props.recipe?.authorId && (
+      {userId == props.recipe?.authorId && (
         <div className={styles.actionBtnsBox}>
           <button className={styles.deleteBtn} onClick={handleDeleteRecipe}>
             <img src={trashIcon} alt="Удалить" className={styles.p18} />

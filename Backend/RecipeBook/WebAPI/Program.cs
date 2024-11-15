@@ -27,6 +27,8 @@ public class Program
                 .AddApplication()
                 .AddInfrastructure();
 
+            builder.Services.AddHttpContextAccessor();
+
             builder.Services.AddAutoMapper( Assembly.GetExecutingAssembly() );
 
             builder.Services.Configure<JwtOptions>( builder.Configuration.GetSection( nameof( JwtOptions ) ) );

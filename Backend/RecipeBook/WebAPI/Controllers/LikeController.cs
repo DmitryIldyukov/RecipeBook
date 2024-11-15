@@ -1,5 +1,6 @@
 ﻿using Application.Common.CQRS.Command;
 using Application.Common.Result;
+using Application.Interfaces.Services;
 using Application.UseCases.Likes.Commands.Create;
 using Application.UseCases.Likes.Commands.Delete;
 using Microsoft.AspNetCore.Authorization;
@@ -12,17 +13,25 @@ namespace WebAPI.Controllers;
 [Route( "api/[controller]" )]
 public class LikeController(
     ICommandHandler<CreateLikeCommand, Result> createLikeCommand,
-    ICommandHandler<DeleteLikeCommand, Result> deleteLikeCommand
+    ICommandHandler<DeleteLikeCommand, Result> deleteLikeCommand,
+    IUserContextService userContextService
 ) : ControllerBase
 {
-    [HttpPost( "{userId:int}/{recipeId:int}" )]
+    [HttpPost( "{recipeId:int}" )]
     [ProducesResponseType( StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
-    public async Task<IActionResult> CreateLike( [FromRoute] int userId, [FromRoute] int recipeId )
+    public async Task<IActionResult> CreateLike( [FromRoute] int recipeId )
     {
+        int? userId = userContextService.GetCurrentUserId();
+
+        if ( userId is null )
+        {
+            return BadRequest( "Id пользователя не найдено." );
+        }
+
         CreateLikeCommand command = new CreateLikeCommand()
         {
-            UserId = userId,
+            UserId = userId.Value,
             RecipeId = recipeId
         };
 
@@ -36,14 +45,21 @@ public class LikeController(
         return BadRequest( result.ErrorMessages );
     }
 
-    [HttpDelete( "{userId:int}/{recipeId:int}" )]
+    [HttpDelete( "{recipeId:int}" )]
     [ProducesResponseType( StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
-    public async Task<IActionResult> DeleteLike( [FromRoute] int userId, [FromRoute] int recipeId )
+    public async Task<IActionResult> DeleteLike( [FromRoute] int recipeId )
     {
+        int? userId = userContextService.GetCurrentUserId();
+
+        if ( userId is null )
+        {
+            return BadRequest( "Id пользователя не найдено." );
+        }
+
         DeleteLikeCommand command = new DeleteLikeCommand()
         {
-            UserId = userId,
+            UserId = userId.Value,
             RecipeId = recipeId
         };
 
