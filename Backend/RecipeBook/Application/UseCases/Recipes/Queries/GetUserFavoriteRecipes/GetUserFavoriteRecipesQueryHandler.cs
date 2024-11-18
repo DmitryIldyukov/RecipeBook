@@ -2,7 +2,6 @@
 using Application.Common.Result;
 using Application.Interfaces.Repositories;
 using Application.UseCases.Recipes.Dtos;
-using Application.UseCases.Recipes.Queries.GetRecipesByFilter;
 using AutoMapper;
 using Domain.Entities;
 using FluentValidation;
@@ -18,7 +17,7 @@ public class GetUserFavoriteRecipesQueryHandler(
 {
     public async Task<ResultT<IReadOnlyList<GetRecipeQueryDto>>> Handle( GetUserFavoriteRecipesQuery query )
     {
-        ResultT<IReadOnlyList<GetRecipeQueryDto>> validationResult = await ValidateCommandAsync( query );
+        ResultT<IReadOnlyList<GetRecipeQueryDto>> validationResult = await ValidateAsync( query );
         if ( !validationResult.IsSuccess )
         {
             return validationResult;
@@ -37,7 +36,7 @@ public class GetUserFavoriteRecipesQueryHandler(
         return ResultT<IReadOnlyList<GetRecipeQueryDto>>.Success( response, $"Избранные рецепты пользователя с id {query.UserId} найдены." );
     }
 
-    private async Task<ResultT<IReadOnlyList<GetRecipeQueryDto>>> ValidateCommandAsync( GetUserFavoriteRecipesQuery query )
+    private async Task<ResultT<IReadOnlyList<GetRecipeQueryDto>>> ValidateAsync( GetUserFavoriteRecipesQuery query )
     {
         ValidationResult validationResult = await validator.ValidateAsync( query );
         if ( !validationResult.IsValid )

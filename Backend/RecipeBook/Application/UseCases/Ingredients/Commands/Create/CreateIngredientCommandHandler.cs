@@ -16,7 +16,7 @@ public class CreateIngredientCommandHandler(
 {
     public async Task<Result> Handle( CreateIngredientCommand command )
     {
-        Result validationResult = await ValidateCommandAsync( command );
+        Result validationResult = await ValidateAsync( command );
         if ( !validationResult.IsSuccess )
         {
             return validationResult;
@@ -31,7 +31,7 @@ public class CreateIngredientCommandHandler(
         return Result.Success( $"Ингредиент {ingredient.Title} успешно добавлен." );
     }
 
-    private async Task<Result> ValidateCommandAsync( CreateIngredientCommand command )
+    private async Task<Result> ValidateAsync( CreateIngredientCommand command )
     {
         ValidationResult validationResult = await validator.ValidateAsync( command );
         if ( !validationResult.IsValid )

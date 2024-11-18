@@ -20,16 +20,12 @@ public class DeleteRecipeCommandHandler(
 {
     public async Task<Result> Handle( DeleteRecipeCommand command )
     {
-        Result validationResult = await ValidateCommandAsync( command );
+        Recipe recipe = await recipeRepository.GetById( command.RecipeId );
+
+        Result validationResult = await ValidateAsync( command, recipe );
         if ( !validationResult.IsSuccess )
         {
             return validationResult;
-        }
-
-        Recipe recipe = await recipeRepository.GetById( command.RecipeId );
-        if ( recipe is null )
-        {
-            return Result.Fail( $"Рецепт с Id {command.RecipeId} не найден." );
         }
 
         DeleteTagsCommand deleteTagsCommand = new DeleteTagsCommand()
@@ -47,12 +43,17 @@ public class DeleteRecipeCommandHandler(
         return Result.Success();
     }
 
-    private async Task<Result> ValidateCommandAsync( DeleteRecipeCommand command )
+    private async Task<Result> ValidateAsync( DeleteRecipeCommand command, Recipe recipe )
     {
         ValidationResult validationResult = await validator.ValidateAsync( command );
         if ( !validationResult.IsValid )
         {
             return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+        }
+
+        if ( recipe is null )
+        {
+            return Result.Fail( $"Рецепт с Id {command.RecipeId} не найден." );
         }
 
         return Result.Success();

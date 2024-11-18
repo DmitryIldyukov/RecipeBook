@@ -4,7 +4,6 @@ using Application.Common.Result;
 using Application.Interfaces;
 using Application.Interfaces.Repositories;
 using Application.UseCases.Ingredients.Commands.Create;
-using Application.UseCases.Likes.Commands.Create;
 using Application.UseCases.Recipes.Dtos;
 using Application.UseCases.Steps.Commands.Create;
 using Application.UseCases.Tags.Commands.Create;
@@ -31,7 +30,7 @@ public class CreateRecipeCommandHandler(
 {
     public async Task<Result> Handle( CreateRecipeCommand command )
     {
-        Result validationResult = await ValidateCommandAsync( command );
+        Result validationResult = await ValidateAsync( command );
         if ( !validationResult.IsSuccess )
         {
             return validationResult;
@@ -135,7 +134,7 @@ public class CreateRecipeCommandHandler(
         fileHelper.Save( configuration.GetSection( "RecipeImages" ).Value, fileNameOnDisk, image.OpenReadStream() );
     }
 
-    private async Task<Result> ValidateCommandAsync( CreateRecipeCommand command )
+    private async Task<Result> ValidateAsync( CreateRecipeCommand command )
     {
         ValidationResult validationResult = await validator.ValidateAsync( command );
         if ( !validationResult.IsValid )

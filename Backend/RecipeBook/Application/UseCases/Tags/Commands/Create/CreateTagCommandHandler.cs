@@ -1,7 +1,6 @@
 ﻿using Application.Common.CQRS.Command;
 using Application.Common.Result;
 using Application.Interfaces.Repositories;
-using Application.UseCases.Steps.Commands.UpdateStep;
 using Domain.Entities;
 using FluentValidation;
 using FluentValidation.Results;
@@ -15,7 +14,7 @@ public class CreateTagCommandHandler(
 {
     public async Task<Result> Handle( CreateTagCommand command )
     {
-        Result validationResult = await ValidateCommandAsync( command );
+        Result validationResult = await ValidateAsync( command );
         if ( !validationResult.IsSuccess )
         {
             return validationResult;
@@ -37,7 +36,7 @@ public class CreateTagCommandHandler(
         return Result.Success();
     }
 
-    private async Task<Result> ValidateCommandAsync( CreateTagCommand command )
+    private async Task<Result> ValidateAsync( CreateTagCommand command )
     {
         ValidationResult validationResult = await validator.ValidateAsync( command );
         if ( !validationResult.IsValid )

@@ -14,16 +14,12 @@ public class UpdateIngredientCommandHandler(
 {
     public async Task<Result> Handle( UpdateIngredientCommand command )
     {
-        Result validationResult = await ValidateCommandAsync( command );
+        Ingredient ingredient = await ingredientRepository.GetById( command.IngredientId );
+
+        Result validationResult = await ValidateAsync( command, ingredient );
         if ( !validationResult.IsSuccess )
         {
             return validationResult;
-        }
-
-        Ingredient ingredient = await ingredientRepository.GetById( command.IngredientId );
-        if ( ingredient is null )
-        {
-            return Result.Fail( $"Ингредиент с Id {command.IngredientId} не найден." );
         }
 
         ingredient.Title = command.Title;
@@ -32,12 +28,17 @@ public class UpdateIngredientCommandHandler(
         return Result.Success();
     }
 
-    private async Task<Result> ValidateCommandAsync( UpdateIngredientCommand command )
+    private async Task<Result> ValidateAsync( UpdateIngredientCommand command, Ingredient ingredient )
     {
         ValidationResult validationResult = await validator.ValidateAsync( command );
         if ( !validationResult.IsValid )
         {
             return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+        }
+
+        if ( ingredient is null )
+        {
+            return Result.Fail( $"Ингредиент с Id {command.IngredientId} не найден." );
         }
 
         return Result.Success();

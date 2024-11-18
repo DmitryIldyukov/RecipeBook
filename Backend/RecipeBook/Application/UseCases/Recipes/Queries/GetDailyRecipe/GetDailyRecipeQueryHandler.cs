@@ -4,7 +4,6 @@ using Application.Interfaces.Repositories;
 using Application.UseCases.Recipes.Dtos;
 using AutoMapper;
 using Domain.Entities;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Application.UseCases.Recipes.Queries.GetDailyRecipe;
 

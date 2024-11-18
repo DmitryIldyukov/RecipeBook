@@ -1,7 +1,6 @@
 ﻿using Application.Common.CQRS.Command;
 using Application.Common.Result;
 using Application.Interfaces.Repositories;
-using Application.UseCases.Favorites.Commands.Create;
 using Domain.Entities;
 using FluentValidation;
 using FluentValidation.Results;
@@ -15,7 +14,7 @@ public class CreateStepCommandHandler(
 {
     public async Task<Result> Handle( CreateStepCommand command )
     {
-        Result validationResult = await ValidateCommandAsync( command );
+        Result validationResult = await ValidateAsync( command );
         if ( !validationResult.IsSuccess )
         {
             return validationResult;
@@ -30,7 +29,7 @@ public class CreateStepCommandHandler(
         return Result.Success();
     }
 
-    private async Task<Result> ValidateCommandAsync( CreateStepCommand command )
+    private async Task<Result> ValidateAsync( CreateStepCommand command )
     {
         ValidationResult validationResult = await validator.ValidateAsync( command );
         if ( !validationResult.IsValid )

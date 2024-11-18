@@ -1,7 +1,7 @@
 ﻿using Application.Common.CQRS.Command;
 using Application.Common.Result;
-using Application.Interfaces.Repositories;
 using Application.Interfaces;
+using Application.Interfaces.Repositories;
 using Domain.Entities;
 using FluentValidation;
 using FluentValidation.Results;
@@ -16,13 +16,27 @@ public class DeleteLikeCommandHandler(
 {
     public async Task<Result> Handle( DeleteLikeCommand command )
     {
-        Result validationResult = await ValidateCommandAsync( command );
+        Like like = await likeRepository.GetByUserIdAndRecipeId( command.UserId, command.RecipeId );
+
+        Result validationResult = await ValidateAsync( command, like );
         if ( !validationResult.IsSuccess )
         {
             return validationResult;
         }
 
-        Like like = await likeRepository.GetByUserIdAndRecipeId( command.UserId, command.RecipeId );
+        likeRepository.Delete( like );
+        await unitOfWork.Commit();
+
+        return Result.Success();
+    }
+
+    private async Task<Result> ValidateAsync( DeleteLikeCommand command, Like like )
+    {
+        ValidationResult validationResult = await validator.ValidateAsync( command );
+        if ( !validationResult.IsValid )
+        {
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+        }
 
         if ( like is null )
         {
@@ -33,20 +47,6 @@ public class DeleteLikeCommandHandler(
         if ( !validationUserOwnershipResult.IsSuccess )
         {
             return validationUserOwnershipResult;
-        }
-
-        likeRepository.Delete( like );
-        await unitOfWork.Commit();
-
-        return Result.Success();
-    }
-
-    private async Task<Result> ValidateCommandAsync( DeleteLikeCommand command )
-    {
-        ValidationResult validationResult = await validator.ValidateAsync( command );
-        if ( !validationResult.IsValid )
-        {
-            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
         return Result.Success();

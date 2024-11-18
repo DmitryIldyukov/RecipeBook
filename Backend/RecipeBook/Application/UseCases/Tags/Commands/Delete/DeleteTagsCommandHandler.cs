@@ -1,7 +1,6 @@
 ﻿using Application.Common.CQRS.Command;
 using Application.Common.Result;
 using Application.Interfaces.Repositories;
-using Application.UseCases.Steps.Commands.UpdateStep;
 using Domain.Entities;
 using FluentValidation;
 using FluentValidation.Results;
@@ -16,16 +15,12 @@ public class DeleteTagsCommandHandler(
 {
     public async Task<Result> Handle( DeleteTagsCommand command )
     {
-        Result validationResult = await ValidateCommandAsync( command );
+        Recipe recipe = await recipeRepository.GetById( command.RecipeId );
+
+        Result validationResult = await ValidateAsync( command, recipe );
         if ( !validationResult.IsSuccess )
         {
             return validationResult;
-        }
-
-        Recipe recipe = await recipeRepository.GetById( command.RecipeId );
-        if ( recipe is null )
-        {
-            return Result.Fail( $"Рецет с Id {command.RecipeId} не найден." );
         }
 
         foreach ( Tag tag in command.Tags )
@@ -40,12 +35,17 @@ public class DeleteTagsCommandHandler(
         return Result.Success();
     }
 
-    private async Task<Result> ValidateCommandAsync( DeleteTagsCommand command )
+    private async Task<Result> ValidateAsync( DeleteTagsCommand command, Recipe recipe )
     {
         ValidationResult validationResult = await validator.ValidateAsync( command );
         if ( !validationResult.IsValid )
         {
             return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+        }
+
+        if ( recipe is null )
+        {
+            return Result.Fail( $"Рецет с Id {command.RecipeId} не найден." );
         }
 
         return Result.Success();

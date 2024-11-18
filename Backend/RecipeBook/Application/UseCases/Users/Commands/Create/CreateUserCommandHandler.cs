@@ -15,7 +15,7 @@ public class CreateUserCommandHandler(
 {
     public async Task<Result> Handle( CreateUserCommand command )
     {
-        Result validationResult = await ValidateCommandAsync( command );
+        Result validationResult = await ValidateAsync( command );
         if ( !validationResult.IsSuccess )
         {
             return validationResult;
@@ -32,7 +32,7 @@ public class CreateUserCommandHandler(
         return Result.Success( "Пользователь успешно добавлен." );
     }
 
-    private async Task<Result> ValidateCommandAsync( CreateUserCommand command )
+    private async Task<Result> ValidateAsync( CreateUserCommand command )
     {
         ValidationResult validationResult = await validator.ValidateAsync( command );
         if ( !validationResult.IsValid )

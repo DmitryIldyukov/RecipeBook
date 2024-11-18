@@ -19,10 +19,26 @@ public class CreateLikeCommandHandler(
 {
     public async Task<Result> Handle( CreateLikeCommand command )
     {
-        Result validationResult = await ValidateCommandAsync( command );
+        Result validationResult = await ValidateAsync( command );
         if ( !validationResult.IsSuccess )
         {
             return validationResult;
+        }
+
+        Like like = mapper.Map<Like>( command );
+
+        await likeRepository.Create( like );
+        await unitOfWork.Commit();
+
+        return Result.Success();
+    }
+
+    private async Task<Result> ValidateAsync( CreateLikeCommand command )
+    {
+        ValidationResult validationResult = await validator.ValidateAsync( command );
+        if ( !validationResult.IsValid )
+        {
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
         bool recipeIsExists = await recipeRepository.ContainsAsync( r => r.Id == command.RecipeId );
@@ -35,22 +51,6 @@ public class CreateLikeCommandHandler(
         if ( userHasRecipeInLikes )
         {
             return Result.Fail( "Этот рецепт уже добавлен в понравившееся." );
-        }
-
-        Like like = mapper.Map<Like>( command );
-
-        await likeRepository.Create( like );
-        await unitOfWork.Commit();
-
-        return Result.Success();
-    }
-
-    private async Task<Result> ValidateCommandAsync( CreateLikeCommand command )
-    {
-        ValidationResult validationResult = await validator.ValidateAsync( command );
-        if ( !validationResult.IsValid )
-        {
-            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
         return Result.Success();

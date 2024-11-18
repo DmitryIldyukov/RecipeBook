@@ -1,7 +1,6 @@
 ﻿using Application.Common.CQRS.Command;
 using Application.Common.Result;
 using Application.Interfaces.Repositories;
-using Application.UseCases.Steps.Commands.Create;
 using Domain.Entities;
 using FluentValidation;
 using FluentValidation.Results;
@@ -15,17 +14,12 @@ public class UpdateStepCommandHandler(
 {
     public async Task<Result> Handle( UpdateStepCommand command )
     {
-        Result validationResult = await ValidateCommandAsync( command );
+        Step step = await stepRepository.GetById( command.StepId );
+
+        Result validationResult = await ValidateAsync( command, step );
         if ( !validationResult.IsSuccess )
         {
             return validationResult;
-        }
-
-        Step step = await stepRepository.GetById( command.StepId );
-
-        if ( step is null )
-        {
-            return Result.Fail( $"Шаг с Id {command.StepId} не найден." );
         }
 
         step.Description = command.Description;
@@ -33,12 +27,17 @@ public class UpdateStepCommandHandler(
         return Result.Success();
     }
 
-    private async Task<Result> ValidateCommandAsync( UpdateStepCommand command )
+    private async Task<Result> ValidateAsync( UpdateStepCommand command, Step step )
     {
         ValidationResult validationResult = await validator.ValidateAsync( command );
         if ( !validationResult.IsValid )
         {
             return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+        }
+
+        if ( step is null )
+        {
+            return Result.Fail( $"Шаг с Id {command.StepId} не найден." );
         }
 
         return Result.Success();

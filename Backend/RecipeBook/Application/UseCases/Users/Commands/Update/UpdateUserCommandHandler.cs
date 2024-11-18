@@ -3,7 +3,6 @@ using Application.Common.PasswordHasher;
 using Application.Common.Result;
 using Application.Interfaces;
 using Application.Interfaces.Repositories;
-using Application.UseCases.Users.Commands.Create;
 using Domain.Entities;
 using FluentValidation;
 using FluentValidation.Results;
@@ -16,22 +15,12 @@ public class UpdateUserCommandHandler(
 {
     public async Task<Result> Handle( UpdateUserCommand command )
     {
-        Result validationResult = await ValidateCommandAsync( command );
+        User user = await userRepository.GetById( command.UserId );
+
+        Result validationResult = await ValidateAsync( command, user );
         if ( !validationResult.IsSuccess )
         {
             return validationResult;
-        }
-
-        User user = await userRepository.GetById( command.UserId );
-        if ( user is null )
-        {
-            return Result.Fail( $"Пользователь с Id {command.UserId} не найден." );
-        }
-
-        Result validationUserOwnershipResult = ValidateUserOwnership( user.Id, command.UserId );
-        if ( !validationUserOwnershipResult.IsSuccess )
-        {
-            return validationUserOwnershipResult;
         }
 
         user.Name = command.Name;
@@ -47,12 +36,23 @@ public class UpdateUserCommandHandler(
         return Result.Success( "Данные пользователя успешно изменены." );
     }
 
-    private async Task<Result> ValidateCommandAsync( UpdateUserCommand command )
+    private async Task<Result> ValidateAsync( UpdateUserCommand command, User user )
     {
         ValidationResult validationResult = await validator.ValidateAsync( command );
         if ( !validationResult.IsValid )
         {
             return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+        }
+
+        if ( user is null )
+        {
+            return Result.Fail( $"Пользователь с Id {command.UserId} не найден." );
+        }
+
+        Result validationUserOwnershipResult = ValidateUserOwnership( user.Id, command.UserId );
+        if ( !validationUserOwnershipResult.IsSuccess )
+        {
+            return validationUserOwnershipResult;
         }
 
         return Result.Success();

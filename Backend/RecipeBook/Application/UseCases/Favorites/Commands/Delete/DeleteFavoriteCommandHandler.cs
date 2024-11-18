@@ -5,7 +5,6 @@ using Application.Interfaces.Repositories;
 using Domain.Entities;
 using FluentValidation;
 using FluentValidation.Results;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Application.UseCases.Favorites.Commands.Delete;
 
@@ -17,13 +16,28 @@ public class DeleteFavoriteCommandHandler(
 {
     public async Task<Result> Handle( DeleteFavoriteCommand command )
     {
-        Result validationResult = await ValidateCommandAsync( command );
+        Favorite favorite = await favoriteRepository.GetByUserIdAndRecipeId( command.UserId, command.RecipeId );
+
+        Result validationResult = await ValidateAsync( command, favorite );
         if ( !validationResult.IsSuccess )
         {
             return validationResult;
         }
 
-        Favorite favorite = await favoriteRepository.GetByUserIdAndRecipeId( command.UserId, command.RecipeId );
+        favoriteRepository.Delete( favorite );
+        await unitOfWork.Commit();
+
+        return Result.Success();
+    }
+
+    private async Task<Result> ValidateAsync( DeleteFavoriteCommand command, Favorite favorite )
+    {
+        ValidationResult validationResult = await validator.ValidateAsync( command );
+        if ( !validationResult.IsValid )
+        {
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+        }
+
         if ( favorite is null )
         {
             return Result.Fail( "Избранный рецепт не найден." );
@@ -33,20 +47,6 @@ public class DeleteFavoriteCommandHandler(
         if ( !validationUserOwnershipResult.IsSuccess )
         {
             return validationUserOwnershipResult;
-        }
-
-        favoriteRepository.Delete( favorite );
-        await unitOfWork.Commit();
-
-        return Result.Success();
-    }
-
-    private async Task<Result> ValidateCommandAsync( DeleteFavoriteCommand command )
-    {
-        ValidationResult validationResult = await validator.ValidateAsync( command );
-        if ( !validationResult.IsValid )
-        {
-            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
         return Result.Success();

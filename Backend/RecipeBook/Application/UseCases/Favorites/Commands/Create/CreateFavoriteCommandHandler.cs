@@ -19,10 +19,26 @@ public class CreateFavoriteCommandHandler(
 {
     public async Task<Result> Handle( CreateFavoriteCommand command )
     {
-        Result validationResult = await ValidateCommandAsync( command );
+        Result validationResult = await ValidateAsync( command );
         if ( !validationResult.IsSuccess )
         {
             return validationResult;
+        }
+
+        Favorite favorite = mapper.Map<Favorite>( command );
+
+        await favoriteRepository.Create( favorite );
+        await unitOfWork.Commit();
+
+        return Result.Success();
+    }
+
+    private async Task<Result> ValidateAsync( CreateFavoriteCommand command )
+    {
+        ValidationResult validationResult = await validator.ValidateAsync( command );
+        if ( !validationResult.IsValid )
+        {
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
         bool recipeIsExists = await recipeRepository.ContainsAsync( r => r.Id == command.RecipeId );
@@ -35,22 +51,6 @@ public class CreateFavoriteCommandHandler(
         if ( userHasRecipeInFavorites )
         {
             return Result.Fail( "Этот рецепт уже добавлен в избранное." );
-        }
-
-        Favorite favorite = mapper.Map<Favorite>( command );
-
-        await favoriteRepository.Create( favorite );
-        await unitOfWork.Commit();
-
-        return Result.Success();
-    }
-
-    private async Task<Result> ValidateCommandAsync( CreateFavoriteCommand command )
-    {
-        ValidationResult validationResult = await validator.ValidateAsync( command );
-        if ( !validationResult.IsValid )
-        {
-            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
         return Result.Success();

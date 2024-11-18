@@ -1,6 +1,5 @@
 ﻿using Application.Common.CQRS.Command;
 using Application.Common.Result;
-using Application.Interfaces.Repositories;
 using Application.UseCases.Recipes.Dtos;
 using Application.UseCases.Tags.Commands.Create;
 using Application.UseCases.Tags.Commands.Delete;
@@ -18,7 +17,7 @@ public class UpdateRecipeTagsCommandHandler(
 {
     public async Task<Result> Handle( UpdateRecipeTagsCommand command )
     {
-        Result validationResult = await ValidateCommandAsync( command );
+        Result validationResult = await ValidateAsync( command );
         if ( !validationResult.IsSuccess )
         {
             return validationResult;
@@ -76,7 +75,7 @@ public class UpdateRecipeTagsCommandHandler(
         return Result.Success();
     }
 
-    private async Task<Result> ValidateCommandAsync( UpdateRecipeTagsCommand command )
+    private async Task<Result> ValidateAsync( UpdateRecipeTagsCommand command )
     {
         ValidationResult validationResult = await validator.ValidateAsync( command );
         if ( !validationResult.IsValid )

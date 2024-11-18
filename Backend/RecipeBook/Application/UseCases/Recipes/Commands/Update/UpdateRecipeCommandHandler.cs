@@ -4,7 +4,6 @@ using Application.Common.Result;
 using Application.Interfaces;
 using Application.Interfaces.Repositories;
 using Application.UseCases.Ingredients.Commands.UpdateRecipeIngredients;
-using Application.UseCases.Recipes.Commands.Delete;
 using Application.UseCases.Recipes.Dtos;
 using Application.UseCases.Steps.Commands.UpdateRecipeSteps;
 using Application.UseCases.Tags.Commands.UpdateRecipeTags;
@@ -29,16 +28,12 @@ public class UpdateRecipeCommandHandler(
 {
     public async Task<Result> Handle( UpdateRecipeCommand command )
     {
-        Result validationResult = await ValidateCommandAsync( command );
+        Recipe recipe = await recipeRepository.GetById( command.RecipeId );
+
+        Result validationResult = await ValidateAsync( command, recipe );
         if ( !validationResult.IsSuccess )
         {
             return validationResult;
-        }
-
-        Recipe recipe = await recipeRepository.GetById( command.RecipeId );
-        if ( recipe is null )
-        {
-            return Result.Fail( $"Рецепт с Id {command.RecipeId} не найден." );
         }
 
         recipe.Name = command.Name;
@@ -131,12 +126,17 @@ public class UpdateRecipeCommandHandler(
         fileHelper.Save( configuration.GetSection( "RecipeImages" ).Value, fileNameOnDisk, image.OpenReadStream() );
     }
 
-    private async Task<Result> ValidateCommandAsync( UpdateRecipeCommand command )
+    private async Task<Result> ValidateAsync( UpdateRecipeCommand command, Recipe recipe )
     {
         ValidationResult validationResult = await validator.ValidateAsync( command );
         if ( !validationResult.IsValid )
         {
             return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+        }
+
+        if ( recipe is null )
+        {
+            return Result.Fail( $"Рецепт с Id {command.RecipeId} не найден." );
         }
 
         return Result.Success();

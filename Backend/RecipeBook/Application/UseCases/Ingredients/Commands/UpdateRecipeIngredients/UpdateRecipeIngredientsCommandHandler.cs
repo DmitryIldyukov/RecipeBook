@@ -19,7 +19,7 @@ public class UpdateRecipeIngredientsCommandHandler(
 {
     public async Task<Result> Handle( UpdateRecipeIngredientsCommand command )
     {
-        Result validationResult = await ValidateCommandAsync( command );
+        Result validationResult = await ValidateAsync( command );
         if ( !validationResult.IsSuccess )
         {
             return validationResult;
@@ -123,7 +123,7 @@ public class UpdateRecipeIngredientsCommandHandler(
         return createResult.IsSuccess ? Result.Success() : Result.Fail( createResult.ErrorMessages );
     }
 
-    private async Task<Result> ValidateCommandAsync( UpdateRecipeIngredientsCommand command )
+    private async Task<Result> ValidateAsync( UpdateRecipeIngredientsCommand command )
     {
         ValidationResult validationResult = await validator.ValidateAsync( command );
         if ( !validationResult.IsValid )

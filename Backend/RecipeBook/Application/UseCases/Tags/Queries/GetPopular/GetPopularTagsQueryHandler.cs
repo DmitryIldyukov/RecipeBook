@@ -17,7 +17,7 @@ public class GetPopularTagsQueryHandler(
 {
     public async Task<ResultT<IReadOnlyList<GetTagDto>>> Handle( GetPopularTagsQuery query )
     {
-        ResultT<IReadOnlyList<GetTagDto>> validationResult = await ValidateCommandAsync( query );
+        ResultT<IReadOnlyList<GetTagDto>> validationResult = await ValidateAsync( query );
         if ( !validationResult.IsSuccess )
         {
             return validationResult;
@@ -28,7 +28,7 @@ public class GetPopularTagsQueryHandler(
         return ResultT<IReadOnlyList<GetTagDto>>.Success( mapper.Map<IReadOnlyList<GetTagDto>>( tags ), "Популярные теги успешно получены." );
     }
 
-    private async Task<ResultT<IReadOnlyList<GetTagDto>>> ValidateCommandAsync( GetPopularTagsQuery query )
+    private async Task<ResultT<IReadOnlyList<GetTagDto>>> ValidateAsync( GetPopularTagsQuery query )
     {
         ValidationResult validationResult = await validator.ValidateAsync( query );
         if ( !validationResult.IsValid )

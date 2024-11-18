@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using Application.Common.CQRS.Query;
+﻿using Application.Common.CQRS.Query;
 using Application.Common.Result;
 using Application.Interfaces.Repositories;
 using Application.UseCases.Recipes.Dtos;
-using Application.UseCases.Recipes.Queries.GetRecipeImage;
 using AutoMapper;
 using Domain.Entities;
 using FluentValidation;
@@ -19,7 +17,7 @@ public class GetRecipesByFilterQueryHandler(
 {
     public async Task<ResultT<IReadOnlyList<GetRecipeQueryDto>>> Handle( GetRecipesByFilterQuery query )
     {
-        ResultT<IReadOnlyList<GetRecipeQueryDto>> validationResult = await ValidateCommandAsync( query );
+        ResultT<IReadOnlyList<GetRecipeQueryDto>> validationResult = await ValidateAsync( query );
         if ( !validationResult.IsSuccess )
         {
             return validationResult;
@@ -38,7 +36,7 @@ public class GetRecipesByFilterQueryHandler(
         return ResultT<IReadOnlyList<GetRecipeQueryDto>>.Success( response, "Рецепты найдены." );
     }
 
-    private async Task<ResultT<IReadOnlyList<GetRecipeQueryDto>>> ValidateCommandAsync( GetRecipesByFilterQuery query )
+    private async Task<ResultT<IReadOnlyList<GetRecipeQueryDto>>> ValidateAsync( GetRecipesByFilterQuery query )
     {
         ValidationResult validationResult = await validator.ValidateAsync( query );
         if ( !validationResult.IsValid )
