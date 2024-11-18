@@ -1,9 +1,11 @@
+import { useAppStore } from "../hooks/useStore";
 import { authService } from "./authService";
 
 let isRefreshing = false;
 let refreshPromise: Promise<void> | null = null;
 
-export async function fetchClient<T>(url: string, options?: RequestInit): Promise<T> {
+export const fetchClient = async <T>(url: string, options?: RequestInit): Promise<T> => {
+  const { logout } = useAppStore.getState();
   const isFormData = options?.body instanceof FormData;
   let token = localStorage.getItem("access-token");
 
@@ -31,6 +33,9 @@ export async function fetchClient<T>(url: string, options?: RequestInit): Promis
         refreshPromise = authService.refreshToken()
           .then(newTokenInfo => {
             token = newTokenInfo.accessToken;
+          })
+          .catch(() => {
+            logout();
           })
           .finally(() => {
             isRefreshing = false;
