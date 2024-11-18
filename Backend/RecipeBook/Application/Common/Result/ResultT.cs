@@ -14,7 +14,7 @@ public class ResultT<T>
         SuccessMessage = successMessage;
     }
 
-    public static ResultT<T> Success( T value, string successMessage )
+    public static ResultT<T> Success( T value, string successMessage = null )
     {
         return new ResultT<T>( value, null, successMessage );
     }

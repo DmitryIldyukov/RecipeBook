@@ -17,10 +17,10 @@ public class GetUserRecipesQueryHandler(
 {
     public async Task<ResultT<IReadOnlyList<GetRecipeQueryDto>>> Handle( GetUserRecipesQuery query )
     {
-        ValidationResult validationResult = await validator.ValidateAsync( query );
-        if ( !validationResult.IsValid )
+        ResultT<IReadOnlyList<GetRecipeQueryDto>> validationResult = await ValidateAsync( query );
+        if ( !validationResult.IsSuccess )
         {
-            return ResultT<IReadOnlyList<GetRecipeQueryDto>>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return validationResult;
         }
 
         IReadOnlyList<Recipe> userRecipes = await recipeRepository.GetUserRecipes( query.UserId );
@@ -34,5 +34,16 @@ public class GetUserRecipesQueryHandler(
         } ).ToList();
 
         return ResultT<IReadOnlyList<GetRecipeQueryDto>>.Success( response, "Рецепты пользователя получены." );
+    }
+
+    private async Task<ResultT<IReadOnlyList<GetRecipeQueryDto>>> ValidateAsync( GetUserRecipesQuery query )
+    {
+        ValidationResult validationResult = await validator.ValidateAsync( query );
+        if ( !validationResult.IsValid )
+        {
+            return ResultT<IReadOnlyList<GetRecipeQueryDto>>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+        }
+
+        return ResultT<IReadOnlyList<GetRecipeQueryDto>>.Success( null );
     }
 }

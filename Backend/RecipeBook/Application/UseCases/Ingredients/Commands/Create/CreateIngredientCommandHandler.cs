@@ -16,10 +16,10 @@ public class CreateIngredientCommandHandler(
 {
     public async Task<Result> Handle( CreateIngredientCommand command )
     {
-        ValidationResult validationResult = await validator.ValidateAsync( command );
-        if ( !validationResult.IsValid )
+        Result validationResult = await ValidateAsync( command );
+        if ( !validationResult.IsSuccess )
         {
-            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return validationResult;
         }
 
         Ingredient ingredient = mapper.Map<Ingredient>( command );
@@ -29,5 +29,16 @@ public class CreateIngredientCommandHandler(
         command.Recipe.Ingredients.Add( ingredient );
 
         return Result.Success( $"Ингредиент {ingredient.Title} успешно добавлен." );
+    }
+
+    private async Task<Result> ValidateAsync( CreateIngredientCommand command )
+    {
+        ValidationResult validationResult = await validator.ValidateAsync( command );
+        if ( !validationResult.IsValid )
+        {
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+        }
+
+        return Result.Success();
     }
 }

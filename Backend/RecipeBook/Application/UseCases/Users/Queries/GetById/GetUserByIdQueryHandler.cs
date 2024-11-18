@@ -16,16 +16,12 @@ public class GetUserByIdQueryHandler(
 {
     public async Task<ResultT<GetUserQueryDto>> Handle( GetUserByIdQuery query )
     {
-        ValidationResult validationResult = await validator.ValidateAsync( query );
-        if ( !validationResult.IsValid )
-        {
-            return ResultT<GetUserQueryDto>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
-        }
-
         User user = await userRepository.GetById( query.Id );
-        if ( user is null )
+
+        ResultT<GetUserQueryDto> validationResult = await ValidateAsync( query, user );
+        if ( !validationResult.IsSuccess )
         {
-            return ResultT<GetUserQueryDto>.Fail( $"Пользователь с id {query.Id} не найден." );
+            return validationResult;
         }
 
         await unitOfWork.Commit();
@@ -33,5 +29,21 @@ public class GetUserByIdQueryHandler(
         GetUserQueryDto response = mapper.Map<GetUserQueryDto>( user );
 
         return ResultT<GetUserQueryDto>.Success( response, $"Пользователь с id {query.Id} найден." );
+    }
+
+    private async Task<ResultT<GetUserQueryDto>> ValidateAsync( GetUserByIdQuery query, User user )
+    {
+        ValidationResult validationResult = await validator.ValidateAsync( query );
+        if ( !validationResult.IsValid )
+        {
+            return ResultT<GetUserQueryDto>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+        }
+
+        if ( user is null )
+        {
+            return ResultT<GetUserQueryDto>.Fail( $"Пользователь с id {query.Id} не найден." );
+        }
+
+        return ResultT<GetUserQueryDto>.Success( null );
     }
 }
