@@ -14,10 +14,10 @@ public class CreateStepCommandHandler(
 {
     public async Task<Result> Handle( CreateStepCommand command )
     {
-        ValidationResult validationResult = await validator.ValidateAsync( command );
-        if ( !validationResult.IsValid )
+        Result validationResult = await ValidateAsync( command );
+        if ( !validationResult.IsSuccess )
         {
-            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return validationResult;
         }
 
         Step step = new( command.Recipe.Id, command.Description );
@@ -25,6 +25,17 @@ public class CreateStepCommandHandler(
         await stepRepository.Create( step );
 
         command.Recipe.Steps.Add( step );
+
+        return Result.Success();
+    }
+
+    private async Task<Result> ValidateAsync( CreateStepCommand command )
+    {
+        ValidationResult validationResult = await validator.ValidateAsync( command );
+        if ( !validationResult.IsValid )
+        {
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+        }
 
         return Result.Success();
     }

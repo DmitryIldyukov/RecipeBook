@@ -17,10 +17,10 @@ public class GetRecipesByFilterQueryHandler(
 {
     public async Task<ResultT<IReadOnlyList<GetRecipeQueryDto>>> Handle( GetRecipesByFilterQuery query )
     {
-        ValidationResult validationResult = await validator.ValidateAsync( query );
-        if ( !validationResult.IsValid )
+        ResultT<IReadOnlyList<GetRecipeQueryDto>> validationResult = await ValidateAsync( query );
+        if ( !validationResult.IsSuccess )
         {
-            return ResultT<IReadOnlyList<GetRecipeQueryDto>>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return validationResult;
         }
 
         IReadOnlyList<Recipe> recipes = await recipeRepository.GetRecipesByFilter( query.SearchQueries, query.Page );
@@ -34,5 +34,16 @@ public class GetRecipesByFilterQueryHandler(
         } ).ToList();
 
         return ResultT<IReadOnlyList<GetRecipeQueryDto>>.Success( response, "Рецепты найдены." );
+    }
+
+    private async Task<ResultT<IReadOnlyList<GetRecipeQueryDto>>> ValidateAsync( GetRecipesByFilterQuery query )
+    {
+        ValidationResult validationResult = await validator.ValidateAsync( query );
+        if ( !validationResult.IsValid )
+        {
+            return ResultT<IReadOnlyList<GetRecipeQueryDto>>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+        }
+
+        return ResultT<IReadOnlyList<GetRecipeQueryDto>>.Success( null );
     }
 }

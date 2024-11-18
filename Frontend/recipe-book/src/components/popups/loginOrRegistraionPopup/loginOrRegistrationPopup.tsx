@@ -1,6 +1,6 @@
 import MyButton from "../../customComponents/myButton/myButton";
 import styles from "./loginOrRegistrationPopup.module.scss";
-import closeIcon from "../../../assets/close.svg";
+import closeIcon from "../../../assets/images/close.svg";
 import { usePopupStore } from "../../../hooks/usePopupStore";
 
 export const LoginOrRegistrationPopup = () => {

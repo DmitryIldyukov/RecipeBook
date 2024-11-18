@@ -17,18 +17,14 @@ public class GetRecipeByIdQueryHandler(
 {
     public async Task<ResultT<GetRecipeQueryDto>> Handle( GetRecipeByIdQuery query )
     {
-        ValidationResult validationResult = await validator.ValidateAsync( query );
-        if ( !validationResult.IsValid )
-        {
-            return ResultT<GetRecipeQueryDto>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
-        }
-
         Recipe recipe = await recipeRepository.GetById( query.RecipeId );
 
-        if ( recipe is null )
+        ResultT<GetRecipeQueryDto> validationResult = await ValidateAsync( query, recipe );
+        if ( !validationResult.IsSuccess )
         {
-            return ResultT<GetRecipeQueryDto>.Fail( $"Рецепт с Id {query.RecipeId} не найден." );
+            return validationResult;
         }
+
 
         if ( query.UserId is not null )
         {
@@ -40,5 +36,21 @@ public class GetRecipeByIdQueryHandler(
         }
 
         return ResultT<GetRecipeQueryDto>.Success( mapper.Map<GetRecipeQueryDto>( recipe ), "Рецепт найден." );
+    }
+
+    private async Task<ResultT<GetRecipeQueryDto>> ValidateAsync( GetRecipeByIdQuery query, Recipe recipe )
+    {
+        ValidationResult validationResult = await validator.ValidateAsync( query );
+        if ( !validationResult.IsValid )
+        {
+            return ResultT<GetRecipeQueryDto>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+        }
+
+        if ( recipe is null )
+        {
+            return ResultT<GetRecipeQueryDto>.Fail( $"Рецепт с Id {query.RecipeId} не найден." );
+        }
+
+        return ResultT<GetRecipeQueryDto>.Success( null );
     }
 }

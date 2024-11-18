@@ -1,6 +1,6 @@
 import styles from "./header.module.scss";
-import loginImg from "../../assets/login.svg";
-import logoutImg from "../../assets/exit_to_app.svg";
+import loginImg from "../../assets/images/login.svg";
+import logoutImg from "../../assets/images/exit_to_app.svg";
 import { useAppStore } from "../../hooks/useStore";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ROUTES } from "../../constants/constants";

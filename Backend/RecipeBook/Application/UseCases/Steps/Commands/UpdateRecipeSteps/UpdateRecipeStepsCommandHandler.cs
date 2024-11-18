@@ -19,10 +19,10 @@ public class UpdateRecipeStepsCommandHandler(
 {
     public async Task<Result> Handle( UpdateRecipeStepsCommand command )
     {
-        ValidationResult validationResult = await validator.ValidateAsync( command );
-        if ( !validationResult.IsValid )
+        Result validationResult = await ValidateAsync( command );
+        if ( !validationResult.IsSuccess )
         {
-            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return validationResult;
         }
 
         ICollection<Step> recipeSteps = command.Recipe.Steps;
@@ -107,5 +107,16 @@ public class UpdateRecipeStepsCommandHandler(
         Result createResult = await createStepHandler.Handle( createStepCommand );
 
         return createResult.IsSuccess ? Result.Success() : Result.Fail( createResult.ErrorMessages );
+    }
+
+    private async Task<Result> ValidateAsync( UpdateRecipeStepsCommand command )
+    {
+        ValidationResult validationResult = await validator.ValidateAsync( command );
+        if ( !validationResult.IsValid )
+        {
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+        }
+
+        return Result.Success();
     }
 }

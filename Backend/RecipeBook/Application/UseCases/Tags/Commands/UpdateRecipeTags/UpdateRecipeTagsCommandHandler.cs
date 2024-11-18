@@ -1,6 +1,5 @@
 ﻿using Application.Common.CQRS.Command;
 using Application.Common.Result;
-using Application.Interfaces.Repositories;
 using Application.UseCases.Recipes.Dtos;
 using Application.UseCases.Tags.Commands.Create;
 using Application.UseCases.Tags.Commands.Delete;
@@ -18,10 +17,10 @@ public class UpdateRecipeTagsCommandHandler(
 {
     public async Task<Result> Handle( UpdateRecipeTagsCommand command )
     {
-        ValidationResult validationResult = await validator.ValidateAsync( command );
-        if ( !validationResult.IsValid )
+        Result validationResult = await ValidateAsync( command );
+        if ( !validationResult.IsSuccess )
         {
-            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return validationResult;
         }
 
         ICollection<Tag> recipeTags = command.Recipe.Tags;
@@ -71,6 +70,17 @@ public class UpdateRecipeTagsCommandHandler(
             {
                 return Result.Fail( createResult.ErrorMessages );
             }
+        }
+
+        return Result.Success();
+    }
+
+    private async Task<Result> ValidateAsync( UpdateRecipeTagsCommand command )
+    {
+        ValidationResult validationResult = await validator.ValidateAsync( command );
+        if ( !validationResult.IsValid )
+        {
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
         return Result.Success();
