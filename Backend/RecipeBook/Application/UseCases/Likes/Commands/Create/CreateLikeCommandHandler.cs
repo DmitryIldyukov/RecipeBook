@@ -1,7 +1,7 @@
 ﻿using Application.Common.CQRS.Command;
 using Application.Common.Result;
-using Application.Interfaces.Repositories;
 using Application.Interfaces;
+using Application.Interfaces.Repositories;
 using AutoMapper;
 using Domain.Entities;
 using FluentValidation;
@@ -18,6 +18,22 @@ public class CreateLikeCommandHandler(
 ) : ICommandHandler<CreateLikeCommand, Result>
 {
     public async Task<Result> Handle( CreateLikeCommand command )
+    {
+        Result validationResult = await ValidateAsync( command );
+        if ( !validationResult.IsSuccess )
+        {
+            return validationResult;
+        }
+
+        Like like = mapper.Map<Like>( command );
+
+        await likeRepository.Create( like );
+        await unitOfWork.Commit();
+
+        return Result.Success();
+    }
+
+    private async Task<Result> ValidateAsync( CreateLikeCommand command )
     {
         ValidationResult validationResult = await validator.ValidateAsync( command );
         if ( !validationResult.IsValid )
@@ -36,11 +52,6 @@ public class CreateLikeCommandHandler(
         {
             return Result.Fail( "Этот рецепт уже добавлен в понравившееся." );
         }
-
-        Like like = mapper.Map<Like>( command );
-
-        await likeRepository.Create( like );
-        await unitOfWork.Commit();
 
         return Result.Success();
     }

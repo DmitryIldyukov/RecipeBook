@@ -28,17 +28,12 @@ public class UpdateRecipeCommandHandler(
 {
     public async Task<Result> Handle( UpdateRecipeCommand command )
     {
-        ValidationResult validationResult = await validator.ValidateAsync( command );
-        if ( !validationResult.IsValid )
-        {
-            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
-        }
-
         Recipe recipe = await recipeRepository.GetById( command.RecipeId );
 
-        if ( recipe is null )
+        Result validationResult = await ValidateAsync( command, recipe );
+        if ( !validationResult.IsSuccess )
         {
-            return Result.Fail( $"Рецепт с Id {command.RecipeId} не найден." );
+            return validationResult;
         }
 
         recipe.Name = command.Name;
@@ -129,5 +124,21 @@ public class UpdateRecipeCommandHandler(
         string fileExtension = Path.GetExtension( recipe.ImageName );
         string fileNameOnDisk = recipe.Id + fileExtension;
         fileHelper.Save( configuration.GetSection( "RecipeImages" ).Value, fileNameOnDisk, image.OpenReadStream() );
+    }
+
+    private async Task<Result> ValidateAsync( UpdateRecipeCommand command, Recipe recipe )
+    {
+        ValidationResult validationResult = await validator.ValidateAsync( command );
+        if ( !validationResult.IsValid )
+        {
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+        }
+
+        if ( recipe is null )
+        {
+            return Result.Fail( $"Рецепт с Id {command.RecipeId} не найден." );
+        }
+
+        return Result.Success();
     }
 }

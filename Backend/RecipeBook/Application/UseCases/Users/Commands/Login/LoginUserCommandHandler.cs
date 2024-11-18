@@ -18,16 +18,12 @@ public class LoginUserCommandHandler(
 
     public async Task<ResultT<int>> Handle( LoginUserCommand command )
     {
-        ValidationResult validationResult = await validator.ValidateAsync( command );
-        if ( !validationResult.IsValid )
-        {
-            return ResultT<int>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
-        }
-
         User user = await userRepository.GetByLogin( command.Login );
-        if ( user == null )
+
+        ResultT<int> validationResult = await ValidateAsync( command, user );
+        if ( !validationResult.IsSuccess )
         {
-            return ResultT<int>.Fail( errorMessage );
+            return validationResult;
         }
 
         if ( !passwordHasher.VerifyPassword( command.Password, user.Password ) )
@@ -36,5 +32,21 @@ public class LoginUserCommandHandler(
         }
 
         return ResultT<int>.Success( user.Id, "Успешный вход." );
+    }
+
+    private async Task<ResultT<int>> ValidateAsync( LoginUserCommand command, User user )
+    {
+        ValidationResult validationResult = await validator.ValidateAsync( command );
+        if ( !validationResult.IsValid )
+        {
+            return ResultT<int>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+        }
+
+        if ( user == null )
+        {
+            return ResultT<int>.Fail( errorMessage );
+        }
+
+        return ResultT<int>.Success( 0 );
     }
 }
