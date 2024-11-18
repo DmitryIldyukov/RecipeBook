@@ -11,7 +11,6 @@ namespace Application.UseCases.Favorites.Commands.Create;
 
 public class CreateFavoriteCommandHandler(
     IFavoriteRepository favoriteRepository,
-    IRecipeRepository recipeRepository,
     IValidator<CreateFavoriteCommand> validator,
     IUnitOfWork unitOfWork,
     IMapper mapper
@@ -39,18 +38,6 @@ public class CreateFavoriteCommandHandler(
         if ( !validationResult.IsValid )
         {
             return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
-        }
-
-        bool recipeIsExists = await recipeRepository.ContainsAsync( r => r.Id == command.RecipeId );
-        if ( !recipeIsExists )
-        {
-            return Result.Fail( $"Рецепт с Id {command.RecipeId} не найден." );
-        }
-
-        bool userHasRecipeInFavorites = await favoriteRepository.IsUserFavoriteRecipe( command.UserId, command.RecipeId );
-        if ( userHasRecipeInFavorites )
-        {
-            return Result.Fail( "Этот рецепт уже добавлен в избранное." );
         }
 
         return Result.Success();

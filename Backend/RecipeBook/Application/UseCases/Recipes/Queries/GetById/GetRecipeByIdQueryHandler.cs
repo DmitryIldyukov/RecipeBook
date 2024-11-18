@@ -17,13 +17,13 @@ public class GetRecipeByIdQueryHandler(
 {
     public async Task<ResultT<GetRecipeQueryDto>> Handle( GetRecipeByIdQuery query )
     {
-        Recipe recipe = await recipeRepository.GetById( query.RecipeId );
-
-        ResultT<GetRecipeQueryDto> validationResult = await ValidateAsync( query, recipe );
-        if ( !validationResult.IsSuccess )
+        ValidationResult validationResult = await validator.ValidateAsync( query );
+        if ( !validationResult.IsValid )
         {
-            return validationResult;
+            return ResultT<GetRecipeQueryDto>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
+
+        Recipe recipe = await recipeRepository.GetById( query.RecipeId );
 
 
         if ( query.UserId is not null )
@@ -40,11 +40,7 @@ public class GetRecipeByIdQueryHandler(
 
     private async Task<ResultT<GetRecipeQueryDto>> ValidateAsync( GetRecipeByIdQuery query, Recipe recipe )
     {
-        ValidationResult validationResult = await validator.ValidateAsync( query );
-        if ( !validationResult.IsValid )
-        {
-            return ResultT<GetRecipeQueryDto>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
-        }
+        
 
         if ( recipe is null )
         {

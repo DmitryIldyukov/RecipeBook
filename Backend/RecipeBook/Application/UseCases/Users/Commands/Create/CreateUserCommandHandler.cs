@@ -15,10 +15,10 @@ public class CreateUserCommandHandler(
 {
     public async Task<Result> Handle( CreateUserCommand command )
     {
-        Result validationResult = await ValidateAsync( command );
-        if ( !validationResult.IsSuccess )
+        ValidationResult validationResult = await validator.ValidateAsync( command );
+        if ( !validationResult.IsValid )
         {
-            return validationResult;
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
         string hashedPassword = hasher.HashPassword( command.Password );
@@ -30,16 +30,5 @@ public class CreateUserCommandHandler(
         await unitOfWork.Commit();
 
         return Result.Success( "Пользователь успешно добавлен." );
-    }
-
-    private async Task<Result> ValidateAsync( CreateUserCommand command )
-    {
-        ValidationResult validationResult = await validator.ValidateAsync( command );
-        if ( !validationResult.IsValid )
-        {
-            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
-        }
-
-        return Result.Success();
     }
 }

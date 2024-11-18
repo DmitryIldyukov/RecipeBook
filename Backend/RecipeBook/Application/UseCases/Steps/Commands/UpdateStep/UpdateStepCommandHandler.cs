@@ -14,31 +14,15 @@ public class UpdateStepCommandHandler(
 {
     public async Task<Result> Handle( UpdateStepCommand command )
     {
-        Step step = await stepRepository.GetById( command.StepId );
-
-        Result validationResult = await ValidateAsync( command, step );
-        if ( !validationResult.IsSuccess )
-        {
-            return validationResult;
-        }
-
-        step.Description = command.Description;
-
-        return Result.Success();
-    }
-
-    private async Task<Result> ValidateAsync( UpdateStepCommand command, Step step )
-    {
         ValidationResult validationResult = await validator.ValidateAsync( command );
         if ( !validationResult.IsValid )
         {
             return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
-        if ( step is null )
-        {
-            return Result.Fail( $"Шаг с Id {command.StepId} не найден." );
-        }
+        Step step = await stepRepository.GetById( command.StepId );
+
+        step.Description = command.Description;
 
         return Result.Success();
     }

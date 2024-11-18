@@ -3,7 +3,7 @@ using Domain.Entities;
 
 namespace Application.Interfaces.Repositories;
 
-public interface IStepRepository : ICreateRepository<Step>, IDeleteRepository<Step>
+public interface IStepRepository : ICreateRepository<Step>, IDeleteRepository<Step>, ISearchRepository<Step>
 {
     Task<IReadOnlyList<Step>> GetStepsByRecipeId( int recipeId );
     Task<Step> GetById( int stepId );

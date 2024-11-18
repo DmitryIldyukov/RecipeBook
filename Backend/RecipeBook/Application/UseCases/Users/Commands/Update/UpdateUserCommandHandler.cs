@@ -15,13 +15,13 @@ public class UpdateUserCommandHandler(
 {
     public async Task<Result> Handle( UpdateUserCommand command )
     {
-        User user = await userRepository.GetById( command.UserId );
-
-        Result validationResult = await ValidateAsync( command, user );
-        if ( !validationResult.IsSuccess )
+        ValidationResult validationResult = await validator.ValidateAsync( command );
+        if ( !validationResult.IsValid )
         {
-            return validationResult;
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
+
+        User user = await userRepository.GetById( command.UserId );
 
         user.Name = command.Name;
         user.Login = command.Login;
@@ -34,37 +34,5 @@ public class UpdateUserCommandHandler(
         await unitOfWork.Commit();
 
         return Result.Success( "Данные пользователя успешно изменены." );
-    }
-
-    private async Task<Result> ValidateAsync( UpdateUserCommand command, User user )
-    {
-        ValidationResult validationResult = await validator.ValidateAsync( command );
-        if ( !validationResult.IsValid )
-        {
-            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
-        }
-
-        if ( user is null )
-        {
-            return Result.Fail( $"Пользователь с Id {command.UserId} не найден." );
-        }
-
-        Result validationUserOwnershipResult = ValidateUserOwnership( user.Id, command.UserId );
-        if ( !validationUserOwnershipResult.IsSuccess )
-        {
-            return validationUserOwnershipResult;
-        }
-
-        return Result.Success();
-    }
-
-    private Result ValidateUserOwnership( int userId, int currentUserId )
-    {
-        if ( userId != currentUserId )
-        {
-            return Result.Fail( "Невозможно изменить данные другого пользователя." );
-        }
-
-        return Result.Success();
     }
 }
