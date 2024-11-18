@@ -14,6 +14,7 @@ import { RecipesPageHeader } from "./recipesPageHeader/recipesPageHeader";
 import { RecipeTagCard } from "./tagsPanel/recipeTagCard";
 import { useAppStore } from "../../hooks/useStore";
 import { RecipeCard } from "../customComponents/recipeCard/recipeCard";
+import { handleError } from "../../utils/errorHandler";
 
 type RecipesPageProps = {
   searchQueries: string[];
@@ -56,7 +57,7 @@ export const RecipesPage = () => {
         setIsCanLoadMore(response.length === defaultPageSize);
       })
       .catch((error: unknown) => {
-        console.error("Ошибка загрузки рецептов:", error);
+        handleError(error);
       })
       .finally(() => {
         setLoading(false);

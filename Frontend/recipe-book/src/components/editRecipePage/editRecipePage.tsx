@@ -46,7 +46,7 @@ export const EditRecipePage = () => {
         setImageName(data.imageName);
       })
       .catch((error: unknown) => {
-        console.error(error);
+        handleError(error);
       });
   };
 

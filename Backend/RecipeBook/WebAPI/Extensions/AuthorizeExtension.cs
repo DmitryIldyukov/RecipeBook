@@ -23,7 +23,8 @@ public static class AuthorizeExtension
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes( jwtOptions!.SecretKey ) )
+                        Encoding.UTF8.GetBytes( jwtOptions!.SecretKey ) ),
+                    ClockSkew = TimeSpan.Zero
                 };
             } );
 

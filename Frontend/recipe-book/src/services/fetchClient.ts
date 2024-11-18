@@ -1,15 +1,18 @@
 import { authService } from "./authService";
 
+let isRefreshing = false;
+let refreshPromise: Promise<void> | null = null;
+
 export async function fetchClient<T>(url: string, options?: RequestInit): Promise<T> {
   const isFormData = options?.body instanceof FormData;
   let token = localStorage.getItem("access-token");
 
-  const defaultHeaders: HeadersInit = {
-    ...(token && { Authorization: `Bearer ${token}` }),
-    ...(!isFormData && { "Content-Type": "application/json" }),
-  };
+  const makeRequest = async (): Promise<Response> => {
+    const defaultHeaders: HeadersInit = {
+      ...(token && { Authorization: `Bearer ${token}` }),
+      ...(!isFormData && { "Content-Type": "application/json" }),
+    };
 
-  async function makeRequest(): Promise<Response> {
     return fetch(url, {
       ...options,
       headers: {
@@ -23,10 +26,23 @@ export async function fetchClient<T>(url: string, options?: RequestInit): Promis
 
   if (!response.ok) {
     if (response.status === 401) {
-      const refreshResponse = await authService.refreshToken();
-      token = refreshResponse.accessToken;
-      localStorage.setItem("access-token", token);
+      if (!isRefreshing) {
+        isRefreshing = true;
+        refreshPromise = authService.refreshToken()
+          .then(newTokenInfo => {
+            token = newTokenInfo.accessToken;
+          })
+          .finally(() => {
+            isRefreshing = false;
+            refreshPromise = null;
+          });
+        await refreshPromise;
+      }
+      else if (refreshPromise) {
+        await refreshPromise;
+      }
 
+      token = localStorage.getItem("access-token");
       response = await makeRequest();
     } else {
       const errorText = await response.text();

@@ -4,6 +4,7 @@ import styles from "./userRecipesList.module.scss";
 import { Recipe } from "../../../types/recipe";
 import { RecipeCard } from "../../customComponents/recipeCard/recipeCard";
 import { useAppStore } from "../../../hooks/useStore";
+import { handleError } from "../../../utils/errorHandler";
 
 export const UserRecipesList = () => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -14,11 +15,11 @@ export const UserRecipesList = () => {
     const getRecipes = async () => {
       try {
         if (userId) {
-          const data = await recipeService.getUserRecipes(userId);
+          const data = await recipeService.getUserRecipes();
           setRecipes(data);
         }
       } catch (error) {
-        console.error(error);
+        handleError(error)
       }
     };
 
