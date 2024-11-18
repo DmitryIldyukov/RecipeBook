@@ -2,8 +2,8 @@ import React from "react";
 import { Step } from "../../../types/recipe";
 import styles from "./stepsList.module.scss";
 import MyButton from "../../customComponents/myButton/myButton";
-import addImage from "../../../assets/add-ptimary.svg";
-import closeIcon from "../../../assets/close.svg";
+import addImage from "../../../assets/images/add-ptimary.svg";
+import closeIcon from "../../../assets/images/close.svg";
 
 type StepsListProps = {
   steps: Step[];

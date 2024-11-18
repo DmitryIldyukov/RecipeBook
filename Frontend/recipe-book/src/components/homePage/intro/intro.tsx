@@ -1,6 +1,6 @@
 import styles from "./intro.module.scss";
-import introImage from "../../../assets/header image.jpg";
-import addImage from "../../../assets/add.svg";
+import introImage from "../../../assets/images/header image.jpg";
+import addImage from "../../../assets/images/add.svg";
 import { MyButton } from "../../customComponents/myButton/myButton";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../../constants/constants";

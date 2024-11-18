@@ -1,6 +1,6 @@
 import MyButton from "../../customComponents/myButton/myButton";
 import styles from "./recipesPageHeader.module.scss";
-import addImage from "../../../assets/add.svg";
+import addImage from "../../../assets/images/add.svg";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../../constants/constants";
 import { usePopupStore } from "../../../hooks/usePopupStore";

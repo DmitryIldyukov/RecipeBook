@@ -1,5 +1,5 @@
 import styles from "./backBtn.module.scss";
-import arrow from "../../../assets/arrow.svg";
+import arrow from "../../../assets/images/arrow.svg";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../../constants/constants";
 

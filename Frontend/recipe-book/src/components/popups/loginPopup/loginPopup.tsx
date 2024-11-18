@@ -1,5 +1,5 @@
 import MyButton from "../../customComponents/myButton/myButton";
-import closeIcon from "../../../assets/close.svg";
+import closeIcon from "../../../assets/images/close.svg";
 import styles from "./loginPopup.module.scss";
 import { usePopupStore } from "../../../hooks/usePopupStore";
 import { authService } from "../../../services/authService";

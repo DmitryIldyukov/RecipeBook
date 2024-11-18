@@ -3,7 +3,7 @@ import MyButton from "../../customComponents/myButton/myButton";
 import styles from "./searchBar.module.scss";
 import { Tag } from "../../../types/recipe";
 import TagService from "../../../services/tagService";
-import muliply from "../../../assets/multiply.svg";
+import muliply from "../../../assets/images/multiply.svg";
 import { handleError } from "../../../utils/errorHandler";
 
 type SearchBarProps = {

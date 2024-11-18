@@ -1,6 +1,6 @@
 import styles from "./RecipeInfoHeader.module.scss";
-import editIcon from "../../../../assets/edit.svg";
-import trashIcon from "../../../../assets/trash.svg";
+import editIcon from "../../../../assets/images/edit.svg";
+import trashIcon from "../../../../assets/images/trash.svg";
 import MyButton from "../../../customComponents/myButton/myButton";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../../../constants/constants";

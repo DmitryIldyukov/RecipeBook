@@ -1,9 +1,9 @@
 import MyButton from "../customComponents/myButton/myButton";
 import styles from "./recipesPage.module.scss";
-import icon1 from "../../assets/ic-menu.svg";
-import icon2 from "../../assets/ic-cook.svg";
-import icon3 from "../../assets/ic-chef.svg";
-import icon4 from "../../assets/ic-hlop.svg";
+import icon1 from "../../assets/images/ic-menu.svg";
+import icon2 from "../../assets/images/ic-cook.svg";
+import icon3 from "../../assets/images/ic-chef.svg";
+import icon4 from "../../assets/images/ic-hlop.svg";
 import { recipeService } from "../../services/recipeService";
 import { useEffect, useState } from "react";
 import { Recipe } from "../../types/recipe";

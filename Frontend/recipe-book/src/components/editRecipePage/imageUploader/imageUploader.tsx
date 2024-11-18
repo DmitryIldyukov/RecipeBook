@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import styles from "./imageUploader.module.scss";
-import downloadIcon from "../../../assets/cloud-download.svg";
+import downloadIcon from "../../../assets/images/cloud-download.svg";
 
 type ImageUploaderProps = {
   imageFile: File | null;

@@ -1,5 +1,5 @@
 import styles from "./userProfileCountInfoSection.module.scss";
-import icon from "../../../assets/ic-menu.svg";
+import icon from "../../../assets/images/ic-menu.svg";
 
 type UserProfileCountInfoProps = {
   recipesCount?: number;

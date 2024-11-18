@@ -1,11 +1,11 @@
 import { Recipe } from "../../../types/recipe";
 import styles from "./recipeCard.module.scss";
-import emptyLikeIcon from "../../../assets/emptyLikeIcon.svg";
-import emptyFavoriteIcon from "../../../assets/emptyFavoriteIcon.svg";
-import likeIcon from "../../../assets/like.svg";
-import favoriteIcon from "../../../assets/favorite.svg";
-import portionIcon from "../../../assets/portionIcon.svg";
-import cookTimeIcon from "../../../assets/cookTimeIcon.svg";
+import emptyLikeIcon from "../../../assets/images/emptyLikeIcon.svg";
+import emptyFavoriteIcon from "../../../assets/images/emptyFavoriteIcon.svg";
+import likeIcon from "../../../assets/images/like.svg";
+import favoriteIcon from "../../../assets/images/favorite.svg";
+import portionIcon from "../../../assets/images/portionIcon.svg";
+import cookTimeIcon from "../../../assets/images/cookTimeIcon.svg";
 import { recipeService } from "../../../services/recipeService";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";

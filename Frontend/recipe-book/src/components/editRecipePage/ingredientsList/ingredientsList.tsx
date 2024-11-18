@@ -1,9 +1,9 @@
 import React from "react";
 import { Ingredient } from "../../../types/recipe";
 import styles from "./ingredientsList.module.scss";
-import closeIcon from "../../../assets/close.svg";
+import closeIcon from "../../../assets/images/close.svg";
 import MyButton from "../../customComponents/myButton/myButton";
-import addImage from "../../../assets/add-ptimary.svg";
+import addImage from "../../../assets/images/add-ptimary.svg";
 
 type IngredientsListProps = {
   ingredients: Ingredient[];

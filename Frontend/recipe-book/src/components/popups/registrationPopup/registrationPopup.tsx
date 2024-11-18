@@ -1,5 +1,5 @@
 import MyButton from "../../customComponents/myButton/myButton";
-import closeIcon from "../../../assets/close.svg";
+import closeIcon from "../../../assets/images/close.svg";
 import styles from "./registrationPopup.module.scss";
 import { usePopupStore } from "../../../hooks/usePopupStore";
 import { useState } from "react";

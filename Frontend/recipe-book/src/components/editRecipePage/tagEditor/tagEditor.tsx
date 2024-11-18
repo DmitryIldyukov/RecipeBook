@@ -2,7 +2,7 @@ import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Tag } from "../../../types/recipe";
 import TagService from "../../../services/tagService";
 import styles from "./tagEditor.module.scss";
-import muliply from "../../../assets/multiply.svg";
+import muliply from "../../../assets/images/multiply.svg";
 
 type TagEditorProps = {
   tags: Tag[];

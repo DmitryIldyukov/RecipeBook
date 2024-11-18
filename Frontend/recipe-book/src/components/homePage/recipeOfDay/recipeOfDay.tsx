@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { Recipe } from "../../../types/recipe";
 import styles from "./recipeOfDay.module.scss";
-import icon from "../../../assets/yummy.svg";
-import likeIcon from "../../../assets/like.svg";
-import emptyLikeIcon from "../../../assets/emptyLikeIcon.svg";
-import timeIcon from "../../../assets/time.svg";
+import icon from "../../../assets/images/yummy.svg";
+import likeIcon from "../../../assets/images/like.svg";
+import emptyLikeIcon from "../../../assets/images/emptyLikeIcon.svg";
+import timeIcon from "../../../assets/images/time.svg";
 import { recipeService } from "../../../services/recipeService";
 import { useAppStore } from "../../../hooks/useStore";
 import { usePopupStore } from "../../../hooks/usePopupStore";

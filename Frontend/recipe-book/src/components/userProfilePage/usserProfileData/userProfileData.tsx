@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import styles from "./userProfileData.module.scss";
-import pencil from "../../../assets/pencil.svg";
+import pencil from "../../../assets/images/pencil.svg";
 import { User } from "../../../types/user";
 import MyButton from "../../customComponents/myButton/myButton";
 import UserService from "../../../services/userService";
 import { useAppStore } from "../../../hooks/useStore";
-import eyeHidden from "../../../assets/eyeHidden.svg";
-import eyeVisible from "../../../assets/eyeVisible.svg";
+import eyeHidden from "../../../assets/images/eyeHidden.svg";
+import eyeVisible from "../../../assets/images/eyeVisible.svg";
 import { handleError } from "../../../utils/errorHandler";
 import toast from "react-hot-toast";
 
