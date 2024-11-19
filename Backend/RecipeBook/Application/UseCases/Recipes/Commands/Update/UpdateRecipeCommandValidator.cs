@@ -1,11 +1,21 @@
-﻿using FluentValidation;
+﻿using Application.Interfaces.Repositories;
+using FluentValidation;
 
 namespace Application.UseCases.Recipes.Commands.Update;
 
 public class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeCommand>
 {
-    public UpdateRecipeCommandValidator()
+    private readonly IRecipeRepository _recipeRepository;
+
+    public UpdateRecipeCommandValidator( IRecipeRepository recipeRepository )
     {
+        _recipeRepository = recipeRepository;
+
+        RuleFor( s => s.RecipeId )
+            .NotNull().WithMessage( "Идентификатор рецепта обязателен." )
+            .GreaterThan( 0 ).WithMessage( "Идентификатор должен быть положительным числом." )
+            .MustAsync( RecipeExists ).WithMessage( r => $"Рецепт с Id {r.RecipeId} не найден." );
+
         RuleFor( r => r.Name )
             .NotEmpty().WithMessage( "Название рецепта обязательно." )
             .MaximumLength( 100 ).WithMessage( "Название рецепта не может превышать 100 символов." );
@@ -32,5 +42,10 @@ public class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeComman
 
         RuleFor( r => r.Tags )
             .NotEmpty().WithMessage( "Теги обязательны." );
+    }
+
+    private async Task<bool> RecipeExists( int recipeId, CancellationToken cancellationToken )
+    {
+        return await _recipeRepository.ContainsAsync( r => r.Id == recipeId );
     }
 }

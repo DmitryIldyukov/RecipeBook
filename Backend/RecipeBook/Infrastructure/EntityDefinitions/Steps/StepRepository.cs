@@ -1,4 +1,5 @@
-﻿using Application.Interfaces.Repositories;
+﻿using System.Linq.Expressions;
+using Application.Interfaces.Repositories;
 using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -25,5 +26,10 @@ public class StepRepository( RecipeBookDbContext dbContext ) : IStepRepository
     public async Task<Step> GetById( int stepId )
     {
         return await dbContext.Steps.FirstOrDefaultAsync( s => s.Id == stepId );
+    }
+
+    public async Task<bool> ContainsAsync( Expression<Func<Step, bool>> predicate )
+    {
+        return await dbContext.Steps.AnyAsync( predicate );
     }
 }

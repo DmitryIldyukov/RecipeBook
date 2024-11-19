@@ -1,4 +1,5 @@
-﻿using Application.Interfaces.Repositories;
+﻿using System.Linq.Expressions;
+using Application.Interfaces.Repositories;
 using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -25,5 +26,10 @@ public class IngredientRepository( RecipeBookDbContext dbContext ) : IIngredient
     public async Task<IReadOnlyList<Ingredient>> GetIngredientsByReceptId( int recipeId )
     {
         return await dbContext.Ingredients.Where( i => i.RecipeId == recipeId ).ToListAsync();
+    }
+
+    public async Task<bool> ContainsAsync( Expression<Func<Ingredient, bool>> predicate )
+    {
+        return await dbContext.Ingredients.AnyAsync( predicate );
     }
 }

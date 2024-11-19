@@ -16,48 +16,16 @@ public class DeleteFavoriteCommandHandler(
 {
     public async Task<Result> Handle( DeleteFavoriteCommand command )
     {
-        Favorite favorite = await favoriteRepository.GetByUserIdAndRecipeId( command.UserId, command.RecipeId );
-
-        Result validationResult = await ValidateAsync( command, favorite );
-        if ( !validationResult.IsSuccess )
-        {
-            return validationResult;
-        }
-
-        favoriteRepository.Delete( favorite );
-        await unitOfWork.Commit();
-
-        return Result.Success();
-    }
-
-    private async Task<Result> ValidateAsync( DeleteFavoriteCommand command, Favorite favorite )
-    {
         ValidationResult validationResult = await validator.ValidateAsync( command );
         if ( !validationResult.IsValid )
         {
             return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
-        if ( favorite is null )
-        {
-            return Result.Fail( "Избранный рецепт не найден." );
-        }
+        Favorite favorite = await favoriteRepository.GetByUserIdAndRecipeId( command.UserId, command.RecipeId );
 
-        Result validationUserOwnershipResult = ValidateUserOwnership( favorite.UserId, command.UserId );
-        if ( !validationUserOwnershipResult.IsSuccess )
-        {
-            return validationUserOwnershipResult;
-        }
-
-        return Result.Success();
-    }
-
-    private Result ValidateUserOwnership( int favoriteUserId, int currentUserId )
-    {
-        if ( favoriteUserId != currentUserId )
-        {
-            return Result.Fail( "Невозможно удалить рецепт из избранного у другого пользователя." );
-        }
+        favoriteRepository.Delete( favorite );
+        await unitOfWork.Commit();
 
         return Result.Success();
     }

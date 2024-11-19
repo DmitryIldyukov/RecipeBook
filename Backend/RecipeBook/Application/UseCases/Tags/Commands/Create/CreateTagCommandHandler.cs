@@ -14,10 +14,10 @@ public class CreateTagCommandHandler(
 {
     public async Task<Result> Handle( CreateTagCommand command )
     {
-        Result validationResult = await ValidateAsync( command );
-        if ( !validationResult.IsSuccess )
+        ValidationResult validationResult = await validator.ValidateAsync( command );
+        if ( !validationResult.IsValid )
         {
-            return validationResult;
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
         string tagName = command.Name.ToLower().Trim();
@@ -32,17 +32,6 @@ public class CreateTagCommandHandler(
         }
 
         command.Recipe.Tags.Add( tag );
-
-        return Result.Success();
-    }
-
-    private async Task<Result> ValidateAsync( CreateTagCommand command )
-    {
-        ValidationResult validationResult = await validator.ValidateAsync( command );
-        if ( !validationResult.IsValid )
-        {
-            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
-        }
 
         return Result.Success();
     }
