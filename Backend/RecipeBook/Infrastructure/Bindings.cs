@@ -27,7 +27,6 @@ public static class Bindings
         services.AddScoped<ILikeRepository, LikeRepository>();
 
         services.AddScoped<IPasswordHasher, PasswordHasher.PasswordHasher>();
-        services.AddScoped<IFileHelper, FileHelper.FileHelper>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
