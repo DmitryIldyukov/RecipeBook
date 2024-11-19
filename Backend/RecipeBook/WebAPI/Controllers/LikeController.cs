@@ -1,6 +1,5 @@
 ﻿using Application.Common.CQRS.Command;
 using Application.Common.Result;
-using Application.Interfaces.Services;
 using Application.UseCases.Likes.Commands.Create;
 using Application.UseCases.Likes.Commands.Delete;
 using Microsoft.AspNetCore.Authorization;
@@ -9,29 +8,24 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebAPI.Controllers;
 
 [Authorize]
-[ApiController]
-[Route( "api/[controller]" )]
 public class LikeController(
     ICommandHandler<CreateLikeCommand, Result> createLikeCommand,
-    ICommandHandler<DeleteLikeCommand, Result> deleteLikeCommand,
-    IUserContextService userContextService
-) : ControllerBase
+    ICommandHandler<DeleteLikeCommand, Result> deleteLikeCommand
+) : BaseController
 {
     [HttpPost( "{recipeId:int}" )]
     [ProducesResponseType( StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
     public async Task<IActionResult> CreateLike( [FromRoute] int recipeId )
     {
-        int? userId = userContextService.GetCurrentUserId();
-
-        if ( userId is null )
+        if ( UserId is null )
         {
-            return BadRequest( "Id пользователя не найдено." );
+            return BadRequest( "Пользователь не найден." );
         }
 
         CreateLikeCommand command = new CreateLikeCommand()
         {
-            UserId = userId.Value,
+            UserId = UserId.Value,
             RecipeId = recipeId
         };
 
@@ -50,16 +44,14 @@ public class LikeController(
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
     public async Task<IActionResult> DeleteLike( [FromRoute] int recipeId )
     {
-        int? userId = userContextService.GetCurrentUserId();
-
-        if ( userId is null )
+        if ( UserId is null )
         {
-            return BadRequest( "Id пользователя не найдено." );
+            return BadRequest( "Пользователь не найден." );
         }
 
         DeleteLikeCommand command = new DeleteLikeCommand()
         {
-            UserId = userId.Value,
+            UserId = UserId.Value,
             RecipeId = recipeId
         };
 

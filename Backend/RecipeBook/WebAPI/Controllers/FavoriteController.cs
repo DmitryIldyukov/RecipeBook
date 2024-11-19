@@ -1,6 +1,5 @@
 ﻿using Application.Common.CQRS.Command;
 using Application.Common.Result;
-using Application.Interfaces.Services;
 using Application.UseCases.Favorites.Commands.Create;
 using Application.UseCases.Favorites.Commands.Delete;
 using Microsoft.AspNetCore.Authorization;
@@ -9,29 +8,24 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebAPI.Controllers;
 
 [Authorize]
-[ApiController]
-[Route( "api/[controller]" )]
 public class FavoriteController(
     ICommandHandler<CreateFavoriteCommand, Result> createFavoriteCommand,
-    ICommandHandler<DeleteFavoriteCommand, Result> deleteFavoriteCommand,
-    IUserContextService userContextService
-) : ControllerBase
+    ICommandHandler<DeleteFavoriteCommand, Result> deleteFavoriteCommand
+) : BaseController
 {
     [HttpPost( "{recipeId:int}" )]
     [ProducesResponseType( StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
     public async Task<IActionResult> CreateFavorite( [FromRoute] int recipeId )
     {
-        int? userId = userContextService.GetCurrentUserId();
-
-        if ( userId is null )
+        if ( UserId is null )
         {
-            return BadRequest( "Id пользователя не найдено." );
+            return BadRequest( "Пользователь не найден." );
         }
 
         CreateFavoriteCommand command = new CreateFavoriteCommand()
         {
-            UserId = userId.Value,
+            UserId = UserId.Value,
             RecipeId = recipeId
         };
 
@@ -50,16 +44,14 @@ public class FavoriteController(
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
     public async Task<IActionResult> DeleteFavorite( [FromRoute] int recipeId )
     {
-        int? userId = userContextService.GetCurrentUserId();
-
-        if ( userId is null )
+        if ( UserId is null )
         {
-            return BadRequest( "Id пользователя не найдено." );
+            return BadRequest( "Пользователь не найден." );
         }
 
         DeleteFavoriteCommand command = new DeleteFavoriteCommand()
         {
-            UserId = userId.Value,
+            UserId = UserId.Value,
             RecipeId = recipeId
         };
 

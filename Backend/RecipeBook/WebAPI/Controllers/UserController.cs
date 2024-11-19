@@ -1,7 +1,6 @@
 ﻿using Application.Common.CQRS.Command;
 using Application.Common.CQRS.Query;
 using Application.Common.Result;
-using Application.Interfaces.Services;
 using Application.UseCases.RefreshTokens.Commands.Refresh;
 using Application.UseCases.Users.Commands.Create;
 using Application.UseCases.Users.Commands.Login;
@@ -15,17 +14,14 @@ using WebAPI.Dtos.User;
 
 namespace WebAPI.Controllers;
 
-[ApiController]
-[Route( "api/[controller]" )]
 public class UserController(
     ICommandHandler<CreateUserCommand, Result> createUserHandler,
     ICommandHandler<UpdateUserCommand, Result> updateUserHandler,
     ICommandHandler<LoginUserCommand, ResultT<TokenInfoDto>> loginUserHandler,
     ICommandHandler<RefreshTokenCommand, ResultT<TokenInfoDto>> refreshTokenHandler,
     IQueryHandler<GetUserByIdQuery, ResultT<GetUserQueryDto>> getUserByIdHandler,
-    IUserContextService userContextService,
     IMapper mapper
-) : ControllerBase
+) : BaseController
 {
     [HttpPost( "Registration" )]
     [ProducesResponseType( StatusCodes.Status200OK )]
@@ -49,16 +45,14 @@ public class UserController(
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
     public async Task<IActionResult> GetCurrentUser()
     {
-        int? userId = userContextService.GetCurrentUserId();
-
-        if ( userId is null )
+        if ( UserId is null )
         {
-            return BadRequest( "Id пользователя не найдено." );
+            return BadRequest( "Пользователь не найден." );
         }
 
         GetUserByIdQuery query = new GetUserByIdQuery()
         {
-            Id = userId.Value
+            Id = UserId.Value
         };
         ResultT<GetUserQueryDto> result = await getUserByIdHandler.Handle( query );
 
@@ -76,16 +70,14 @@ public class UserController(
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
     public async Task<IActionResult> EditUser( [FromBody] UserEditDto dto )
     {
-        int? userId = userContextService.GetCurrentUserId();
-
-        if ( userId is null )
+        if ( UserId is null )
         {
-            return BadRequest( "Id пользователя не найдено." );
+            return BadRequest( "Пользователь не найден." );
         }
 
         UpdateUserCommand command = new()
         {
-            UserId = userId.Value,
+            UserId = UserId.Value,
             Name = dto.Name,
             Login = dto.Login,
             Password = dto.Password,
