@@ -39,7 +39,7 @@ public class Program
 
             builder.Services.AddEndpointsApiExplorer();
 
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwagger();
 
             WebApplication app = builder.Build();
 
