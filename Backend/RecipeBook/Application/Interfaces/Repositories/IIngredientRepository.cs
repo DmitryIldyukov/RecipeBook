@@ -3,7 +3,7 @@ using Domain.Entities;
 
 namespace Application.Interfaces.Repositories;
 
-public interface IIngredientRepository : ICreateRepository<Ingredient>, IDeleteRepository<Ingredient>
+public interface IIngredientRepository : ICreateRepository<Ingredient>, IDeleteRepository<Ingredient>, ISearchRepository<Ingredient>
 {
     Task<IReadOnlyList<Ingredient>> GetIngredientsByReceptId( int recipeId );
     Task<Ingredient> GetById( int ingredientId );

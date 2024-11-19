@@ -30,10 +30,10 @@ public class CreateRecipeCommandHandler(
 {
     public async Task<Result> Handle( CreateRecipeCommand command )
     {
-        Result validationResult = await ValidateAsync( command );
-        if ( !validationResult.IsSuccess )
+        ValidationResult validationResult = await validator.ValidateAsync( command );
+        if ( !validationResult.IsValid )
         {
-            return validationResult;
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
         Recipe recipe = new Recipe(
@@ -132,16 +132,5 @@ public class CreateRecipeCommandHandler(
         string fileExtension = Path.GetExtension( recipe.ImageName );
         string fileNameOnDisk = recipe.Id + fileExtension;
         fileHelper.Save( configuration.GetSection( "RecipeImages" ).Value, fileNameOnDisk, image.OpenReadStream() );
-    }
-
-    private async Task<Result> ValidateAsync( CreateRecipeCommand command )
-    {
-        ValidationResult validationResult = await validator.ValidateAsync( command );
-        if ( !validationResult.IsValid )
-        {
-            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
-        }
-
-        return Result.Success();
     }
 }

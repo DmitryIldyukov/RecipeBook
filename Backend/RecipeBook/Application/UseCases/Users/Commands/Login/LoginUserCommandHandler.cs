@@ -50,7 +50,7 @@ public class LoginUserCommandHandler(
             return ResultT<TokenInfoDto>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
-        if ( user == null )
+        if ( user is null )
         {
             return ResultT<TokenInfoDto>.Fail( errorMessage );
         }

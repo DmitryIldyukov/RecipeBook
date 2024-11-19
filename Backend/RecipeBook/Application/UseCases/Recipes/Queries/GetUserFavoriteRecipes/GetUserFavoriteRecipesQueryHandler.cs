@@ -17,10 +17,10 @@ public class GetUserFavoriteRecipesQueryHandler(
 {
     public async Task<ResultT<IReadOnlyList<GetRecipeQueryDto>>> Handle( GetUserFavoriteRecipesQuery query )
     {
-        ResultT<IReadOnlyList<GetRecipeQueryDto>> validationResult = await ValidateAsync( query );
-        if ( !validationResult.IsSuccess )
+        ValidationResult validationResult = await validator.ValidateAsync( query );
+        if ( !validationResult.IsValid )
         {
-            return validationResult;
+            return ResultT<IReadOnlyList<GetRecipeQueryDto>>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
         IReadOnlyList<Recipe> recipes = await recipeRepository.GetUserFavoriteRecipesByPage( query.UserId, query.Page );
@@ -34,16 +34,5 @@ public class GetUserFavoriteRecipesQueryHandler(
         } ).ToList();
 
         return ResultT<IReadOnlyList<GetRecipeQueryDto>>.Success( response, $"Избранные рецепты пользователя с id {query.UserId} найдены." );
-    }
-
-    private async Task<ResultT<IReadOnlyList<GetRecipeQueryDto>>> ValidateAsync( GetUserFavoriteRecipesQuery query )
-    {
-        ValidationResult validationResult = await validator.ValidateAsync( query );
-        if ( !validationResult.IsValid )
-        {
-            return ResultT<IReadOnlyList<GetRecipeQueryDto>>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
-        }
-
-        return ResultT<IReadOnlyList<GetRecipeQueryDto>>.Success( null );
     }
 }

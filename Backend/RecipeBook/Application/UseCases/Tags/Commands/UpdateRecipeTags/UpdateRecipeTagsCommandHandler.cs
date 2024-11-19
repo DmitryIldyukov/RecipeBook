@@ -17,10 +17,10 @@ public class UpdateRecipeTagsCommandHandler(
 {
     public async Task<Result> Handle( UpdateRecipeTagsCommand command )
     {
-        Result validationResult = await ValidateAsync( command );
-        if ( !validationResult.IsSuccess )
+        ValidationResult validationResult = await validator.ValidateAsync( command );
+        if ( !validationResult.IsValid )
         {
-            return validationResult;
+            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
         ICollection<Tag> recipeTags = command.Recipe.Tags;
@@ -70,17 +70,6 @@ public class UpdateRecipeTagsCommandHandler(
             {
                 return Result.Fail( createResult.ErrorMessages );
             }
-        }
-
-        return Result.Success();
-    }
-
-    private async Task<Result> ValidateAsync( UpdateRecipeTagsCommand command )
-    {
-        ValidationResult validationResult = await validator.ValidateAsync( command );
-        if ( !validationResult.IsValid )
-        {
-            return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
         return Result.Success();
