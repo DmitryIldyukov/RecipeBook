@@ -2,7 +2,7 @@
 
 namespace Application.UseCases.Tags.Commands.Create;
 
-public class CreateTagCommand
+public record CreateTagCommand
 {
     public Recipe Recipe { get; set; }
     public string Name { get; init; }

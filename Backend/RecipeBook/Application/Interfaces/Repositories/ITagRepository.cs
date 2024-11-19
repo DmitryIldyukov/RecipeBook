@@ -3,8 +3,10 @@ using Domain.Entities;
 
 namespace Application.Interfaces.Repositories;
 
-public interface ITagRepository : ICreateRepository<Tag>
+public interface ITagRepository : ICreateRepository<Tag>, IDeleteRepository<Tag>
 {
     Task<Tag> GetByName( string name );
-    IQueryable<Tag> GetAll();
+    Task<IReadOnlyList<Tag>> GetAll();
+    Task<IReadOnlyList<Tag>> GetPopularTags( int count );
+    Task<bool> IsUsedInMultipleRecipes( int tagId );
 }

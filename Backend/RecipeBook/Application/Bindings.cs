@@ -1,5 +1,7 @@
 ﻿using System.Reflection;
+using Application.UseCases.Favorites;
 using Application.UseCases.Ingredients;
+using Application.UseCases.Likes;
 using Application.UseCases.Recipes;
 using Application.UseCases.Steps;
 using Application.UseCases.Tags;
@@ -15,7 +17,9 @@ public static class Bindings
         services.AddAutoMapper( Assembly.GetExecutingAssembly() );
 
         services.AddIngredientBindings();
+        services.AddFavoriteBindings();
         services.AddRecipeBindings();
+        services.AddLikeBidings();
         services.AddUserBindings();
         services.AddStepBindings();
         services.AddTagBindings();

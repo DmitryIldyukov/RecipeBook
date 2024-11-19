@@ -1,6 +1,5 @@
 ﻿using Application.Common.CQRS.Query;
 using Application.Common.Result;
-using Application.Interfaces;
 using Application.Interfaces.Repositories;
 using Application.UseCases.Tags.Dtos;
 using AutoMapper;
@@ -11,7 +10,7 @@ using FluentValidation.Results;
 namespace Application.UseCases.Tags.Queries.GetByName;
 
 public class GetTagByNameQueryHandler(
-    ITagRepository tagRepository, IUnitOfWork unitOfWork, IValidator<GetTagByNameQuery> validator, IMapper mapper
+    ITagRepository tagRepository, IValidator<GetTagByNameQuery> validator, IMapper mapper
 ) : IQueryHandler<GetTagByNameQuery, ResultT<GetTagDto>>
 {
     public async Task<ResultT<GetTagDto>> Handle( GetTagByNameQuery query )
@@ -23,11 +22,7 @@ public class GetTagByNameQueryHandler(
         }
 
         Tag tag = await tagRepository.GetByName( query.Tag );
-        if ( tag is null )
-        {
-            return ResultT<GetTagDto>.Fail( "Тэг не найден." );
-        }
 
-        return ResultT<GetTagDto>.Success( mapper.Map<GetTagDto>( tag ), $"Тэг {tag.Name} найден." );
+        return ResultT<GetTagDto>.Success( mapper.Map<GetTagDto>( tag ), $"Тег {tag.Name} получен." );
     }
 }

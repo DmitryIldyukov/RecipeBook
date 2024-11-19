@@ -20,19 +20,19 @@ public class CreateTagCommandHandler(
             return Result.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
-        Tag tag = await tagRepository.GetByName( command.Name );
+        string tagName = command.Name.ToLower().Trim();
+
+        Tag tag = await tagRepository.GetByName( tagName );
 
         if ( tag is null )
         {
-            tag = new Tag( command.Name );
+            tag = new Tag( tagName );
 
             await tagRepository.Create( tag );
-
-            command.Recipe.Tags.Add( tag );
-
-            return Result.Success( $"Тэг {tag.Name} успешно добавлен." );
         }
 
-        return Result.Success( $"Тэг {tag.Name} найден." );
+        command.Recipe.Tags.Add( tag );
+
+        return Result.Success();
     }
 }

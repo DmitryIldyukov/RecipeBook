@@ -2,7 +2,7 @@
 
 namespace Application.UseCases.Steps.Commands.Create;
 
-public class CreateStepCommand
+public record CreateStepCommand
 {
     public Recipe Recipe { get; init; }
     public string Description { get; init; }

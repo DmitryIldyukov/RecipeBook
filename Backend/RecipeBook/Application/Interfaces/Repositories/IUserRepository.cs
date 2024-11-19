@@ -1,11 +1,10 @@
-﻿using System.Linq.Expressions;
-using Application.Common.Repositories;
+﻿using Application.Common.Repositories;
 using Domain.Entities;
 
 namespace Application.Interfaces.Repositories;
 
-public interface IUserRepository : ICreateRepository<User>
+public interface IUserRepository : ICreateRepository<User>, ISearchRepository<User>
 {
-    Task<bool> ContainsAsync( Expression<Func<User, bool>> predicate );
     Task<User> GetById( int id );
+    Task<User> GetByLogin( string login );
 }

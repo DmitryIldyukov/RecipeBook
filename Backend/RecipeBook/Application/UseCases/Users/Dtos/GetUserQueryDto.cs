@@ -6,4 +6,7 @@ public class GetUserQueryDto
     public string Name { get; init; }
     public string Login { get; init; }
     public string Information { get; init; }
+    public int RecipesCount { get; init; }
+    public int LikesCount { get; init; }
+    public int FavoritesCount { get; init; }
 }

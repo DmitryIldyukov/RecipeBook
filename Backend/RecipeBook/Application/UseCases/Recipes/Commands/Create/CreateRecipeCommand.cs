@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Application.UseCases.Recipes.Commands.Create;
 
-public class CreateRecipeCommand
+public record CreateRecipeCommand
 {
     public int AuthorId { get; init; }
     public string Name { get; init; }

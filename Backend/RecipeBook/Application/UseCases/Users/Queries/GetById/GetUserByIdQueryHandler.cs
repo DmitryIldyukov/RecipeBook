@@ -23,10 +23,6 @@ public class GetUserByIdQueryHandler(
         }
 
         User user = await userRepository.GetById( query.Id );
-        if ( user is null )
-        {
-            return ResultT<GetUserQueryDto>.Fail( $"Пользователь с id {query.Id} не найден." );
-        }
 
         await unitOfWork.Commit();
 

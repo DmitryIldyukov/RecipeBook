@@ -2,7 +2,7 @@
 
 namespace Application.UseCases.Ingredients.Commands.Create;
 
-public class CreateIngredientCommand
+public record CreateIngredientCommand
 {
     public Recipe Recipe { get; init; }
     public string Title { get; init; }

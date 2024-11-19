@@ -5,14 +5,14 @@ namespace Application.UseCases.Recipes.Commands.Create;
 
 public class CreateRecipeCommandValidator : AbstractValidator<CreateRecipeCommand>
 {
-    private readonly IUserRepository _repository;
+    private readonly IUserRepository _userRepository;
 
-    public CreateRecipeCommandValidator( IUserRepository repo )
+    public CreateRecipeCommandValidator( IUserRepository userRepository )
     {
-        _repository = repo;
+        _userRepository = userRepository;
 
         RuleFor( r => r.AuthorId )
-            .NotEmpty().WithMessage( "Id автора обязателен." )
+            .NotEmpty().WithMessage( "Идентификатор автора обязателен." )
             .MustAsync( UserIsExists ).WithMessage( $"Пользователь не найден." )
             .GreaterThan( 0 ).WithMessage( "Идентификатор должен быть положительным числом." );
 
@@ -41,11 +41,11 @@ public class CreateRecipeCommandValidator : AbstractValidator<CreateRecipeComman
             .NotEmpty().WithMessage( "Ингредиенты для приготовления обязательны." );
 
         RuleFor( r => r.Tags )
-            .NotEmpty().WithMessage( "Тэги обязательны." );
+            .NotEmpty().WithMessage( "Теги обязательны." );
     }
 
     private async Task<bool> UserIsExists( int id, CancellationToken cancellationToken )
     {
-        return await _repository.ContainsAsync( u => u.Id == id );
+        return await _userRepository.ContainsAsync( u => u.Id == id );
     }
 }

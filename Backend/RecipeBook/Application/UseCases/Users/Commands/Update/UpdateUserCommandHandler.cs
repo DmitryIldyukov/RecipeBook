@@ -22,10 +22,6 @@ public class UpdateUserCommandHandler(
         }
 
         User user = await userRepository.GetById( command.UserId );
-        if ( user is null )
-        {
-            return Result.Fail( $"Пользователь с Id {command.UserId} не найден." );
-        }
 
         user.Name = command.Name;
         user.Login = command.Login;

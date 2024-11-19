@@ -2,14 +2,19 @@
 using Application.Common.Result;
 using Application.UseCases.Tags.Dtos;
 using Application.UseCases.Tags.Queries.GetAll;
+using Application.UseCases.Tags.Queries.GetPopular;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.Dtos.Tag;
 
 namespace WebAPI.Controllers;
 
 [ApiController]
 [Route( "api/[controller]" )]
 public class TagController(
-    IQueryHandler<GetAllTagsQuery, ResultT<IReadOnlyList<GetTagDto>>> getTagsHandler
+    IQueryHandler<GetAllTagsQuery, ResultT<IReadOnlyList<GetTagDto>>> getTagsHandler,
+    IQueryHandler<GetPopularTagsQuery, ResultT<IReadOnlyList<GetTagDto>>> getPopularTagsHandler,
+    IMapper mapper
 ) : ControllerBase
 {
     [HttpGet]
@@ -19,6 +24,22 @@ public class TagController(
     {
         GetAllTagsQuery query = new();
         ResultT<IReadOnlyList<GetTagDto>> result = await getTagsHandler.Handle( query );
+
+        if ( result.IsSuccess )
+        {
+            return Ok( result.Value );
+        }
+
+        return BadRequest( result.ErrorMessages );
+    }
+
+    [HttpGet( "GetPopularTags" )]
+    [ProducesResponseType( StatusCodes.Status200OK )]
+    [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
+    public async Task<IActionResult> GetPopularTags( [FromQuery] GetPopularTagsDto popualTagsDto )
+    {
+        GetPopularTagsQuery query = mapper.Map<GetPopularTagsQuery>( popualTagsDto );
+        ResultT<IReadOnlyList<GetTagDto>> result = await getPopularTagsHandler.Handle( query );
 
         if ( result.IsSuccess )
         {

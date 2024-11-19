@@ -8,6 +8,9 @@ public class UserProfile : Profile
 {
     public UserProfile()
     {
-        CreateMap<User, GetUserQueryDto>();
+        CreateMap<User, GetUserQueryDto>()
+            .ForMember( dest => dest.RecipesCount, opt => opt.MapFrom( src => src.Recipes.Count() ) )
+            .ForMember( dest => dest.FavoritesCount, opt => opt.MapFrom( src => src.Favorites.Count() ) )
+            .ForMember( dest => dest.LikesCount, opt => opt.MapFrom( src => src.Likes.Count() ) );
     }
 }

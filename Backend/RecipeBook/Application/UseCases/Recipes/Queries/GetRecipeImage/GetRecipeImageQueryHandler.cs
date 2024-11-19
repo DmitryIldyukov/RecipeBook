@@ -19,19 +19,15 @@ public class GetRecipeImageQueryHandler(
 {
     public async Task<ResultT<GetImageQueryDto>> Handle( GetRecipeImageQuery query )
     {
-        ValidationResult validationResult = await validator.ValidateAsync( query );
-        if ( !validationResult.IsValid )
-        {
-            return ResultT<GetImageQueryDto>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
-        }
-
         Recipe recipe = await recipeRepository.GetById( query.RecipeId );
-        if ( recipe is null )
+
+        ResultT<GetImageQueryDto> validationResult = await ValidateAsync( query, recipe );
+        if ( !validationResult.IsSuccess )
         {
-            return ResultT<GetImageQueryDto>.Fail( "Рецепт не найден." );
+            return validationResult;
         }
 
-        var fullPath = BuildImagePath( recipe );
+        string fullPath = BuildImagePath( recipe );
 
         FileData file = fileHelper.Get( fullPath );
 
@@ -42,12 +38,28 @@ public class GetRecipeImageQueryHandler(
 
     private string BuildImagePath( Recipe recipe )
     {
-        var fileName = $"{recipe.Id}{Path.GetExtension( recipe.ImageName )}";
-        var storagePath = Path.Combine(
+        string fileName = $"{recipe.Id}{Path.GetExtension( recipe.ImageName )}";
+        string storagePath = Path.Combine(
             Directory.GetCurrentDirectory(),
             configuration.GetSection( "RecipeImages" ).Value
         );
 
         return Path.Combine( storagePath, fileName );
+    }
+
+    private async Task<ResultT<GetImageQueryDto>> ValidateAsync( GetRecipeImageQuery query, Recipe recipe )
+    {
+        ValidationResult validationResult = await validator.ValidateAsync( query );
+        if ( !validationResult.IsValid )
+        {
+            return ResultT<GetImageQueryDto>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+        }
+
+        if ( recipe is null )
+        {
+            return ResultT<GetImageQueryDto>.Fail( "Рецепт не найден." );
+        }
+
+        return ResultT<GetImageQueryDto>.Success( null );
     }
 }

@@ -7,6 +7,7 @@ using Application.UseCases.Ingredients.Commands.Create;
 using Application.UseCases.Recipes.Dtos;
 using Application.UseCases.Steps.Commands.Create;
 using Application.UseCases.Tags.Commands.Create;
+using AutoMapper;
 using Domain.Entities;
 using FluentValidation;
 using FluentValidation.Results;
@@ -23,7 +24,8 @@ public class CreateRecipeCommandHandler(
     ICommandHandler<CreateIngredientCommand, Result> createIngredientHandler,
     IValidator<CreateRecipeCommand> validator,
     IFileHelper fileHelper,
-    IConfiguration configuration
+    IConfiguration configuration,
+    IMapper mapper
 ) : ICommandHandler<CreateRecipeCommand, Result>
 {
     public async Task<Result> Handle( CreateRecipeCommand command )
@@ -86,18 +88,15 @@ public class CreateRecipeCommandHandler(
             }
         }
 
-        return Result.Success( "Тэги успешно добавлены." );
+        return Result.Success( "Теги успешно добавлены." );
     }
 
     private async Task<Result> AddSteps( Recipe recipe, ICollection<RecipeStepDto> steps )
     {
         foreach ( RecipeStepDto step in steps )
         {
-            CreateStepCommand createStepCommand = new CreateStepCommand()
-            {
-                Recipe = recipe,
-                Description = step.Description,
-            };
+            CreateStepCommand createStepCommand =
+                mapper.Map<CreateStepCommand>( step ) with { Recipe = recipe };
 
             Result stepResult = await createStepHandler.Handle( createStepCommand );
 
@@ -114,12 +113,8 @@ public class CreateRecipeCommandHandler(
     {
         foreach ( RecipeIngredientDto ingredient in ingredients )
         {
-            CreateIngredientCommand createIngredientCommand = new CreateIngredientCommand()
-            {
-                Recipe = recipe,
-                Title = ingredient.Title,
-                Description = ingredient.Description,
-            };
+            CreateIngredientCommand createIngredientCommand =
+                mapper.Map<CreateIngredientCommand>( ingredient ) with { Recipe = recipe };
 
             Result ingredientResult = await createIngredientHandler.Handle( createIngredientCommand );
 
