@@ -21,7 +21,7 @@ public class CreateRecipeCommandValidator : AbstractValidator<CreateRecipeComman
             .MaximumLength( 100 ).WithMessage( "Название рецепта не может превышать 100 символов." );
 
         RuleFor( r => r.Description )
-            .NotEmpty().WithMessage( "Описание обязательно." )
+            .NotEmpty().WithMessage( "Описание рецепта обязательно." )
             .MaximumLength( 150 ).WithMessage( "Описание не может превышать 150 символов." );
 
         RuleFor( r => r.CookTime )
@@ -31,7 +31,7 @@ public class CreateRecipeCommandValidator : AbstractValidator<CreateRecipeComman
             .GreaterThan( 0 ).WithMessage( "Количество порций должно быть больше 0." );
 
         RuleFor( r => r.ImageName )
-            .NotEmpty().WithMessage( "Название картинки обязательно." )
+            .NotEmpty().WithMessage( "Картинка обязательна." )
             .MaximumLength( 100 ).WithMessage( "Название картинки не может превышать 100 символов." );
 
         RuleFor( r => r.Steps )

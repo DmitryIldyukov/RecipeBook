@@ -17,11 +17,11 @@ public class UpdateIngredientCommandValidator : AbstractValidator<UpdateIngredie
             .MustAsync( IngredientExists ).WithMessage( i => $"Ингредиент с Id {i.IngredientId} не найден." );
 
         RuleFor( i => i.Title )
-            .NotEmpty().WithMessage( "Заголовок обязателен." )
-            .MaximumLength( 40 ).WithMessage( "Заголовок не может превышать 40 символов." );
+            .NotEmpty().WithMessage( "Заголовок ингредиента обязателен." )
+            .MaximumLength( 40 ).WithMessage( "Заголовок ингредиента не может превышать 40 символов." );
 
         RuleFor( i => i.Description )
-            .NotEmpty().WithMessage( "Описание обязательно." );
+            .NotEmpty().WithMessage( "Описание ингредиента обязательно." );
     }
 
     private async Task<bool> IngredientExists( int ingredientId, CancellationToken cancellationToken )
