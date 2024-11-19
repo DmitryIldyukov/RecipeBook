@@ -24,13 +24,13 @@ public class LoginUserCommandHandler(
 
     public async Task<ResultT<TokenInfoDto>> Handle( LoginUserCommand command )
     {
-        User user = await userRepository.GetByLogin( command.Login );
-
-        ResultT<TokenInfoDto> validationResult = await ValidateAsync( command, user );
-        if ( !validationResult.IsSuccess )
+        ValidationResult validationResult = await validator.ValidateAsync( command );
+        if ( !validationResult.IsValid )
         {
-            return validationResult;
+            return ResultT<TokenInfoDto>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
+
+        User user = await userRepository.GetByLogin( command.Login );
 
         if ( !passwordHasher.VerifyPassword( command.Password, user.Password ) )
         {
@@ -40,22 +40,6 @@ public class LoginUserCommandHandler(
         TokenInfoDto response = await GenerateTokenResponseAsync( user.Id );
 
         return ResultT<TokenInfoDto>.Success( response, "Успешный вход." );
-    }
-
-    private async Task<ResultT<TokenInfoDto>> ValidateAsync( LoginUserCommand command, User user )
-    {
-        ValidationResult validationResult = await validator.ValidateAsync( command );
-        if ( !validationResult.IsValid )
-        {
-            return ResultT<TokenInfoDto>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
-        }
-
-        if ( user is null )
-        {
-            return ResultT<TokenInfoDto>.Fail( errorMessage );
-        }
-        
-        return ResultT<TokenInfoDto>.Success( null );
     }
 
     private async Task<TokenInfoDto> GenerateTokenResponseAsync( int userId )

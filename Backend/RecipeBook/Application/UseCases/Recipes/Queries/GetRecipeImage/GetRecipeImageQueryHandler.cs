@@ -19,13 +19,13 @@ public class GetRecipeImageQueryHandler(
 {
     public async Task<ResultT<GetImageQueryDto>> Handle( GetRecipeImageQuery query )
     {
-        Recipe recipe = await recipeRepository.GetById( query.RecipeId );
-
-        ResultT<GetImageQueryDto> validationResult = await ValidateAsync( query, recipe );
-        if ( !validationResult.IsSuccess )
+        ValidationResult validationResult = await validator.ValidateAsync( query );
+        if ( !validationResult.IsValid )
         {
-            return validationResult;
+            return ResultT<GetImageQueryDto>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
+
+        Recipe recipe = await recipeRepository.GetById( query.RecipeId );
 
         string fullPath = BuildImagePath( recipe );
 
@@ -45,21 +45,5 @@ public class GetRecipeImageQueryHandler(
         );
 
         return Path.Combine( storagePath, fileName );
-    }
-
-    private async Task<ResultT<GetImageQueryDto>> ValidateAsync( GetRecipeImageQuery query, Recipe recipe )
-    {
-        ValidationResult validationResult = await validator.ValidateAsync( query );
-        if ( !validationResult.IsValid )
-        {
-            return ResultT<GetImageQueryDto>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
-        }
-
-        if ( recipe is null )
-        {
-            return ResultT<GetImageQueryDto>.Fail( "Рецепт не найден." );
-        }
-
-        return ResultT<GetImageQueryDto>.Success( null );
     }
 }

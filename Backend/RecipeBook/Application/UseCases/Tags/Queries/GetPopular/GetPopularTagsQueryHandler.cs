@@ -17,25 +17,14 @@ public class GetPopularTagsQueryHandler(
 {
     public async Task<ResultT<IReadOnlyList<GetTagDto>>> Handle( GetPopularTagsQuery query )
     {
-        ResultT<IReadOnlyList<GetTagDto>> validationResult = await ValidateAsync( query );
-        if ( !validationResult.IsSuccess )
-        {
-            return validationResult;
-        }
-
-        IReadOnlyList<Tag> tags = await tagRepository.GetPopularTags( query.Count );
-
-        return ResultT<IReadOnlyList<GetTagDto>>.Success( mapper.Map<IReadOnlyList<GetTagDto>>( tags ), "Популярные теги успешно получены." );
-    }
-
-    private async Task<ResultT<IReadOnlyList<GetTagDto>>> ValidateAsync( GetPopularTagsQuery query )
-    {
         ValidationResult validationResult = await validator.ValidateAsync( query );
         if ( !validationResult.IsValid )
         {
             return ResultT<IReadOnlyList<GetTagDto>>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
-        return ResultT<IReadOnlyList<GetTagDto>>.Success( null );
+        IReadOnlyList<Tag> tags = await tagRepository.GetPopularTags( query.Count );
+
+        return ResultT<IReadOnlyList<GetTagDto>>.Success( mapper.Map<IReadOnlyList<GetTagDto>>( tags ), "Популярные теги успешно получены." );
     }
 }
