@@ -7,7 +7,12 @@ namespace WebAPI.Controllers;
 [Route( "api/[controller]" )]
 public class BaseController : ControllerBase
 {
-    protected int? UserId => User.Identity.IsAuthenticated
-        ? ClaimInfo.GetUserId( HttpContext?.User.Claims )
-        : null;
+    protected int? UserId => GetCurrentUserId();
+
+    private int? GetCurrentUserId()
+    {
+        return User.Identity.IsAuthenticated
+            ? ClaimInfo.GetUserId( HttpContext?.User.Claims )
+            : null;
+    }
 }
