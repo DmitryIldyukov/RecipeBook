@@ -27,8 +27,8 @@ class AuthService {
   }
 
   async refreshToken(): Promise<TokenInfo> {
-    const response: TokenInfo = await fetchClient<TokenInfo>("/api/user/refresh", {
-      method: "Get",
+    const response: TokenInfo = await fetchClient<TokenInfo>("/api/refreshToken", {
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
