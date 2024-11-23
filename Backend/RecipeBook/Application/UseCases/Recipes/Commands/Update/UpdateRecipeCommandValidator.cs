@@ -31,7 +31,7 @@ public class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeComman
             .GreaterThan( 0 ).WithMessage( "Количество порций должно быть больше 0." );
 
         RuleFor( r => r.ImageName )
-            .NotEmpty().WithMessage( "Картинка обязательно." )
+            .NotEmpty().WithMessage( "Картинка обязательна." )
             .MaximumLength( 100 ).WithMessage( "Название картинки не может превышать 100 символов." );
 
         RuleFor( r => r.Steps )
