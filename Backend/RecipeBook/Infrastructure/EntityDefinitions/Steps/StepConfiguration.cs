@@ -12,16 +12,13 @@ public class StepConfiguration : IEntityTypeConfiguration<Step>
             .HasKey( s => s.Id );
 
         builder.Property( s => s.Id )
-            .HasComment( "Id шага" )
             .HasColumnName( "step_id" )
             .ValueGeneratedOnAdd();
 
         builder.Property( s => s.RecipeId )
-            .HasComment( "Id рецепта" )
             .HasColumnName( "recipe_id" );
 
         builder.Property( s => s.Description )
-            .HasComment( "Описание шага" )
             .HasColumnName( "description" )
             .HasMaxLength( 255 )
             .IsRequired();

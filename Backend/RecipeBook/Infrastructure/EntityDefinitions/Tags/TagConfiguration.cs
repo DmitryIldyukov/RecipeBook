@@ -12,12 +12,10 @@ public class TagConfiguration : IEntityTypeConfiguration<Tag>
             .HasKey( t => t.Id );
 
         builder.Property( t => t.Id )
-            .HasComment( "Id тега" )
             .HasColumnName( "tag_id" )
             .ValueGeneratedOnAdd();
 
         builder.Property( t => t.Name )
-            .HasComment( "Название тега" )
             .HasColumnName( "name" )
             .HasMaxLength( 20 )
             .IsRequired();

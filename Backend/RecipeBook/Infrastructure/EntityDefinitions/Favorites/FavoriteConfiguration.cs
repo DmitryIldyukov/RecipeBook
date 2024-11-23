@@ -12,16 +12,13 @@ public class FavoriteConfiguration : IEntityTypeConfiguration<Favorite>
             .HasKey( f => f.Id );
 
         builder.Property( f => f.Id )
-            .HasComment( "Id избранного" )
             .HasColumnName( "favorite_id" )
             .ValueGeneratedOnAdd();
 
         builder.Property( f => f.UserId )
-            .HasComment( "Id пользователя" )
             .HasColumnName( "user_id" );
 
         builder.Property( f => f.RecipeId )
-            .HasComment( "Id рецепта" )
             .HasColumnName( "recipe_id" );
 
         builder.HasOne( f => f.User )
