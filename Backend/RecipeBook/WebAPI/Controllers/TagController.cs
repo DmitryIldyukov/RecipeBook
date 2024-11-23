@@ -10,6 +10,7 @@ using WebAPI.Dtos.Tag;
 namespace WebAPI.Controllers;
 
 [ApiController]
+[Route( "api/tags" )]
 public class TagController(
     IQueryHandler<GetAllTagsQuery, ResultT<IReadOnlyList<GetTagDto>>> getTagsHandler,
     IQueryHandler<GetPopularTagsQuery, ResultT<IReadOnlyList<GetTagDto>>> getPopularTagsHandler,
@@ -32,7 +33,7 @@ public class TagController(
         return BadRequest( result.ErrorMessages );
     }
 
-    [HttpGet( "GetPopularTags" )]
+    [HttpGet( "popular" )]
     [ProducesResponseType( StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
     public async Task<IActionResult> GetPopularTags( [FromQuery] GetPopularTagsDto popualTagsDto )

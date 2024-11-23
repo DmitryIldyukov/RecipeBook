@@ -19,7 +19,7 @@ using WebAPI.Dtos.Recipe;
 namespace WebAPI.Controllers;
 
 [ApiController]
-[Route( "api/[controller]" )]
+[Route( "api/recipes" )]
 public class RecipeController(
     ICommandHandler<CreateRecipeCommand, Result> createRecipeHandler,
     ICommandHandler<UpdateRecipeCommand, Result> updateRecipeHandler,
@@ -50,7 +50,7 @@ public class RecipeController(
     }
 
     [Authorize]
-    [HttpPost( "FavoriteRecipes" )]
+    [HttpPost( "favorite" )]
     [ProducesResponseType( typeof( IReadOnlyList<GetRecipeQueryDto> ), StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
     public async Task<IActionResult> GetUserFavoritesRecipes( [FromBody] FavoriteRecipesDto recipesDto )
@@ -72,7 +72,7 @@ public class RecipeController(
         return BadRequest( result.ErrorMessages );
     }
 
-    [HttpPost( "GetRecipes" )]
+    [HttpPost( "filter" )]
     [ProducesResponseType( typeof( IReadOnlyList<GetRecipeQueryDto> ), StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
     public async Task<IActionResult> GetRecipesByFilters( [FromBody] RecipesByFilterDto recipesDto )
@@ -89,7 +89,7 @@ public class RecipeController(
         return BadRequest( result.ErrorMessages );
     }
 
-    [HttpGet( "RecipeImage/{recipeId:int}" )]
+    [HttpGet( "{recipeId:int}/image" )]
     [ProducesResponseType( typeof( FileResult ), StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
     public async Task<IActionResult> GetRecipeImage( [FromRoute] int recipeId )
@@ -108,7 +108,7 @@ public class RecipeController(
         return BadRequest( result.ErrorMessages );
     }
 
-    [HttpGet( "DailyRecipe" )]
+    [HttpGet( "daily" )]
     [ProducesResponseType( typeof( DailyRecipeDto ), StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
     public async Task<IActionResult> GetDailyRecipe()
@@ -147,7 +147,7 @@ public class RecipeController(
     }
 
     [Authorize]
-    [HttpGet( "MyRecipes" )]
+    [HttpGet( "my" )]
     [ProducesResponseType( typeof( IReadOnlyList<GetRecipeQueryDto> ), StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
     public async Task<IActionResult> GetUserRecipes()

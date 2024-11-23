@@ -1,7 +1,6 @@
 ﻿using Application.Common.CQRS.Command;
 using Application.Common.CQRS.Query;
 using Application.Common.Result;
-using Application.UseCases.RefreshTokens.Commands.Refresh;
 using Application.UseCases.Users.Commands.Create;
 using Application.UseCases.Users.Commands.Login;
 using Application.UseCases.Users.Commands.Update;
@@ -14,6 +13,7 @@ using WebAPI.Dtos.User;
 
 namespace WebAPI.Controllers;
 
+[Route( "api/users" )]
 public class UserController(
     ICommandHandler<CreateUserCommand, Result> createUserHandler,
     ICommandHandler<UpdateUserCommand, Result> updateUserHandler,
@@ -22,7 +22,7 @@ public class UserController(
     IMapper mapper
 ) : BaseController
 {
-    [HttpPost( "Registration" )]
+    [HttpPost( "registration" )]
     [ProducesResponseType( StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
     public async Task<IActionResult> Register( [FromBody] UserRegisterDto dto )
@@ -39,7 +39,7 @@ public class UserController(
     }
 
     [Authorize]
-    [HttpGet]
+    [HttpGet( "me" )]
     [ProducesResponseType( typeof( GetUserQueryDto ), StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
     public async Task<IActionResult> GetCurrentUser()
@@ -64,7 +64,7 @@ public class UserController(
     }
 
     [Authorize]
-    [HttpPut]
+    [HttpPut( "me" )]
     [ProducesResponseType( StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
     public async Task<IActionResult> EditUser( [FromBody] UserEditDto dto )
@@ -92,7 +92,7 @@ public class UserController(
         return BadRequest( result.ErrorMessages );
     }
 
-    [HttpPost( "Login" )]
+    [HttpPost( "login" )]
     [ProducesResponseType( typeof( TokenInfoDto ), StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
     public async Task<IActionResult> Login( [FromBody] LoginDto dto )

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebAPI.Controllers;
 
 [Authorize]
+[Route( "api/favorites" )]
 public class FavoriteController(
     ICommandHandler<CreateFavoriteCommand, Result> createFavoriteCommand,
     ICommandHandler<DeleteFavoriteCommand, Result> deleteFavoriteCommand

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebAPI.Controllers;
 
 [Authorize]
+[Route( "api/likes" )]
 public class LikeController(
     ICommandHandler<CreateLikeCommand, Result> createLikeCommand,
     ICommandHandler<DeleteLikeCommand, Result> deleteLikeCommand

@@ -6,9 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
 
+[Route( "api/refresh-tokens" )]
 public class RefreshTokenController( ICommandHandler<RefreshTokenCommand, ResultT<TokenInfoDto>> refreshTokenHandler ) : BaseController
 {
-    [HttpGet]
+    [HttpGet( "refresh" )]
     [ProducesResponseType( typeof( TokenInfoDto ), StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
     public async Task<IActionResult> Refresh()

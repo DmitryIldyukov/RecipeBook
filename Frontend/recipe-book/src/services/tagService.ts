@@ -3,10 +3,10 @@ import { fetchClient } from "./fetchClient";
 
 export default class TagService {
   async getTags(): Promise<Tag[]> {
-    return fetchClient(`/api/Tag`);
+    return fetchClient(`/api/tags`);
   }
 
   async getPopularTags(count: number): Promise<Tag[]> {
-    return fetchClient(`/api/Tag/GetPopularTags?count=${count.toString()}`);
+    return fetchClient(`/api/tags/popular?count=${count.toString()}`);
   }
 }
