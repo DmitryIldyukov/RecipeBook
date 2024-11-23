@@ -14,8 +14,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property( u => u.Id )
             .HasComment( "Id пользователя" )
             .HasColumnName( "user_id" )
-            .ValueGeneratedOnAdd()
-            .IsRequired();
+            .ValueGeneratedOnAdd();
 
         builder.Property( u => u.Name )
             .HasComment( "Имя пользователя" )

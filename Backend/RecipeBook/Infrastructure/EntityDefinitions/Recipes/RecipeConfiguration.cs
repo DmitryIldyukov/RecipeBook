@@ -14,13 +14,11 @@ public class RecipeConfiguration : IEntityTypeConfiguration<Recipe>
         builder.Property( r => r.Id )
             .HasComment( "Id рецепта" )
             .HasColumnName( "recipe_id" )
-            .ValueGeneratedOnAdd()
-            .IsRequired();
+            .ValueGeneratedOnAdd();
 
         builder.Property( r => r.AuthorId )
             .HasComment( "Id автора" )
-            .HasColumnName( "author_id" )
-            .IsRequired();
+            .HasColumnName( "author_id" );
 
         builder.Property( r => r.Name )
             .HasComment( "Название рецепта" )
@@ -36,13 +34,11 @@ public class RecipeConfiguration : IEntityTypeConfiguration<Recipe>
 
         builder.Property( r => r.CookTime )
             .HasComment( "Время готовки в минутах" )
-            .HasColumnName( "cook_time" )
-            .IsRequired();
+            .HasColumnName( "cook_time" );
 
         builder.Property( r => r.PortionCount )
             .HasComment( "Порций в блюде" )
-            .HasColumnName( "portion_count" )
-            .IsRequired();
+            .HasColumnName( "portion_count" );
 
         builder.Property( r => r.ImageName )
             .HasComment( "Название фото блюда" )

@@ -14,13 +14,11 @@ public class StepConfiguration : IEntityTypeConfiguration<Step>
         builder.Property( s => s.Id )
             .HasComment( "Id шага" )
             .HasColumnName( "step_id" )
-            .ValueGeneratedOnAdd()
-            .IsRequired();
+            .ValueGeneratedOnAdd();
 
         builder.Property( s => s.RecipeId )
             .HasComment( "Id рецепта" )
-            .HasColumnName( "recipe_id" )
-            .IsRequired();
+            .HasColumnName( "recipe_id" );
 
         builder.Property( s => s.Description )
             .HasComment( "Описание шага" )

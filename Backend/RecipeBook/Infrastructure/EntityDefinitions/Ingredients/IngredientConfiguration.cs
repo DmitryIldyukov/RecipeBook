@@ -14,13 +14,11 @@ public class IngredientConfiguration : IEntityTypeConfiguration<Ingredient>
         builder.Property( i => i.Id )
             .HasComment( "Id ингредиента" )
             .HasColumnName( "ingredient_id" )
-            .ValueGeneratedOnAdd()
-            .IsRequired();
+            .ValueGeneratedOnAdd();
 
         builder.Property( i => i.RecipeId )
             .HasComment( "Id рецепта" )
-            .HasColumnName( "recipe_id" )
-            .IsRequired();
+            .HasColumnName( "recipe_id" );
 
         builder.Property( i => i.Title )
             .HasComment( "Заголовок для игредиентов" )

@@ -14,8 +14,7 @@ public class TagConfiguration : IEntityTypeConfiguration<Tag>
         builder.Property( t => t.Id )
             .HasComment( "Id тега" )
             .HasColumnName( "tag_id" )
-            .ValueGeneratedOnAdd()
-            .IsRequired();
+            .ValueGeneratedOnAdd();
 
         builder.Property( t => t.Name )
             .HasComment( "Название тега" )
