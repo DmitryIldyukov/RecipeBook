@@ -18,7 +18,6 @@ public class UserController(
     ICommandHandler<CreateUserCommand, Result> createUserHandler,
     ICommandHandler<UpdateUserCommand, Result> updateUserHandler,
     ICommandHandler<LoginUserCommand, ResultT<TokenInfoDto>> loginUserHandler,
-    ICommandHandler<RefreshTokenCommand, ResultT<TokenInfoDto>> refreshTokenHandler,
     IQueryHandler<GetUserByIdQuery, ResultT<GetUserQueryDto>> getUserByIdHandler,
     IMapper mapper
 ) : BaseController
@@ -101,29 +100,6 @@ public class UserController(
         LoginUserCommand command = mapper.Map<LoginUserCommand>( dto );
 
         ResultT<TokenInfoDto> result = await loginUserHandler.Handle( command );
-
-        if ( result.IsSuccess )
-        {
-            Response.Cookies.Append( "refresh-token", result.Value.RefreshToken );
-
-            return Ok( result.Value );
-        }
-
-        return BadRequest( result.ErrorMessages );
-    }
-
-    [HttpGet( "Refresh" )]
-    [ProducesResponseType( typeof( TokenInfoDto ), StatusCodes.Status200OK )]
-    [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
-    public async Task<IActionResult> Refresh()
-    {
-        string requestRefreshToken = Request.Cookies[ "refresh-token" ];
-
-        RefreshTokenCommand command = new RefreshTokenCommand()
-        {
-            RefreshToken = requestRefreshToken
-        };
-        ResultT<TokenInfoDto> result = await refreshTokenHandler.Handle( command );
 
         if ( result.IsSuccess )
         {
