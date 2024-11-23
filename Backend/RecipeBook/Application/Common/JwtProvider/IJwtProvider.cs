@@ -4,6 +4,6 @@ namespace Application.Common.JwtProvider;
 
 public interface IJwtProvider
 {
-    string GenerateToken( int userId );
+    string GenerateAccessToken( int userId );
     RefreshToken GenerateRefreshToken( int userId );
 }

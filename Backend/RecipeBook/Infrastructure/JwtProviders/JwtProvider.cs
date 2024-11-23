@@ -13,7 +13,7 @@ public class JwtProvider( IOptions<JwtOptions> options ) : IJwtProvider
 {
     private readonly JwtOptions _options = options.Value;
 
-    public string GenerateToken( int userId )
+    public string GenerateAccessToken( int userId )
     {
         Claim[] claims = [ new Claim( nameof( userId ), userId.ToString() ) ];
 

@@ -63,7 +63,7 @@ public class RefreshTokenCommandHandler(
     {
         int userId = oldRefreshToken.UserId;
 
-        string newAccessToken = jwtProvider.GenerateToken( userId );
+        string newAccessToken = jwtProvider.GenerateAccessToken( userId );
         RefreshToken newRefreshToken = jwtProvider.GenerateRefreshToken( userId );
 
         await refreshTokenRepository.Create( newRefreshToken );

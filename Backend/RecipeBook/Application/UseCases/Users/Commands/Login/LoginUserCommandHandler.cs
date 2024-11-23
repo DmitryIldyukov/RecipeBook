@@ -44,7 +44,7 @@ public class LoginUserCommandHandler(
 
     private async Task<TokenInfoDto> GenerateTokenResponseAsync( int userId )
     {
-        string token = jwtProvider.GenerateToken( userId );
+        string token = jwtProvider.GenerateAccessToken( userId );
 
         RefreshToken existingRefreshToken = await refreshTokenRepository.GetByUserId( userId );
         if ( existingRefreshToken is not null )
