@@ -14,27 +14,24 @@ public class RefreshTokenConfiguration : IEntityTypeConfiguration<RefreshToken>
         builder.Property( r => r.Id )
             .HasComment( "Id токена" )
             .HasColumnName( "refresh_token_id" )
-            .ValueGeneratedOnAdd()
-            .IsRequired();
+            .ValueGeneratedOnAdd();
 
-        builder.Property( t => t.UserId )
+        builder.Property( r => r.UserId )
             .HasComment( "Id пользователя" )
-            .HasColumnName( "user_id" )
-            .IsRequired();
+            .HasColumnName( "user_id" );
 
-        builder.Property( t => t.Token )
+        builder.Property( r => r.Token )
             .HasComment( "Токен" )
             .HasColumnName( "token" )
             .IsRequired();
 
-        builder.Property( t => t.ExpirationDate )
+        builder.Property( r => r.ExpirationDate )
             .HasComment( "Дата истечения срока действия токена" )
-            .HasColumnName( "expiration_date" )
-            .IsRequired();
+            .HasColumnName( "expiration_date" );
 
-        builder.HasOne( t => t.User )
-            .WithMany( r => r.RefreshTokens )
-            .HasForeignKey( s => s.UserId )
+        builder.HasOne( r => r.User )
+            .WithMany( u => u.RefreshTokens )
+            .HasForeignKey( r => r.UserId )
             .OnDelete( DeleteBehavior.Cascade );
     }
 }
