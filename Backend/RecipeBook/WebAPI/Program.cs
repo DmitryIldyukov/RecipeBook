@@ -3,6 +3,7 @@ using Application;
 using Infrastructure;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using WebAPI.Middlewares;
 
 namespace WebAPI;
 
@@ -37,6 +38,8 @@ public class Program
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseMiddleware<ExceptionHandlerMiddleware>();
 
             app.UseAuthorization();
 
