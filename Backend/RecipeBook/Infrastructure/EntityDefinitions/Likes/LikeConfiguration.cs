@@ -12,25 +12,17 @@ public class LikeConfiguration : IEntityTypeConfiguration<Like>
             .HasKey( l => l.Id );
 
         builder.Property( l => l.Id )
-            .HasComment( "Id лайка" )
             .HasColumnName( "like_id" )
-            .ValueGeneratedOnAdd()
-            .IsRequired();
+            .ValueGeneratedOnAdd();
 
         builder.Property( l => l.UserId )
-            .HasComment( "Id пользователя" )
-            .HasColumnName( "user_id" )
-            .IsRequired();
+            .HasColumnName( "user_id" );
 
         builder.Property( l => l.RecipeId )
-            .HasComment( "Id рецепта" )
-            .HasColumnName( "recipe_id" )
-            .IsRequired();
+            .HasColumnName( "recipe_id" );
 
         builder.Property( l => l.CreatedAt )
-            .HasComment( "Дата и время лайка" )
-            .HasColumnName( "created_at" )
-            .IsRequired();
+            .HasColumnName( "created_at" );
 
         builder.HasOne( f => f.User )
             .WithMany( u => u.Likes )
