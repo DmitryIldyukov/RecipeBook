@@ -18,6 +18,7 @@ public class RecipeBookDbContext : DbContext
     public DbSet<Like> Likes { get; set; }
     public DbSet<Step> Steps { get; set; }
     public DbSet<Tag> Tags { get; set; }
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
 
     #endregion
 

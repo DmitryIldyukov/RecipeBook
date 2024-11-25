@@ -10,10 +10,10 @@ public class CreateIngredientCommandValidator : AbstractValidator<CreateIngredie
             .NotNull().WithMessage( "Рецепт обязателен." );
 
         RuleFor( i => i.Title )
-            .NotEmpty().WithMessage( "Заголовок обязателен." )
-            .MaximumLength( 40 ).WithMessage( "Заголовок не может превышать 40 символов." );
+            .NotEmpty().WithMessage( "Заголовок ингредиента обязателен." )
+            .MaximumLength( 40 ).WithMessage( "Заголовок ингредиента не может превышать 40 символов." );
 
         RuleFor( i => i.Description )
-            .NotEmpty().WithMessage( "Описание обязательно." );
+            .NotEmpty().WithMessage( "Описание ингредиента обязательно." );
     }
 }

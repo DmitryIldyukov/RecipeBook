@@ -11,6 +11,7 @@ public class User : Entity
     public ICollection<Recipe> Recipes { get; set; } = new List<Recipe>();
     public ICollection<Like> Likes { get; set; } = new HashSet<Like>();
     public ICollection<Favorite> Favorites { get; set; } = new List<Favorite>();
+    public ICollection<RefreshToken> RefreshTokens { get; set; } = new HashSet<RefreshToken>();
 
     public User( string name, string login, string password )
     {

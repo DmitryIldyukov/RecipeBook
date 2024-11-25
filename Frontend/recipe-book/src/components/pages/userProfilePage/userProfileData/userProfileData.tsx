@@ -3,20 +3,18 @@ import styles from "./userProfileData.module.scss";
 import pencil from "../../../../assets/images/pencil.svg";
 import { User } from "../../../../types/user";
 import MyButton from "../../../customComponents/myButton/myButton";
-import UserService from "../../../../services/userService";
 import { useAppStore } from "../../../../hooks/useStore";
 import eyeHidden from "../../../../assets/images/eyeHidden.svg";
 import eyeVisible from "../../../../assets/images/eyeVisible.svg";
 import { handleError } from "../../../../utils/errorHandler";
 import toast from "react-hot-toast";
+import { userService } from "../../../../services/userService";
 
 type UserProfileDataProps = {
   user: User | null;
 };
 
 export const UserProfileData = ({ user }: UserProfileDataProps) => {
-  const userService = new UserService();
-
   const [name, setName] = useState(user?.name ?? "");
   const [login, setLogin] = useState(user?.login ?? "");
   const [password, setPassword] = useState("");
@@ -42,7 +40,7 @@ export const UserProfileData = ({ user }: UserProfileDataProps) => {
   const saveUser = () => {
     if (userId) {
       userService
-        .saveUser(userId, {
+        .saveUser({
           name: name,
           login: login,
           password: password,

@@ -7,10 +7,8 @@ class RecipeService {
     return fetchClient<Recipe>("/api/Recipe/DailyRecipe");
   }
 
-  async getRecipeList(searchQueries: string[], page: Page, userId?: number): Promise<Recipe[]> {
-    const params = userId ? `?userId=${userId.toString()}` : "";
-
-    return fetchClient<Recipe[]>(`/api/Recipe/GetRecipes${params}`, {
+  async getRecipeList(searchQueries: string[], page: Page): Promise<Recipe[]> {
+    return fetchClient<Recipe[]>(`/api/Recipe/GetRecipes`, {
       method: "POST",
       body: JSON.stringify({
         searchQueries,
@@ -19,8 +17,8 @@ class RecipeService {
     });
   }
 
-  async getFavoriteRecipes(userId: number, page: Page): Promise<Recipe[]> {
-    return fetchClient<Recipe[]>(`/api/Recipe/FavoriteRecipes/${userId.toString()}`, {
+  async getFavoriteRecipes(page: Page): Promise<Recipe[]> {
+    return fetchClient<Recipe[]>(`/api/Recipe/FavoriteRecipes`, {
       method: "POST",
       body: JSON.stringify({
         page,
@@ -37,26 +35,26 @@ class RecipeService {
     return fetchClient<string>(`/api/Recipe/RecipeImage/${recipeId.toString()}`);
   }
 
-  async addLike(userId: number, recipeId: number): Promise<Response> {
-    return fetchClient(`/api/Like/${userId.toString()}/${recipeId.toString()}`, {
+  async addLike(recipeId: number): Promise<Response> {
+    return fetchClient(`/api/Like/${recipeId.toString()}`, {
       method: "POST",
     });
   }
 
-  async addFavorite(userId: number, recipeId: number): Promise<Response> {
-    return fetchClient(`/api/Favorite/${userId.toString()}/${recipeId.toString()}`, {
+  async addFavorite(recipeId: number): Promise<Response> {
+    return fetchClient(`/api/Favorite/${recipeId.toString()}`, {
       method: "POST",
     });
   }
 
-  async removeLike(userId: number, recipeId: number): Promise<Response> {
-    return fetchClient(`/api/Like/${userId.toString()}/${recipeId.toString()}`, {
+  async removeLike(recipeId: number): Promise<Response> {
+    return fetchClient(`/api/Like/${recipeId.toString()}`, {
       method: "DELETE",
     });
   }
 
-  async removeFavorite(userId: number, recipeId: number): Promise<Response> {
-    return fetchClient(`/api/Favorite/${userId.toString()}/${recipeId.toString()}`, {
+  async removeFavorite(recipeId: number): Promise<Response> {
+    return fetchClient(`/api/Favorite/${recipeId.toString()}`, {
       method: "DELETE",
     });
   }
@@ -75,8 +73,8 @@ class RecipeService {
     });
   }
 
-  async getUserRecipes(userId: number): Promise<Recipe[]> {
-    return fetchClient<Recipe[]>(`/api/Recipe/User/${userId.toString()}`);
+  async getUserRecipes(): Promise<Recipe[]> {
+    return fetchClient<Recipe[]>(`/api/Recipe/MyRecipes`);
   }
 
   async deleteRecipe(recipeId: number): Promise<Response> {

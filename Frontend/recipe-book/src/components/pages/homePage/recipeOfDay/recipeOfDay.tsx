@@ -53,7 +53,7 @@ export const RecipeOfDay = () => {
         void getRecipeOfDay();
       }
     } catch (error) {
-      console.error(error);
+      handleError(error, "Произошла ошибка при добавлении рецепта в понравившиеся.");
     }
   };
 

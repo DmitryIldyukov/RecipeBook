@@ -27,20 +27,17 @@ namespace Infrastructure.Migrations.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("favorite_id")
-                        .HasComment("Id избранного");
+                        .HasColumnName("favorite_id");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("RecipeId")
                         .HasColumnType("int")
-                        .HasColumnName("recipe_id")
-                        .HasComment("Id рецепта");
+                        .HasColumnName("recipe_id");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int")
-                        .HasColumnName("user_id")
-                        .HasComment("Id пользователя");
+                        .HasColumnName("user_id");
 
                     b.HasKey("Id");
 
@@ -56,8 +53,7 @@ namespace Infrastructure.Migrations.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("ingredient_id")
-                        .HasComment("Id ингредиента");
+                        .HasColumnName("ingredient_id");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
@@ -65,20 +61,17 @@ namespace Infrastructure.Migrations.Migrations
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)")
-                        .HasColumnName("description")
-                        .HasComment("Список продуктов");
+                        .HasColumnName("description");
 
                     b.Property<int>("RecipeId")
                         .HasColumnType("int")
-                        .HasColumnName("recipe_id")
-                        .HasComment("Id рецепта");
+                        .HasColumnName("recipe_id");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(40)
                         .HasColumnType("nvarchar(40)")
-                        .HasColumnName("title")
-                        .HasComment("Заголовок для игредиентов");
+                        .HasColumnName("title");
 
                     b.HasKey("Id");
 
@@ -92,25 +85,21 @@ namespace Infrastructure.Migrations.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("like_id")
-                        .HasComment("Id лайка");
+                        .HasColumnName("like_id");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2")
-                        .HasColumnName("created_at")
-                        .HasComment("Дата и время лайка");
+                        .HasColumnName("created_at");
 
                     b.Property<int>("RecipeId")
                         .HasColumnType("int")
-                        .HasColumnName("recipe_id")
-                        .HasComment("Id рецепта");
+                        .HasColumnName("recipe_id");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int")
-                        .HasColumnName("user_id")
-                        .HasComment("Id пользователя");
+                        .HasColumnName("user_id");
 
                     b.HasKey("Id");
 
@@ -126,46 +115,39 @@ namespace Infrastructure.Migrations.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("recipe_id")
-                        .HasComment("Id рецепта");
+                        .HasColumnName("recipe_id");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AuthorId")
                         .HasColumnType("int")
-                        .HasColumnName("author_id")
-                        .HasComment("Id автора");
+                        .HasColumnName("author_id");
 
                     b.Property<int>("CookTime")
                         .HasColumnType("int")
-                        .HasColumnName("cook_time")
-                        .HasComment("Время готовки в минутах");
+                        .HasColumnName("cook_time");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)")
-                        .HasColumnName("description")
-                        .HasComment("Описание");
+                        .HasColumnName("description");
 
                     b.Property<string>("ImageName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
-                        .HasColumnName("image_name")
-                        .HasComment("Название фото блюда");
+                        .HasColumnName("image_name");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
-                        .HasColumnName("name")
-                        .HasComment("Название рецепта");
+                        .HasColumnName("name");
 
                     b.Property<int>("PortionCount")
                         .HasColumnType("int")
-                        .HasColumnName("portion_count")
-                        .HasComment("Порций в блюде");
+                        .HasColumnName("portion_count");
 
                     b.HasKey("Id");
 
@@ -174,13 +156,45 @@ namespace Infrastructure.Migrations.Migrations
                     b.ToTable("recipes", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Entities.RefreshToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("refresh_token_id")
+                        .HasComment("Id токена");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("ExpirationDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("expiration_date")
+                        .HasComment("Дата истечения срока действия токена");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("token")
+                        .HasComment("Токен");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int")
+                        .HasColumnName("user_id")
+                        .HasComment("Id пользователя");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("refresh_tokens", (string)null);
+                });
+
             modelBuilder.Entity("Domain.Entities.Step", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("step_id")
-                        .HasComment("Id шага");
+                        .HasColumnName("step_id");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
@@ -188,13 +202,11 @@ namespace Infrastructure.Migrations.Migrations
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)")
-                        .HasColumnName("description")
-                        .HasComment("Описание шага");
+                        .HasColumnName("description");
 
                     b.Property<int>("RecipeId")
                         .HasColumnType("int")
-                        .HasColumnName("recipe_id")
-                        .HasComment("Id рецепта");
+                        .HasColumnName("recipe_id");
 
                     b.HasKey("Id");
 
@@ -208,8 +220,7 @@ namespace Infrastructure.Migrations.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("tag_id")
-                        .HasComment("Id тега");
+                        .HasColumnName("tag_id");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
@@ -217,8 +228,7 @@ namespace Infrastructure.Migrations.Migrations
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)")
-                        .HasColumnName("name")
-                        .HasComment("Название тега");
+                        .HasColumnName("name");
 
                     b.HasKey("Id");
 
@@ -230,8 +240,7 @@ namespace Infrastructure.Migrations.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("user_id")
-                        .HasComment("Id пользователя");
+                        .HasColumnName("user_id");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
@@ -239,36 +248,31 @@ namespace Infrastructure.Migrations.Migrations
                         .IsRequired()
                         .HasMaxLength(254)
                         .HasColumnType("nvarchar(254)")
-                        .HasColumnName("email")
-                        .HasComment("Электронная почта");
+                        .HasColumnName("email");
 
                     b.Property<string>("Information")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)")
-                        .HasColumnName("information")
-                        .HasComment("Информация о себе");
+                        .HasColumnName("information");
 
                     b.Property<string>("Login")
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)")
-                        .HasColumnName("login")
-                        .HasComment("Логин");
+                        .HasColumnName("login");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
-                        .HasColumnName("name")
-                        .HasComment("Имя пользователя");
+                        .HasColumnName("name");
 
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)")
-                        .HasColumnName("password")
-                        .HasComment("Пароль");
+                        .HasColumnName("password");
 
                     b.HasKey("Id");
 
@@ -350,6 +354,17 @@ namespace Infrastructure.Migrations.Migrations
                     b.Navigation("Author");
                 });
 
+            modelBuilder.Entity("Domain.Entities.RefreshToken", b =>
+                {
+                    b.HasOne("Domain.Entities.User", "User")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Domain.Entities.Step", b =>
                 {
                     b.HasOne("Domain.Entities.Recipe", "Recipe")
@@ -394,6 +409,8 @@ namespace Infrastructure.Migrations.Migrations
                     b.Navigation("Likes");
 
                     b.Navigation("Recipes");
+
+                    b.Navigation("RefreshTokens");
                 });
 #pragma warning restore 612, 618
         }

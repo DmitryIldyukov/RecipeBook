@@ -10,12 +10,11 @@ using WebAPI.Dtos.Tag;
 namespace WebAPI.Controllers;
 
 [ApiController]
-[Route( "api/[controller]" )]
 public class TagController(
     IQueryHandler<GetAllTagsQuery, ResultT<IReadOnlyList<GetTagDto>>> getTagsHandler,
     IQueryHandler<GetPopularTagsQuery, ResultT<IReadOnlyList<GetTagDto>>> getPopularTagsHandler,
     IMapper mapper
-) : ControllerBase
+) : BaseController
 {
     [HttpGet]
     [ProducesResponseType( StatusCodes.Status200OK )]

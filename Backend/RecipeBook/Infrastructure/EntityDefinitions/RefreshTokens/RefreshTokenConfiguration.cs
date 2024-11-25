@@ -1,0 +1,37 @@
+﻿using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace Infrastructure.EntityDefinitions.RefreshTokens;
+
+public class RefreshTokenConfiguration : IEntityTypeConfiguration<RefreshToken>
+{
+    public void Configure( EntityTypeBuilder<RefreshToken> builder )
+    {
+        builder.ToTable( "refresh_tokens" )
+            .HasKey( r => r.Id );
+
+        builder.Property( r => r.Id )
+            .HasComment( "Id токена" )
+            .HasColumnName( "refresh_token_id" )
+            .ValueGeneratedOnAdd();
+
+        builder.Property( r => r.UserId )
+            .HasComment( "Id пользователя" )
+            .HasColumnName( "user_id" );
+
+        builder.Property( r => r.Token )
+            .HasComment( "Токен" )
+            .HasColumnName( "token" )
+            .IsRequired();
+
+        builder.Property( r => r.ExpirationDate )
+            .HasComment( "Дата истечения срока действия токена" )
+            .HasColumnName( "expiration_date" );
+
+        builder.HasOne( r => r.User )
+            .WithMany( u => u.RefreshTokens )
+            .HasForeignKey( r => r.UserId )
+            .OnDelete( DeleteBehavior.Cascade );
+    }
+}

@@ -2,7 +2,6 @@ import MyButton from "../../customComponents/myButton/myButton";
 import closeIcon from "../../../assets/images/close.svg";
 import styles from "./loginPopup.module.scss";
 import { usePopupStore } from "../../../hooks/usePopupStore";
-import { authService } from "../../../services/authService";
 import { LoginInfo } from "../../../types/auth";
 import { useState } from "react";
 import { useAppStore } from "../../../hooks/useStore";
@@ -27,10 +26,8 @@ export const LoginPopup = () => {
   const handleLogin = () => {
     const data: LoginInfo = { login: loginData, password: password };
 
-    authService
-      .login(data)
-      .then((response) => {
-        login(response);
+    login(data)
+      .then(() => {
         handleClosePopup();
       })
       .catch((error: unknown) => {

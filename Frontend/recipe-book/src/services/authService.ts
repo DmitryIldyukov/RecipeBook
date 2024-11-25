@@ -1,4 +1,4 @@
-import { LoginInfo, RegistrationInfo } from "../types/auth";
+import { LoginInfo, RegistrationInfo, TokenInfo } from "../types/auth";
 import { fetchClient } from "./fetchClient";
 
 class AuthService {
@@ -9,11 +9,37 @@ class AuthService {
     });
   }
 
-  async login(data: LoginInfo): Promise<number> {
-    return fetchClient("/api/User/Login", {
+  async login(data: LoginInfo): Promise<TokenInfo> {
+    const response: TokenInfo = await fetchClient<TokenInfo>("/api/user/login", {
       method: "POST",
       body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
+
+    if (response.accessToken) {
+      localStorage.removeItem("access-token");
+      localStorage.setItem("access-token", response.accessToken);
+    }
+
+    return response;
+  }
+
+  async refreshToken(): Promise<TokenInfo> {
+    const response: TokenInfo = await fetchClient<TokenInfo>("/api/refreshToken", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.accessToken) {
+      localStorage.removeItem("access-token");
+      localStorage.setItem("access-token", response.accessToken);
+    }
+
+    return response;
   }
 }
 

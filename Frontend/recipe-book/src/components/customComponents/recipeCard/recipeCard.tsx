@@ -49,11 +49,11 @@ export const RecipeCard = ({ recipe }: RecipeCardProps) => {
     try {
       if (userId) {
         if (isLiked) {
-          await recipeService.removeLike(userId, recipeId);
+          await recipeService.removeLike(recipeId);
           setLikesCount((prev) => prev - 1);
           setIsLiked(false);
         } else {
-          await recipeService.addLike(userId, recipeId);
+          await recipeService.addLike(recipeId);
           setLikesCount((prev) => prev + 1);
           setIsLiked(true);
         }
@@ -72,11 +72,11 @@ export const RecipeCard = ({ recipe }: RecipeCardProps) => {
     try {
       if (userId) {
         if (isFavorite) {
-          await recipeService.removeFavorite(userId, recipeId);
+          await recipeService.removeFavorite(recipeId);
           setFavoritesCount((prev) => prev - 1);
           setIsFavorite(false);
         } else {
-          await recipeService.addFavorite(userId, recipeId);
+          await recipeService.addFavorite(recipeId);
           setFavoritesCount((prev) => prev + 1);
           setIsFavorite(true);
         }

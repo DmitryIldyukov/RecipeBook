@@ -3,6 +3,7 @@ import { Tag } from "../../../../types/recipe";
 import TagService from "../../../../services/tagService";
 import styles from "./tagEditor.module.scss";
 import muliply from "../../../../assets/images/multiply.svg";
+import { handleError } from "../../../../utils/errorHandler";
 
 type TagEditorProps = {
   tags: Tag[];
@@ -27,7 +28,7 @@ export const TagEditor = ({ tags, setTags }: TagEditorProps) => {
         setFilteredTags(allTags.filter((tag) => !tags.some((t) => t.id === tag.id)));
       })
       .catch((error: unknown) => {
-        console.error(error);
+        handleError(error)
       });
   }, [tags]);
 
