@@ -18,7 +18,13 @@ public class RequestLoggingMiddleware( RequestDelegate next, ILogger<RequestLogg
         stopwatch.Stop();
 
         int statusCode = httpContext.Response.StatusCode;
-        logger.LogInformation( "Response from User {UserId}: {Method} {Path} StatusCode: {StatusCode} Duration: {Duration}ms",
-                                userId, method, path, statusCode, stopwatch.ElapsedMilliseconds );
+        logger.LogInformation(
+            "Response from User {@UserId}: {Method} {Path} StatusCode: {StatusCode} Duration: {Duration}ms",
+            userId,
+            method,
+            path,
+            statusCode,
+            stopwatch.ElapsedMilliseconds
+        );
     }
 }
