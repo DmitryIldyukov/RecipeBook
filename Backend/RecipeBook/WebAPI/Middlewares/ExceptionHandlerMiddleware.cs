@@ -3,18 +3,13 @@ using System.Text.Json;
 
 namespace WebAPI.Middlewares;
 
-public class ExceptionHandlerMiddleware
+public class ExceptionHandlerMiddleware( RequestDelegate next, ILogger<ExceptionHandlerMiddleware> logger )
 {
-    private readonly RequestDelegate _next;
-
-    public ExceptionHandlerMiddleware( RequestDelegate next ) =>
-        _next = next;
-
     public async Task Invoke( HttpContext context )
     {
         try
         {
-            await _next( context );
+            await next( context );
         }
         catch ( Exception exception )
         {
@@ -24,6 +19,8 @@ public class ExceptionHandlerMiddleware
 
     private async Task HandleExceptionAsync( HttpContext context, Exception exception )
     {
+        logger.LogError( exception, "An error occurred during request processing." );
+
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = ( int )HttpStatusCode.InternalServerError;
 

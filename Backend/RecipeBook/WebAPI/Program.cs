@@ -3,6 +3,8 @@ using Application;
 using Infrastructure;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
+using WebAPI.Extensions;
 using WebAPI.Middlewares;
 
 namespace WebAPI;
@@ -14,6 +16,8 @@ public class Program
         try
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder( args );
+
+            builder.AddSerilogLogging();
 
             string connectionString = builder.Configuration.GetConnectionString( "MSSQLRecipeBook" );
             builder.Services.AddDbContext<RecipeBookDbContext>( options =>
@@ -39,6 +43,8 @@ public class Program
                 app.UseSwaggerUI();
             }
 
+            app.UseMiddleware<RequestLoggingMiddleware>();
+
             app.UseMiddleware<ExceptionHandlerMiddleware>();
 
             app.UseAuthorization();
@@ -49,12 +55,12 @@ public class Program
         }
         catch ( Exception ex )
         {
-            Console.WriteLine( ex.Message );
-            Console.WriteLine( "Сервер неожиданно завершил работу." );
+            Log.Fatal( ex.Message );
+            Log.Information( "Сервер неожиданно завершил работу." );
         }
         finally
         {
-            Console.WriteLine( "Сервер отключается..." );
+            Log.Information( "Сервер отключается..." );
         }
     }
 }
