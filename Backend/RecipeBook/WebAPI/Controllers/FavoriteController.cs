@@ -2,25 +2,30 @@
 using Application.Common.Result;
 using Application.UseCases.Favorites.Commands.Create;
 using Application.UseCases.Favorites.Commands.Delete;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
 
-[ApiController]
-[Route( "api/[controller]" )]
+[Authorize]
 public class FavoriteController(
     ICommandHandler<CreateFavoriteCommand, Result> createFavoriteCommand,
     ICommandHandler<DeleteFavoriteCommand, Result> deleteFavoriteCommand
-) : ControllerBase
+) : BaseController
 {
-    [HttpPost( "{userId:int}/{recipeId:int}" )]
+    [HttpPost( "{recipeId:int}" )]
     [ProducesResponseType( StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
-    public async Task<IActionResult> CreateFavorite( [FromRoute] int userId, [FromRoute] int recipeId )
+    public async Task<IActionResult> CreateFavorite( [FromRoute] int recipeId )
     {
+        if ( UserId is null )
+        {
+            return BadRequest( "Пользователь не найден." );
+        }
+
         CreateFavoriteCommand command = new CreateFavoriteCommand()
         {
-            UserId = userId,
+            UserId = UserId.Value,
             RecipeId = recipeId
         };
 
@@ -34,14 +39,19 @@ public class FavoriteController(
         return BadRequest( result.ErrorMessages );
     }
 
-    [HttpDelete( "{userId:int}/{recipeId:int}" )]
+    [HttpDelete( "{recipeId:int}" )]
     [ProducesResponseType( StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
-    public async Task<IActionResult> DeleteFavorite( [FromRoute] int userId, [FromRoute] int recipeId )
+    public async Task<IActionResult> DeleteFavorite( [FromRoute] int recipeId )
     {
+        if ( UserId is null )
+        {
+            return BadRequest( "Пользователь не найден." );
+        }
+
         DeleteFavoriteCommand command = new DeleteFavoriteCommand()
         {
-            UserId = userId,
+            UserId = UserId.Value,
             RecipeId = recipeId
         };
 

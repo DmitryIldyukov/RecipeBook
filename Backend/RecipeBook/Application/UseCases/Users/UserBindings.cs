@@ -22,7 +22,7 @@ public static class UserBindings
 
         services.AddScoped<ICommandHandler<CreateUserCommand, Result>, CreateUserCommandHandler>();
         services.AddScoped<ICommandHandler<UpdateUserCommand, Result>, UpdateUserCommandHandler>();
-        services.AddScoped<ICommandHandler<LoginUserCommand, ResultT<int>>, LoginUserCommandHandler>();
+        services.AddScoped<ICommandHandler<LoginUserCommand, ResultT<TokenInfoDto>>, LoginUserCommandHandler>();
 
         services.AddScoped<IQueryHandler<GetUserByIdQuery, ResultT<GetUserQueryDto>>, GetUserByIdQueryHandler>();
     }

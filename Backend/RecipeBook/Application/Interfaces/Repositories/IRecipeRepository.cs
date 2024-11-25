@@ -1,4 +1,4 @@
-﻿using Application.Common.Page;
+using Application.Common.Page;
 using Application.Common.Repositories;
 using Domain.Entities;
 

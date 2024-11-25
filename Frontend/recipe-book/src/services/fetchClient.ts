@@ -1,17 +1,58 @@
-export async function fetchClient<T>(url: string, options?: RequestInit): Promise<T> {
-  const isFormData = options?.body instanceof FormData;
+import { useAppStore } from "../hooks/useStore";
+import { authService } from "./authService";
 
-  const response = await fetch(url, {
-    ...options,
-    headers: {
-      ...options?.headers,
+let isRefreshing = false;
+let refreshPromise: Promise<void> | null = null;
+
+export const fetchClient = async <T>(url: string, options?: RequestInit): Promise<T> => {
+  const { logout } = useAppStore.getState();
+  const isFormData = options?.body instanceof FormData;
+  let token = localStorage.getItem("access-token");
+
+  const makeRequest = async (): Promise<Response> => {
+    const defaultHeaders: HeadersInit = {
+      ...(token && { Authorization: `Bearer ${token}` }),
       ...(!isFormData && { "Content-Type": "application/json" }),
-    },
-  });
+    };
+
+    return fetch(url, {
+      ...options,
+      headers: {
+        ...defaultHeaders,
+        ...options?.headers,
+      },
+    });
+  }
+
+  let response = await makeRequest();
 
   if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText);
+    if (response.status === 401) {
+      if (!isRefreshing) {
+        isRefreshing = true;
+        refreshPromise = authService.refreshToken()
+          .then(newTokenInfo => {
+            token = newTokenInfo.accessToken;
+          })
+          .catch(() => {
+            logout();
+          })
+          .finally(() => {
+            isRefreshing = false;
+            refreshPromise = null;
+          });
+        await refreshPromise;
+      }
+      else if (refreshPromise) {
+        await refreshPromise;
+      }
+
+      token = localStorage.getItem("access-token");
+      response = await makeRequest();
+    } else {
+      const errorText = await response.text();
+      throw new Error(errorText);
+    }
   }
 
   const contentType = response.headers.get("Content-Type");

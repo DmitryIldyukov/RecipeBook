@@ -76,7 +76,11 @@
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  background: url("../../../assets/images/selectArrow.svg") no-repeat 192px #fff;
+  background: url("../../../../assets/images/selectArrow.svg") no-repeat 192px #fff;
+}
+
+.selectInput:hover {
+  cursor: pointer;
 }
 
 .text {

@@ -9,6 +9,7 @@ import { useParams } from "react-router-dom";
 import { RecipeInfoHeader } from "./recipeInfoHeader/recipeInfoHeader";
 import { useAppStore } from "../../../../hooks/useStore";
 import { BackBtn } from "../../../customComponents/backBtn/backBtn";
+import { handleError } from "../../../../utils/errorHandler";
 
 export const RecipeFullInfo = () => {
   const { recipeId } = useParams();
@@ -21,7 +22,7 @@ export const RecipeFullInfo = () => {
       const data = await recipeService.getRecipeById(recipeId, userId ? userId : undefined);
       setRecipe(data);
     } catch (error) {
-      console.error(error);
+      handleError(error);
     }
   };
 

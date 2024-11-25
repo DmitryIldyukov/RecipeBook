@@ -2,7 +2,10 @@ using System.Reflection;
 using Application;
 using Infrastructure;
 using Infrastructure.Data;
+using Infrastructure.JwtProviders;
+using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.EntityFrameworkCore;
+using WebAPI.Extensions;
 
 namespace WebAPI;
 
@@ -24,11 +27,19 @@ public class Program
                 .AddApplication()
                 .AddInfrastructure();
 
+            builder.Services.AddHttpContextAccessor();
+
             builder.Services.AddAutoMapper( Assembly.GetExecutingAssembly() );
 
+            builder.Services.Configure<JwtOptions>( builder.Configuration.GetSection( nameof( JwtOptions ) ) );
+
+            builder.Services.AddApiAuthentication( builder.Configuration );
+
             builder.Services.AddControllers();
+
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+
+            builder.Services.AddSwagger();
 
             WebApplication app = builder.Build();
 
@@ -38,6 +49,14 @@ public class Program
                 app.UseSwaggerUI();
             }
 
+            app.UseCookiePolicy( new CookiePolicyOptions
+            {
+                MinimumSameSitePolicy = SameSiteMode.Strict,
+                HttpOnly = HttpOnlyPolicy.Always,
+                Secure = CookieSecurePolicy.Always,
+            } );
+
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();

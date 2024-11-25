@@ -37,16 +37,4 @@ public class GetRecipeByIdQueryHandler(
 
         return ResultT<GetRecipeQueryDto>.Success( mapper.Map<GetRecipeQueryDto>( recipe ), "Рецепт найден." );
     }
-
-    private async Task<ResultT<GetRecipeQueryDto>> ValidateAsync( GetRecipeByIdQuery query, Recipe recipe )
-    {
-        
-
-        if ( recipe is null )
-        {
-            return ResultT<GetRecipeQueryDto>.Fail( $"Рецепт с Id {query.RecipeId} не найден." );
-        }
-
-        return ResultT<GetRecipeQueryDto>.Success( null );
-    }
 }

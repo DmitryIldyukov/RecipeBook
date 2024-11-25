@@ -2,25 +2,30 @@
 using Application.Common.Result;
 using Application.UseCases.Likes.Commands.Create;
 using Application.UseCases.Likes.Commands.Delete;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
 
-[ApiController]
-[Route( "api/[controller]" )]
+[Authorize]
 public class LikeController(
     ICommandHandler<CreateLikeCommand, Result> createLikeCommand,
     ICommandHandler<DeleteLikeCommand, Result> deleteLikeCommand
-) : ControllerBase
+) : BaseController
 {
-    [HttpPost( "{userId:int}/{recipeId:int}" )]
+    [HttpPost( "{recipeId:int}" )]
     [ProducesResponseType( StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
-    public async Task<IActionResult> CreateLike( [FromRoute] int userId, [FromRoute] int recipeId )
+    public async Task<IActionResult> CreateLike( [FromRoute] int recipeId )
     {
+        if ( UserId is null )
+        {
+            return BadRequest( "Пользователь не найден." );
+        }
+
         CreateLikeCommand command = new CreateLikeCommand()
         {
-            UserId = userId,
+            UserId = UserId.Value,
             RecipeId = recipeId
         };
 
@@ -34,14 +39,19 @@ public class LikeController(
         return BadRequest( result.ErrorMessages );
     }
 
-    [HttpDelete( "{userId:int}/{recipeId:int}" )]
+    [HttpDelete( "{recipeId:int}" )]
     [ProducesResponseType( StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
-    public async Task<IActionResult> DeleteLike( [FromRoute] int userId, [FromRoute] int recipeId )
+    public async Task<IActionResult> DeleteLike( [FromRoute] int recipeId )
     {
+        if ( UserId is null )
+        {
+            return BadRequest( "Пользователь не найден." );
+        }
+
         DeleteLikeCommand command = new DeleteLikeCommand()
         {
-            UserId = userId,
+            UserId = UserId.Value,
             RecipeId = recipeId
         };
 

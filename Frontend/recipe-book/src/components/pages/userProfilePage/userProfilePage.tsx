@@ -7,34 +7,35 @@ import { useEffect, useState } from "react";
 import { ROUTES } from "../../../constants/constants";
 import { UserProfileCountInfoSection } from "./userProfileCountInfoSection/userProfileCountInfoSection";
 import { User } from "../../../types/user";
-import UserService from "../../../services/userService";
 import { UserRecipesList } from "./userRecipesList/userRecipesList";
+import { userService } from "../../../services/userService";
+import { handleError } from "../../../utils/errorHandler";
 
 export const UserProfilePage = () => {
-  const userServie = new UserService();
-
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
 
-  const { userId } = useAppStore();
+  const { isAuth } = useAppStore();
 
-  const getUserInfo = async (userId: number) => {
-    try {
-      const data = await userServie.getUser(userId);
-      setUser(data);
-    } catch (error) {
-      console.error(error);
-    }
+  const getUserInfo = () => {
+    userService
+      .getUser()
+      .then((data) => {
+        setUser(data);
+      })
+      .catch((error: unknown) => {
+        handleError(error, "Неудалось получить данные пользователя.");
+      });
   };
 
   useEffect(() => {
-    if (!userId) {
+    if (!isAuth) {
       navigate(ROUTES.HOME);
       return;
     }
 
-    void getUserInfo(userId);
-  }, [userId]);
+    getUserInfo();
+  }, [isAuth]);
 
   return (
     <div className={styles.container}>

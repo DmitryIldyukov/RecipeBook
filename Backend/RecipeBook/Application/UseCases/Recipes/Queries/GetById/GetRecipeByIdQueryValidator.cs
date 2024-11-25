@@ -1,4 +1,4 @@
-﻿using Application.Interfaces.Repositories;
+using Application.Interfaces.Repositories;
 using FluentValidation;
 
 namespace Application.UseCases.Recipes.Queries.GetById;

@@ -174,6 +174,39 @@ namespace Infrastructure.Migrations.Migrations
                     b.ToTable("recipes", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Entities.RefreshToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("refresh_token_id")
+                        .HasComment("Id токена");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("ExpirationDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("expiration_date")
+                        .HasComment("Дата истечения срока действия токена");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("token")
+                        .HasComment("Токен");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int")
+                        .HasColumnName("user_id")
+                        .HasComment("Id пользователя");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("refresh_tokens", (string)null);
+                });
+
             modelBuilder.Entity("Domain.Entities.Step", b =>
                 {
                     b.Property<int>("Id")
@@ -350,6 +383,17 @@ namespace Infrastructure.Migrations.Migrations
                     b.Navigation("Author");
                 });
 
+            modelBuilder.Entity("Domain.Entities.RefreshToken", b =>
+                {
+                    b.HasOne("Domain.Entities.User", "User")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Domain.Entities.Step", b =>
                 {
                     b.HasOne("Domain.Entities.Recipe", "Recipe")
@@ -394,6 +438,8 @@ namespace Infrastructure.Migrations.Migrations
                     b.Navigation("Likes");
 
                     b.Navigation("Recipes");
+
+                    b.Navigation("RefreshTokens");
                 });
 #pragma warning restore 612, 618
         }
