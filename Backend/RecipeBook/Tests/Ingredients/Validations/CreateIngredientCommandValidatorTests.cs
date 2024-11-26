@@ -14,7 +14,7 @@ public class CreateIngredientCommandValidatorTests
     }
 
     [Fact]
-    public async Task Validate_ValidCommand_ShouldPassValidation()
+    public async Task Validate_ValidCommand_PassValidation()
     {
         // Arrange
         Recipe recipe = new Recipe( 1, "Торт", "Шоколадный торт", 60, 8, "cake.jpg" );
@@ -33,7 +33,7 @@ public class CreateIngredientCommandValidatorTests
     }
 
     [Fact]
-    public async Task Validate_MissingRecipe_ShouldFailValidation()
+    public async Task Validate_MissingRecipe_FailValidation()
     {
         // Arrange
         CreateIngredientCommand command = new CreateIngredientCommand
@@ -52,7 +52,7 @@ public class CreateIngredientCommandValidatorTests
     }
 
     [Fact]
-    public async Task Validate_EmptyTitle_ShouldFailValidation()
+    public async Task Validate_EmptyTitle_FailValidation()
     {
         // Arrange
         var recipe = new Recipe( 1, "Торт", "Шоколадный торт", 60, 8, "cake.jpg" );
@@ -72,7 +72,7 @@ public class CreateIngredientCommandValidatorTests
     }
 
     [Fact]
-    public async Task Validate_TitleTooLong_ShouldFailValidation()
+    public async Task Validate_TitleTooLong_FailValidation()
     {
         // Arrange
         Recipe recipe = new Recipe( 1, "Торт", "Шоколадный торт", 60, 8, "cake.jpg" );
@@ -92,7 +92,7 @@ public class CreateIngredientCommandValidatorTests
     }
 
     [Fact]
-    public async Task Validate_EmptyDescription_ShouldFailValidation()
+    public async Task Validate_EmptyDescription_FailValidation()
     {
         // Arrange
         Recipe recipe = new Recipe( 1, "Торт", "Шоколадный торт", 60, 8, "cake.jpg" );

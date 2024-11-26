@@ -17,7 +17,7 @@ public class DeleteFavoriteCommandValidatorTests
     }
 
     [Fact]
-    public async Task Validate_ValidCommand_ShouldPassValidation()
+    public async Task Validate_ValidCommand_PassValidation()
     {
         // Arrange
         DeleteFavoriteCommand command = new DeleteFavoriteCommand { UserId = 1, RecipeId = 1 };
@@ -35,7 +35,7 @@ public class DeleteFavoriteCommandValidatorTests
     }
 
     [Fact]
-    public async Task Validate_MissingUserId_ShouldFailValidation()
+    public async Task Validate_MissingUserId_FailValidation()
     {
         // Arrange
         DeleteFavoriteCommand command = new DeleteFavoriteCommand { RecipeId = 1 };
@@ -49,7 +49,7 @@ public class DeleteFavoriteCommandValidatorTests
     }
 
     [Fact]
-    public async Task Validate_MissingRecipeId_ShouldFailValidation()
+    public async Task Validate_MissingRecipeId_FailValidation()
     {
         // Arrange
         DeleteFavoriteCommand command = new DeleteFavoriteCommand { UserId = 1 };
@@ -63,7 +63,7 @@ public class DeleteFavoriteCommandValidatorTests
     }
 
     [Fact]
-    public async Task Validate_FavoriteDoesNotExist_ShouldFailValidation()
+    public async Task Validate_FavoriteDoesNotExist_FailValidation()
     {
         // Arrange
         DeleteFavoriteCommand command = new DeleteFavoriteCommand { UserId = 1, RecipeId = 1 };

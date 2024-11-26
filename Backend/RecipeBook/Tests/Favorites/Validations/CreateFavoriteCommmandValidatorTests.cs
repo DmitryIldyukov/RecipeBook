@@ -28,7 +28,7 @@ public class CreateFavoriteCommandValidatorTests
     }
 
     [Fact]
-    public async Task Validate_ValidCommand_ShouldPassValidation()
+    public async Task Validate_ValidCommand_PassValidation()
     {
         // Arrange
         CreateFavoriteCommand command = new CreateFavoriteCommand { RecipeId = 1, UserId = 1 };
@@ -50,7 +50,7 @@ public class CreateFavoriteCommandValidatorTests
     }
 
     [Fact]
-    public async Task Validate_RecipeIdIsEmpty_ShouldReturnError()
+    public async Task Validate_RecipeIdIsEmpty_FailValidation()
     {
         // Arrange
         CreateFavoriteCommand command = new CreateFavoriteCommand { UserId = 1 };
@@ -64,7 +64,7 @@ public class CreateFavoriteCommandValidatorTests
     }
 
     [Fact]
-    public async Task Validate_UserIdIsEmpty_ShouldReturnError()
+    public async Task Validate_UserIdIsEmpty_FailValidation()
     {
         // Arrange
         CreateFavoriteCommand command = new CreateFavoriteCommand { RecipeId = 1 };
@@ -78,7 +78,7 @@ public class CreateFavoriteCommandValidatorTests
     }
 
     [Fact]
-    public async Task Validate_RecipeDoesNotExist_ShouldReturnError()
+    public async Task Validate_RecipeDoesNotExist_FailValidation()
     {
         // Arrange
         CreateFavoriteCommand command = new CreateFavoriteCommand { RecipeId = 1, UserId = 1 };
@@ -95,7 +95,7 @@ public class CreateFavoriteCommandValidatorTests
     }
 
     [Fact]
-    public async Task Validate_UserDoesNotExist_ShouldReturnError()
+    public async Task Validate_UserDoesNotExist_FailValidation()
     {
         // Arrange
         CreateFavoriteCommand command = new CreateFavoriteCommand { RecipeId = 1, UserId = 1 };
@@ -112,7 +112,7 @@ public class CreateFavoriteCommandValidatorTests
     }
 
     [Fact]
-    public async Task Validate_RecipeAlreadyInFavorites_ShouldReturnError()
+    public async Task Validate_RecipeAlreadyInFavorites_FailValidation()
     {
         // Arrange
         CreateFavoriteCommand command = new CreateFavoriteCommand { RecipeId = 1, UserId = 1 };

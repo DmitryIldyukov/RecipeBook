@@ -30,7 +30,7 @@ public class DeleteFavoriteCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ValidCommand_ShouldDeleteFavoriteAndCommit()
+    public async Task Handle_ValidCommand_DeleteFavorite()
     {
         // Arrange
         DeleteFavoriteCommand command = new DeleteFavoriteCommand { UserId = 1, RecipeId = 1 };
@@ -51,7 +51,7 @@ public class DeleteFavoriteCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_InvalidCommand_ShouldReturnFail()
+    public async Task Handle_InvalidCommand_Fail()
     {
         // Arrange
         DeleteFavoriteCommand command = new DeleteFavoriteCommand { UserId = 1, RecipeId = 1 };

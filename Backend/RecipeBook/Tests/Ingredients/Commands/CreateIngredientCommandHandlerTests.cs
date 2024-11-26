@@ -30,7 +30,7 @@ public class CreateIngredientCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ValidCommand_ShouldCreateIngredientAndCommit()
+    public async Task Handle_ValidCommand_SaveIngredient()
     {
         // Arrange
         Recipe recipe = new Recipe( 1, "Торт", "Шоколадный торт", 60, 8, "cake.jpg" );
@@ -62,7 +62,7 @@ public class CreateIngredientCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_InvalidCommand_ShouldReturnFail()
+    public async Task Handle_InvalidCommand_Fail()
     {
         // Arrange
         CreateIngredientCommand command = new CreateIngredientCommand();

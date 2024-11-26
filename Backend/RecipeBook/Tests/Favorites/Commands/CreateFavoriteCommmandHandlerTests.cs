@@ -33,7 +33,7 @@ public class CreateFavoriteCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ValidCommand_ShouldCreateFavoriteAndCommit()
+    public async Task Handle_ValidCommand_SaveFavorite()
     {
         // Arrange
         CreateFavoriteCommand command = new CreateFavoriteCommand() { RecipeId = 1, UserId = 1 };
@@ -54,7 +54,7 @@ public class CreateFavoriteCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_InvalidCommand_ShouldReturnFail()
+    public async Task Handle_InvalidCommand_Fail()
     {
         // Arrange
         CreateFavoriteCommand command = new CreateFavoriteCommand();
