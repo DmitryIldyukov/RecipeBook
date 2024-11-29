@@ -8,21 +8,29 @@ class RecipeService {
   }
 
   async getRecipeList(searchQueries: string[], page: Page): Promise<Recipe[]> {
-    return fetchClient<Recipe[]>(`/api/recipes/filter`, {
-      method: "POST",
-      body: JSON.stringify({
-        searchQueries,
-        page,
-      }),
+    const queryString = new URLSearchParams();
+    searchQueries.forEach((query) => {
+      queryString.append("searchQueries", query);
+    });
+    queryString.append("pageNumber", page.pageNumber.toString());
+    queryString.append("pageSize", page.pageSize.toString());
+
+    const url = `/api/recipes/search?${queryString.toString()}`;
+
+    return fetchClient<Recipe[]>(url, {
+      method: "GET",
     });
   }
 
-  async getFavoriteRecipes(page: Page): Promise<Recipe[]> {
-    return fetchClient<Recipe[]>(`/api/recipes/favorite`, {
-      method: "POST",
-      body: JSON.stringify({
-        page,
-      }),
+  async getFavoriteRecipes(userId: number, page: Page): Promise<Recipe[]> {
+    const queryString = new URLSearchParams();
+    queryString.append("page.pageNumber", page.pageNumber.toString());
+    queryString.append("page.pageSize", page.pageSize.toString());
+
+    const url = `/api/users/${userId.toString()}/favorites?${queryString.toString()}`;
+
+    return fetchClient<Recipe[]>(url, {
+      method: "GET",
     });
   }
 
@@ -31,7 +39,7 @@ class RecipeService {
   }
 
   async getRecipeImage(recipeId: number): Promise<string> {
-    return fetchClient<string>(`/api/recipes/${recipeId.toString()}/image`);
+    return fetchClient<string>(`/api/recipes/${recipeId.toString()}/images`);
   }
 
   async addLike(recipeId: number): Promise<Response> {
@@ -72,8 +80,8 @@ class RecipeService {
     });
   }
 
-  async getUserRecipes(): Promise<Recipe[]> {
-    return fetchClient<Recipe[]>(`/api/recipes/my`);
+  async getUserRecipes(userId: number): Promise<Recipe[]> {
+    return fetchClient<Recipe[]>(`/api/users/${userId.toString()}/recipes`);
   }
 
   async deleteRecipe(recipeId: number): Promise<Response> {

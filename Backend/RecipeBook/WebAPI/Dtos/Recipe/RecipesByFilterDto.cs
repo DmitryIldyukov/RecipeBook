@@ -1,9 +1,8 @@
-﻿using Application.Common.Page;
-
-namespace WebAPI.Dtos.Recipe;
+﻿namespace WebAPI.Dtos.Recipe;
 
 public class RecipesByFilterDto
 {
-    public List<string> SearchQueries { get; init; }
-    public Page Page { get; init; }
+    public List<string> SearchQueries { get; init; } = new List<string>();
+    public int PageNumber { get; init; }
+    public int PageSize { get; init; }
 }

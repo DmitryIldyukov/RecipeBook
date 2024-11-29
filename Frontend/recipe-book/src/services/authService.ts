@@ -3,7 +3,7 @@ import { fetchClient } from "./fetchClient";
 
 class AuthService {
   async Registration(data: RegistrationInfo): Promise<Response> {
-    return fetchClient("/api/users/registration", {
+    return fetchClient("/api/users", {
       method: "POST",
       body: JSON.stringify(data),
     });
@@ -27,7 +27,7 @@ class AuthService {
   }
 
   async refreshToken(): Promise<TokenInfo> {
-    const response: TokenInfo = await fetchClient<TokenInfo>("/api/refresh-tokens/refresh", {
+    const response: TokenInfo = await fetchClient<TokenInfo>("/api/refreshTokens", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

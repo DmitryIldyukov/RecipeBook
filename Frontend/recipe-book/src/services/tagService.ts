@@ -7,6 +7,6 @@ export default class TagService {
   }
 
   async getPopularTags(count: number): Promise<Tag[]> {
-    return fetchClient(`/api/tags/popular?count=${count.toString()}`);
+    return fetchClient(`/api/tags/populars?count=${count.toString()}`);
   }
 }

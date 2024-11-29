@@ -1,4 +1,5 @@
-﻿using Application.UseCases.Recipes.Commands.Create;
+﻿using Application.Common.Page;
+using Application.UseCases.Recipes.Commands.Create;
 using Application.UseCases.Recipes.Commands.Update;
 using Application.UseCases.Recipes.Dtos;
 using Application.UseCases.Recipes.Queries.GetFavoriteRecipes;
@@ -18,12 +19,18 @@ public class RecipeProfile : Profile
         CreateMap<RecipeDto, CreateRecipeCommand>();
         CreateMap<UpdateRecipeDto, UpdateRecipeCommand>();
         CreateMap<FavoriteRecipesDto, GetUserFavoriteRecipesQuery>();
-        CreateMap<RecipesByFilterDto, GetRecipesByFilterQuery>();
         CreateMap<TagDto, RecipeTagDto>();
         CreateMap<StepDto, RecipeStepDto>();
         CreateMap<IngredientDto, RecipeIngredientDto>();
         CreateMap<UpdateTagDto, RecipeTagDto>();
         CreateMap<UpdateStepDto, RecipeStepDto>();
         CreateMap<UpdateIngredientDto, RecipeIngredientDto>();
+
+        CreateMap<RecipesByFilterDto, Page>()
+            .ForMember( dest => dest.PageNumber, opt => opt.MapFrom( src => src.PageNumber ) )
+            .ForMember( dest => dest.PageSize, opt => opt.MapFrom( src => src.PageSize ) );
+
+        CreateMap<RecipesByFilterDto, GetRecipesByFilterQuery>()
+            .ForMember( dest => dest.Page, opt => opt.MapFrom( src => src ) );
     }
 }
