@@ -10,6 +10,7 @@ using Application.UseCases.Users.Commands.Update;
 using Application.UseCases.Users.Dtos;
 using Application.UseCases.Users.Queries.GetById;
 using AutoMapper;
+using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Dtos.Recipe;
@@ -123,9 +124,9 @@ public class UsersController(
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
     public async Task<IActionResult> GetUserRecipes( [FromRoute] int userId )
     {
-        if ( UserId is null )
+        if ( UserId != userId )
         {
-            return BadRequest( "Пользователь не найден." );
+            return Forbid( "Невозможно получить рецепты другого пользователя." );
         }
 
         GetUserRecipesQuery query = new GetUserRecipesQuery()
@@ -147,11 +148,11 @@ public class UsersController(
     [HttpGet( "{userId:int}/favorites" )]
     [ProducesResponseType( typeof( IReadOnlyList<GetRecipeQueryDto> ), StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
-    public async Task<IActionResult> GetUserFavoritesRecipes( [FromQuery] FavoriteRecipesDto recipesDto )
+    public async Task<IActionResult> GetUserFavoritesRecipes( [FromRoute] int userId, [FromQuery] FavoriteRecipesDto recipesDto )
     {
-        if ( UserId is null )
+        if ( UserId != userId )
         {
-            return BadRequest( "Пользователь не найден." );
+            return Forbid( "Невозможно получить избранные рецепты другого пользователя." );
         }
 
         GetUserFavoriteRecipesQuery query = mapper.Map<GetUserFavoriteRecipesQuery>( recipesDto ) with { UserId = UserId.Value };
