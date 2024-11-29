@@ -51,9 +51,9 @@ public class UsersController(
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
     public async Task<IActionResult> GetUserById( [FromRoute] int userId )
     {
-        if ( UserId is null )
+        if ( UserId != userId )
         {
-            return BadRequest( "Пользователь не найден." );
+            return Forbid( "Невозможно получить данные другого пользователя." );
         }
 
         GetUserByIdQuery query = new GetUserByIdQuery()
@@ -76,9 +76,9 @@ public class UsersController(
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
     public async Task<IActionResult> EditUser( [FromRoute] int userId, [FromBody] UserEditDto dto )
     {
-        if ( UserId is null )
+        if ( UserId != userId )
         {
-            return BadRequest( "Пользователь не найден." );
+            return Forbid( "Невозможно изменить данные другого пользователя." );
         }
 
         UpdateUserCommand command = new()
