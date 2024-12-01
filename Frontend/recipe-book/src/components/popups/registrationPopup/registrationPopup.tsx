@@ -97,6 +97,7 @@ export const RegistrationPopup = () => {
                 value={name}
                 onChange={(e) => {
                   setName(e.target.value);
+                  setErrors((prev) => ({ ...prev, name: "" }));
                 }}
               />
               {errors.name && <div className={styles.errorText}>{errors.name}</div>}
@@ -111,6 +112,7 @@ export const RegistrationPopup = () => {
                 value={loginData}
                 onChange={(e) => {
                   setLoginData(e.target.value);
+                  setErrors((prev) => ({ ...prev, login: "" }));
                 }}
               />
               {errors.login && <div className={styles.errorText}>{errors.login}</div>}
@@ -127,6 +129,7 @@ export const RegistrationPopup = () => {
                     value={password}
                     onChange={(e) => {
                       setPassword(e.target.value);
+                      setErrors((prev) => ({ ...prev, password: "" }));
                     }}
                   />
                   <span className={styles.description}>Минимум 8 символов</span>
