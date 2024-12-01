@@ -27,13 +27,27 @@ public class GetRecipeImageQueryHandler(
 
         Recipe recipe = await recipeRepository.GetById( query.RecipeId );
 
-        string fullPath = BuildImagePath( recipe );
+        ResultT<FileData> imageResult = GetRecipeImage( recipe );
 
-        FileData file = fileHelper.Get( fullPath );
-
-        GetImageQueryDto response = new GetImageQueryDto( file.File, file.MimeType, recipe.ImageName );
+        GetImageQueryDto response = new GetImageQueryDto( imageResult.Value.File, imageResult.Value.MimeType, recipe.ImageName );
 
         return ResultT<GetImageQueryDto>.Success( response, "Изображение успешно сохранено." );
+    }
+
+    private ResultT<FileData> GetRecipeImage( Recipe recipe )
+    {
+        string fullPath = BuildImagePath( recipe );
+
+        try
+        {
+            FileData file = fileHelper.Get( fullPath );
+
+            return ResultT<FileData>.Success( file );
+        }
+        catch ( FileNotFoundException ex )
+        {
+            return ResultT<FileData>.Fail( ex.Message );
+        }
     }
 
     private string BuildImagePath( Recipe recipe )

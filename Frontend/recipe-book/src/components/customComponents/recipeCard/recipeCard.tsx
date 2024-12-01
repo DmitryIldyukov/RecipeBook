@@ -6,6 +6,7 @@ import likeIcon from "../../../assets/images/like.svg";
 import favoriteIcon from "../../../assets/images/favorite.svg";
 import portionIcon from "../../../assets/images/portionIcon.svg";
 import cookTimeIcon from "../../../assets/images/cookTimeIcon.svg";
+import emptyImage from "../../../assets/images/emptyImage.png";
 import { recipeService } from "../../../services/recipeService";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -101,7 +102,7 @@ export const RecipeCard = ({ recipe }: RecipeCardProps) => {
         {loadingImage ? (
           <p>Загрузка изображения...</p>
         ) : (
-          <img src={image} alt="recipe image" className={styles.image} />
+          <img src={image || emptyImage} alt="recipe image" className={styles.image} />
         )}
       </div>
       <div className={styles.recipeInfo}>
