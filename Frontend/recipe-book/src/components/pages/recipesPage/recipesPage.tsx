@@ -5,7 +5,7 @@ import icon2 from "../../../assets/images/ic-cook.svg";
 import icon3 from "../../../assets/images/ic-chef.svg";
 import icon4 from "../../../assets/images/ic-hlop.svg";
 import { recipeService } from "../../../services/recipeService";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Recipe } from "../../../types/recipe";
 import { Page } from "../../../types/page";
 import { useLocation } from "react-router";
@@ -31,6 +31,10 @@ export const RecipesPage = () => {
   const [isCanLoadMore, setIsCanLoadMore] = useState<boolean>(false);
 
   const { userId } = useAppStore();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [])
 
   useEffect(() => {
     const initialSearchQuery = (location.state as RecipesPageProps | undefined)?.searchQueries ?? [];

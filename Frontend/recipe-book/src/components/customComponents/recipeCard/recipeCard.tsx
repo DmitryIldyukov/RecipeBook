@@ -98,7 +98,7 @@ export const RecipeCard = ({ recipe }: RecipeCardProps) => {
   return (
     <div className={styles.container} onClick={recipeHandler}>
       <div className={styles.imgBlock}>
-        <span className={styles.login}>{recipe.login}</span>
+        <span className={styles.login}>@{recipe.login}</span>
         {loadingImage ? (
           <p>Загрузка изображения...</p>
         ) : (
