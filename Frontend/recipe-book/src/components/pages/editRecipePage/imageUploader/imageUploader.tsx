@@ -4,8 +4,8 @@ import downloadIcon from "../../../../assets/images/cloud-download.svg";
 
 type ImageUploaderProps = {
   imageFile: File | null;
-  setImageFile: React.Dispatch<React.SetStateAction<File | null>>;
-  setImageName: React.Dispatch<React.SetStateAction<string>>;
+  setImageFile: (ingredients: File | null) => void;
+  setImageName: (imageName: string) => void;
 };
 
 export const ImageUploader = ({ imageFile, setImageFile, setImageName }: ImageUploaderProps) => {

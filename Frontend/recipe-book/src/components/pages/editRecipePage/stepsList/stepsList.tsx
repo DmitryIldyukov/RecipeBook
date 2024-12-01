@@ -1,4 +1,3 @@
-import React from "react";
 import { Step } from "../../../../types/recipe";
 import styles from "./stepsList.module.scss";
 import MyButton from "../../../customComponents/myButton/myButton";
@@ -7,7 +6,7 @@ import closeIcon from "../../../../assets/images/close.svg";
 
 type StepsListProps = {
   steps: Step[];
-  setSteps: React.Dispatch<React.SetStateAction<Step[]>>;
+  setSteps: (steps: Step[]) => void;
 };
 
 export const StepsList = ({ steps, setSteps }: StepsListProps) => {
