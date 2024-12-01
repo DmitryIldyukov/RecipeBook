@@ -124,7 +124,8 @@ export const EditRecipePage = () => {
   };
 
   const handleFormKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
+    const target = e.target as HTMLElement;
+    if (e.key === "Enter" && target.tagName !== "TEXTAREA") {
       e.preventDefault();
     }
   };

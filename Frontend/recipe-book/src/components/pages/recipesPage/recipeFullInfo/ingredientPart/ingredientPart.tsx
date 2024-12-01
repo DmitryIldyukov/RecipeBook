@@ -14,7 +14,7 @@ export const IngredientPart = (props: IngredientPartProps) => {
           props.ingredients.map((ingredient) => (
             <li key={ingredient.id} className={styles.ingredientInfo}>
               <p className={styles.ingredientTitle}>{ingredient.title}</p>
-              <p className={styles.ingredientDescription}>{ingredient.description}</p>
+              <p className={styles.ingredientDescription}>{ingredient.description.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</p>
             </li>
           ))
         ) : (

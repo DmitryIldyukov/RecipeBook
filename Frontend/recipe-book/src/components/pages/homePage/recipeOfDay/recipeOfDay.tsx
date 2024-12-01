@@ -5,6 +5,7 @@ import icon from "../../../../assets/images/yummy.svg";
 import likeIcon from "../../../../assets/images/like.svg";
 import emptyLikeIcon from "../../../../assets/images/emptyLikeIcon.svg";
 import timeIcon from "../../../../assets/images/time.svg";
+import emptyImage from "../../../../assets/images/emptyImage.png";
 import { recipeService } from "../../../../services/recipeService";
 import { useAppStore } from "../../../../hooks/useStore";
 import { usePopupStore } from "../../../../hooks/usePopupStore";
@@ -49,7 +50,7 @@ export const RecipeOfDay = () => {
   const addLike = async () => {
     try {
       if (recipe && userId) {
-        await recipeService.addLike(userId, recipe.recipeId);
+        await recipeService.addLike(recipe.recipeId);
         void getRecipeOfDay();
       }
     } catch (error) {
@@ -95,7 +96,7 @@ export const RecipeOfDay = () => {
         {loadingImage ? (
           <div className={styles.loader}>Загрузка изображения...</div>
         ) : (
-          <img src={image} alt="recipe image" className={styles.image} />
+          <img src={image || emptyImage} alt="recipe image" className={styles.image} />
         )}
       </div>
       <div className={styles.recipeInfo}>
