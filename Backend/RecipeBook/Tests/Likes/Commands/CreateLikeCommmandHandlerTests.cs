@@ -2,38 +2,38 @@
 using Application.Common.Result;
 using Application.Interfaces;
 using Application.Interfaces.Repositories;
-using Application.UseCases.Favorites.Commands.Create;
+using Application.UseCases.Likes.Commands.Create;
 using AutoMapper;
 using Domain.Entities;
 using Moq;
 
-namespace Tests.Favorites.Commands;
+namespace Tests.Likes.Commands;
 
-public class CreateFavoriteCommandHandlerTests
+public class CreateLikeCommandHandlerTests
 {
-    private readonly Mock<IFavoriteRepository> _favoriteRepositoryMock;
+    private readonly Mock<ILikeRepository> _favoriteRepositoryMock;
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
     private readonly Mock<IMapper> _mapperMock;
     private readonly Mock<IRecipeRepository> _recipeRepositoryMock;
     private readonly Mock<IUserRepository> _userRepositoryMock;
-    private readonly CreateFavoriteCommandValidator _validator;
-    private readonly CreateFavoriteCommandHandler _handler;
+    private readonly CreateLikeCommandValidator _validator;
+    private readonly CreateLikeCommandHandler _handler;
 
-    public CreateFavoriteCommandHandlerTests()
+    public CreateLikeCommandHandlerTests()
     {
-        _favoriteRepositoryMock = new Mock<IFavoriteRepository>();
+        _favoriteRepositoryMock = new Mock<ILikeRepository>();
         _unitOfWorkMock = new Mock<IUnitOfWork>();
         _mapperMock = new Mock<IMapper>();
         _recipeRepositoryMock = new Mock<IRecipeRepository>();
         _userRepositoryMock = new Mock<IUserRepository>();
 
-        _validator = new CreateFavoriteCommandValidator(
+        _validator = new CreateLikeCommandValidator(
             _recipeRepositoryMock.Object,
             _favoriteRepositoryMock.Object,
             _userRepositoryMock.Object
         );
 
-        _handler = new CreateFavoriteCommandHandler(
+        _handler = new CreateLikeCommandHandler(
             _favoriteRepositoryMock.Object,
             _validator,
             _unitOfWorkMock.Object,
@@ -41,11 +41,11 @@ public class CreateFavoriteCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ValidCommand_SaveFavorite()
+    public async Task Handle_ValidCommand_SaveLike()
     {
         // Arrange
-        CreateFavoriteCommand command = new CreateFavoriteCommand() { RecipeId = 1, UserId = 1 };
-        Favorite favorite = new Favorite( command.UserId, command.RecipeId );
+        CreateLikeCommand command = new CreateLikeCommand() { RecipeId = 1, UserId = 1 };
+        Like favorite = new Like( command.UserId, command.RecipeId );
 
         _recipeRepositoryMock
             .Setup( r => r.ContainsAsync( It.IsAny<Expression<Func<Recipe, bool>>>() ) )
@@ -54,10 +54,10 @@ public class CreateFavoriteCommandHandlerTests
             .Setup( u => u.ContainsAsync( It.IsAny<Expression<Func<User, bool>>>() ) )
             .ReturnsAsync( true );
         _favoriteRepositoryMock
-            .Setup( f => f.IsUserFavoriteRecipe( command.UserId, command.RecipeId ) )
+            .Setup( f => f.IsRecipeLikedByUser( command.UserId, command.RecipeId ) )
             .ReturnsAsync( false );
 
-        _mapperMock.Setup( m => m.Map<Favorite>( command ) )
+        _mapperMock.Setup( m => m.Map<Like>( command ) )
             .Returns( favorite );
 
         // Act
@@ -76,7 +76,7 @@ public class CreateFavoriteCommandHandlerTests
     public async Task Handle_InvalidCommand_FailValidation( int recipeId, int userId, string expectedError )
     {
         // Arrange
-        CreateFavoriteCommand command = new CreateFavoriteCommand { RecipeId = recipeId, UserId = userId };
+        CreateLikeCommand command = new CreateLikeCommand { RecipeId = recipeId, UserId = userId };
 
         // Act
         Result result = await _handler.Handle( command );
@@ -84,7 +84,7 @@ public class CreateFavoriteCommandHandlerTests
         // Assert
         Assert.False( result.IsSuccess );
         Assert.Contains( expectedError, result.ErrorMessages );
-        _favoriteRepositoryMock.Verify( r => r.Create( It.IsAny<Favorite>() ), Times.Never );
+        _favoriteRepositoryMock.Verify( r => r.Create( It.IsAny<Like>() ), Times.Never );
         _unitOfWorkMock.Verify( u => u.Commit(), Times.Never );
     }
 
@@ -92,7 +92,7 @@ public class CreateFavoriteCommandHandlerTests
     public async Task Handle_RecipeDoesNotExist_FailValidation()
     {
         // Arrange
-        CreateFavoriteCommand command = new CreateFavoriteCommand() { RecipeId = 1, UserId = 1 };
+        CreateLikeCommand command = new CreateLikeCommand() { RecipeId = 1, UserId = 1 };
         _recipeRepositoryMock
             .Setup( r => r.ContainsAsync( It.IsAny<Expression<Func<Recipe, bool>>>() ) )
             .ReturnsAsync( false );
@@ -104,15 +104,15 @@ public class CreateFavoriteCommandHandlerTests
         Assert.False( result.IsSuccess );
         Assert.True( result.ErrorMessages.Any() );
         Assert.Contains( "Рецепт с Id 1 не найден.", result.ErrorMessages );
-        _favoriteRepositoryMock.Verify( r => r.Create( It.IsAny<Favorite>() ), Times.Never );
+        _favoriteRepositoryMock.Verify( r => r.Create( It.IsAny<Like>() ), Times.Never );
         _unitOfWorkMock.Verify( u => u.Commit(), Times.Never );
     }
 
     [Fact]
-    public async Task Handle_RecipeAlreadyInFavorites_FailValidation()
+    public async Task Handle_RecipeAlreadyInLikes_FailValidation()
     {
         // Arrange
-        CreateFavoriteCommand command = new CreateFavoriteCommand() { RecipeId = 1, UserId = 1 };
+        CreateLikeCommand command = new CreateLikeCommand() { RecipeId = 1, UserId = 1 };
         _recipeRepositoryMock
             .Setup( r => r.ContainsAsync( It.IsAny<Expression<Func<Recipe, bool>>>() ) )
             .ReturnsAsync( true );
@@ -120,7 +120,7 @@ public class CreateFavoriteCommandHandlerTests
             .Setup( u => u.ContainsAsync( It.IsAny<Expression<Func<User, bool>>>() ) )
             .ReturnsAsync( true );
         _favoriteRepositoryMock
-            .Setup( f => f.IsUserFavoriteRecipe( command.UserId, command.RecipeId ) )
+            .Setup( f => f.IsRecipeLikedByUser( command.UserId, command.RecipeId ) )
             .ReturnsAsync( true );
 
         // Act
@@ -129,8 +129,8 @@ public class CreateFavoriteCommandHandlerTests
         // Assert
         Assert.False( result.IsSuccess );
         Assert.True( result.ErrorMessages.Any() );
-        Assert.Contains( "Этот рецепт уже добавлен в избранное.", result.ErrorMessages );
-        _favoriteRepositoryMock.Verify( r => r.Create( It.IsAny<Favorite>() ), Times.Never );
+        Assert.Contains( "Этот рецепт уже добавлен в понравившееся.", result.ErrorMessages );
+        _favoriteRepositoryMock.Verify( r => r.Create( It.IsAny<Like>() ), Times.Never );
         _unitOfWorkMock.Verify( u => u.Commit(), Times.Never );
     }
 }

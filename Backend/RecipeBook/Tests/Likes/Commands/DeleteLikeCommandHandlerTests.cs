@@ -1,48 +1,48 @@
 ﻿using Application.Common.Result;
 using Application.Interfaces;
 using Application.Interfaces.Repositories;
-using Application.UseCases.Favorites.Commands.Delete;
+using Application.UseCases.Likes.Commands.Delete;
 using Domain.Entities;
 using FluentValidation.Results;
 using Moq;
 
-namespace Tests.Favorites.Commands;
+namespace Tests.Likes.Commands;
 
 public class DeleteLikeCommandHandlerTests
 {
-    private readonly Mock<IFavoriteRepository> _favoriteRepositoryMock;
+    private readonly Mock<ILikeRepository> _likeRepositoryMock;
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
-    private readonly DeleteFavoriteCommandHandler _handler;
-    private readonly DeleteFavoriteCommandValidator _validator;
+    private readonly DeleteLikeCommandHandler _handler;
+    private readonly DeleteLikeCommandValidator _validator;
 
     public DeleteLikeCommandHandlerTests()
     {
-        _favoriteRepositoryMock = new Mock<IFavoriteRepository>();
+        _likeRepositoryMock = new Mock<ILikeRepository>();
         _unitOfWorkMock = new Mock<IUnitOfWork>();
 
-        _validator = new DeleteFavoriteCommandValidator( _favoriteRepositoryMock.Object );
+        _validator = new DeleteLikeCommandValidator( _likeRepositoryMock.Object );
 
-        _handler = new DeleteFavoriteCommandHandler(
-            _favoriteRepositoryMock.Object,
+        _handler = new DeleteLikeCommandHandler(
+            _likeRepositoryMock.Object,
             _validator,
             _unitOfWorkMock.Object
         );
     }
 
     [Fact]
-    public async Task Handle_ValidCommand_DeleteFavorite()
+    public async Task Handle_ValidCommand_DeleteLike()
     {
         // Arrange
-        DeleteFavoriteCommand command = new DeleteFavoriteCommand { UserId = 1, RecipeId = 1 };
-        Favorite favorite = new Favorite( command.UserId, command.RecipeId );
+        DeleteLikeCommand command = new DeleteLikeCommand { UserId = 1, RecipeId = 1 };
+        Like like = new Like( command.UserId, command.RecipeId );
 
-        _favoriteRepositoryMock
-            .Setup( r => r.IsUserFavoriteRecipe( command.UserId, command.RecipeId ) )
+        _likeRepositoryMock
+            .Setup( r => r.IsRecipeLikedByUser( command.UserId, command.RecipeId ) )
             .ReturnsAsync( true );
 
-        _favoriteRepositoryMock
+        _likeRepositoryMock
             .Setup( r => r.GetByUserIdAndRecipeId( command.UserId, command.RecipeId ) )
-            .ReturnsAsync( favorite );
+            .ReturnsAsync( like );
 
         // Act
         Result result = await _handler.Handle( command );
@@ -50,7 +50,7 @@ public class DeleteLikeCommandHandlerTests
         // Assert
         Assert.True( result.IsSuccess );
         Assert.False( result.ErrorMessages.Any() );
-        _favoriteRepositoryMock.Verify( r => r.Delete( favorite ), Times.Once );
+        _likeRepositoryMock.Verify( r => r.Delete( like ), Times.Once );
         _unitOfWorkMock.Verify( u => u.Commit(), Times.Once );
     }
 
@@ -60,7 +60,7 @@ public class DeleteLikeCommandHandlerTests
     public async Task Validate_MissingFields_FailValidation( int userId, int recipeId, string expectedError )
     {
         // Arrange
-        DeleteFavoriteCommand command = new DeleteFavoriteCommand
+        DeleteLikeCommand command = new DeleteLikeCommand
         {
             UserId = userId,
             RecipeId = recipeId
@@ -72,18 +72,18 @@ public class DeleteLikeCommandHandlerTests
         // Assert
         Assert.False( result.IsSuccess );
         Assert.Contains( expectedError, result.ErrorMessages );
-        _favoriteRepositoryMock.Verify( r => r.Delete( It.IsAny<Favorite>() ), Times.Never );
+        _likeRepositoryMock.Verify( r => r.Delete( It.IsAny<Like>() ), Times.Never );
         _unitOfWorkMock.Verify( u => u.Commit(), Times.Never );
     }
 
     [Fact]
-    public async Task Validate_FavoriteDoesNotExist_FailValidation()
+    public async Task Validate_LikeDoesNotExist_FailValidation()
     {
         // Arrange
-        DeleteFavoriteCommand command = new DeleteFavoriteCommand { UserId = 1, RecipeId = 1 };
+        DeleteLikeCommand command = new DeleteLikeCommand { UserId = 1, RecipeId = 1 };
 
-        _favoriteRepositoryMock
-            .Setup( r => r.IsUserFavoriteRecipe( command.UserId, command.RecipeId ) )
+        _likeRepositoryMock
+            .Setup( r => r.IsRecipeLikedByUser( command.UserId, command.RecipeId ) )
             .ReturnsAsync( false );
 
         // Act
@@ -91,8 +91,8 @@ public class DeleteLikeCommandHandlerTests
 
         // Assert
         Assert.False( result.IsSuccess );
-        Assert.Contains( "Избранный рецепт не найден.", result.ErrorMessages );
-        _favoriteRepositoryMock.Verify( r => r.Delete( It.IsAny<Favorite>() ), Times.Never );
+        Assert.Contains( "Понравившийся рецепт не найден.", result.ErrorMessages );
+        _likeRepositoryMock.Verify( r => r.Delete( It.IsAny<Like>() ), Times.Never );
         _unitOfWorkMock.Verify( u => u.Commit(), Times.Never );
     }
 }
