@@ -7,7 +7,7 @@ import { handleError } from "../../../../utils/errorHandler";
 
 type TagEditorProps = {
   tags: Tag[];
-  setTags: React.Dispatch<React.SetStateAction<Tag[]>>;
+  setTags: (tags: Tag[]) => void;
 };
 
 export const TagEditor = ({ tags, setTags }: TagEditorProps) => {

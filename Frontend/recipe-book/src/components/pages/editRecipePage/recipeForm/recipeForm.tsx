@@ -9,11 +9,11 @@ type RecipeFormProps = {
   cookTime: number;
   portionCount: number;
   tags: Tag[];
-  setName: React.Dispatch<React.SetStateAction<string>>;
-  setDescription: React.Dispatch<React.SetStateAction<string>>;
-  setCookTime: React.Dispatch<React.SetStateAction<number>>;
-  setPortionCount: React.Dispatch<React.SetStateAction<number>>;
-  setTags: React.Dispatch<React.SetStateAction<Tag[]>>;
+  setName: (name: string) => void;
+  setDescription: (description: string) => void;
+  setCookTime: (cookTime: number) => void;
+  setPortionCount: (portionCount: number) => void;
+  setTags: (tags: Tag[])=> void;
 };
 
 export const RecipeForm = ({
