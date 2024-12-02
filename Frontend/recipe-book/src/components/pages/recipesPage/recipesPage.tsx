@@ -50,11 +50,11 @@ export const RecipesPage = () => {
       .getRecipeList(searchQuery, currentPage)
       .then((response) => {
         if (currentPage.pageNumber === 1) {
-          setRecipes(response);
+          setRecipes(response.recipes);
         } else {
-          setRecipes((prevRecipes) => [...prevRecipes, ...response]);
+          setRecipes((prevRecipes) => [...prevRecipes, ...response.recipes]);
         }
-        setIsCanLoadMore(response.length === defaultPageSize);
+        setIsCanLoadMore(response.hasTakeMoreRecipes);
       })
       .catch((error: unknown) => {
         handleError(error);
