@@ -1,5 +1,6 @@
 ﻿using Application.Common.CQRS.Command;
 using Application.Common.CQRS.Query;
+using Application.Common.Page;
 using Application.Common.Result;
 using Application.UseCases.Recipes.Commands.Create;
 using Application.UseCases.Recipes.Commands.Delete;
@@ -50,9 +51,22 @@ public class RecipesController(
     [HttpGet( "search" )]
     [ProducesResponseType( typeof( IReadOnlyList<GetRecipeQueryDto> ), StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
-    public async Task<IActionResult> GetRecipesByFilters( [FromQuery] RecipesByFilterDto recipesDto )
+    public async Task<IActionResult> GetRecipesByFilters(
+        [FromQuery] int pageNumber,
+        [FromQuery] int pageSize,
+        [FromQuery] List<string> searchQueries
+    )
     {
-        GetRecipesByFilterQuery query = mapper.Map<GetRecipesByFilterQuery>( recipesDto ) with { UserId = UserId };
+        GetRecipesByFilterQuery query = new GetRecipesByFilterQuery
+        {
+            UserId = UserId,
+            SearchQueries = searchQueries,
+            Page = new Page
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            }
+        };
 
         ResultT<IReadOnlyList<GetRecipeQueryDto>> result = await getRecipesByFilterHandler.Handle( query );
 

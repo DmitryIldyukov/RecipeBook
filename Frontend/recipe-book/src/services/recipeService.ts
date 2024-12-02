@@ -9,11 +9,11 @@ class RecipeService {
 
   async getRecipeList(searchQueries: string[], page: Page): Promise<Recipe[]> {
     const queryString = new URLSearchParams();
+    queryString.append("pageNumber", page.pageNumber.toString());
+    queryString.append("pageSize", page.pageSize.toString());
     searchQueries.forEach((query) => {
       queryString.append("searchQueries", query);
     });
-    queryString.append("pageNumber", page.pageNumber.toString());
-    queryString.append("pageSize", page.pageSize.toString());
 
     const url = `/api/recipes/search?${queryString.toString()}`;
 
@@ -24,8 +24,8 @@ class RecipeService {
 
   async getFavoriteRecipes(userId: number, page: Page): Promise<Recipe[]> {
     const queryString = new URLSearchParams();
-    queryString.append("page.pageNumber", page.pageNumber.toString());
-    queryString.append("page.pageSize", page.pageSize.toString());
+    queryString.append("pageNumber", page.pageNumber.toString());
+    queryString.append("pageSize", page.pageSize.toString());
 
     const url = `/api/users/${userId.toString()}/favorites?${queryString.toString()}`;
 

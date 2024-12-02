@@ -1,5 +1,6 @@
 ﻿using Application.Common.CQRS.Command;
 using Application.Common.CQRS.Query;
+using Application.Common.Page;
 using Application.Common.Result;
 using Application.UseCases.Recipes.Dtos;
 using Application.UseCases.Recipes.Queries.GetFavoriteRecipes;
@@ -148,14 +149,26 @@ public class UsersController(
     [HttpGet( "{userId:int}/favorites" )]
     [ProducesResponseType( typeof( IReadOnlyList<GetRecipeQueryDto> ), StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
-    public async Task<IActionResult> GetUserFavoritesRecipes( [FromRoute] int userId, [FromQuery] FavoriteRecipesDto recipesDto )
+    public async Task<IActionResult> GetUserFavoritesRecipes(
+        [FromRoute] int userId,
+        [FromQuery] int pageNumber,
+        [FromQuery] int pageSize
+    )
     {
         if ( UserId != userId )
         {
             return Forbid( "Невозможно получить избранные рецепты другого пользователя." );
         }
 
-        GetUserFavoriteRecipesQuery query = mapper.Map<GetUserFavoriteRecipesQuery>( recipesDto ) with { UserId = UserId.Value };
+        GetUserFavoriteRecipesQuery query = new GetUserFavoriteRecipesQuery()
+        {
+            UserId = userId,
+            Page = new Page()
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            }
+        };
 
         ResultT<IReadOnlyList<GetRecipeQueryDto>> result = await getFavoriteRecipesHandler.Handle( query );
 
