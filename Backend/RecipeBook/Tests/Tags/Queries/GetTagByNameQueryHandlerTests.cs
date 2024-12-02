@@ -1,12 +1,10 @@
-﻿using Application.Interfaces.Repositories;
+﻿using Application.Common.Result;
+using Application.Interfaces.Repositories;
 using Application.UseCases.Tags.Dtos;
 using Application.UseCases.Tags.Queries.GetByName;
 using AutoMapper;
 using Domain.Entities;
-using FluentValidation.Results;
-using FluentValidation;
 using Moq;
-using Application.Common.Result;
 
 namespace Tests.Tags.Queries;
 
@@ -26,7 +24,7 @@ public class GetTagByNameQueryHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReturnsMappedTag_WhenValidationSucceedsAndTagExists()
+    public async Task Handle_ValidQuery_ReturnsTag()
     {
         // Arrange
         string tagName = "TestTag";
@@ -50,7 +48,7 @@ public class GetTagByNameQueryHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReturnsValidationError_WhenTagIsEmpty()
+    public async Task Handle_EmptyTag_Fail()
     {
         // Arrange
         GetTagByNameQuery query = new GetTagByNameQuery { Tag = "" };
@@ -64,7 +62,7 @@ public class GetTagByNameQueryHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReturnsFailure_WhenTagDoesNotExist()
+    public async Task Handle_NonExistentTag_Fail()
     {
         // Arrange
         GetTagByNameQuery query = new GetTagByNameQuery { Tag = "NonExistentTag" };

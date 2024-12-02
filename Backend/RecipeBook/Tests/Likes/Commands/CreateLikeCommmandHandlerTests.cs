@@ -73,7 +73,7 @@ public class CreateLikeCommandHandlerTests
     [Theory]
     [InlineData( 0, 1, "Идентификатор рецепта обязателен." )]
     [InlineData( 1, 0, "Идентификатор пользователя обязателен." )]
-    public async Task Handle_InvalidCommand_FailValidation( int recipeId, int userId, string expectedError )
+    public async Task Handle_InvalidRecipeIdOrUserId_Fail( int recipeId, int userId, string expectedError )
     {
         // Arrange
         CreateLikeCommand command = new CreateLikeCommand { RecipeId = recipeId, UserId = userId };
@@ -89,7 +89,7 @@ public class CreateLikeCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_RecipeDoesNotExist_FailValidation()
+    public async Task Handle_RecipeDoesNotExist_Fail()
     {
         // Arrange
         CreateLikeCommand command = new CreateLikeCommand() { RecipeId = 1, UserId = 1 };
@@ -109,7 +109,7 @@ public class CreateLikeCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_RecipeAlreadyInLikes_FailValidation()
+    public async Task Handle_RecipeAlreadyInLikes_Fail()
     {
         // Arrange
         CreateLikeCommand command = new CreateLikeCommand() { RecipeId = 1, UserId = 1 };

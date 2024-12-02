@@ -29,7 +29,7 @@ public class GetRecipeByIdQueryHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReturnsSuccess_WhenRecipeExists()
+    public async Task Handle_RecipeExists_ReturnsRecipe()
     {
         // Arrange
         int recipeId = 1;
@@ -57,7 +57,7 @@ public class GetRecipeByIdQueryHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReturnsSuccess_WithLikeAndFavoriteStatus_WhenUserIdIsProvided()
+    public async Task Handle_UserIdIsProvided_ReturnsRecipeWithLikeAndFavoriteStatus()
     {
         // Arrange
         int recipeId = 1;
@@ -92,7 +92,7 @@ public class GetRecipeByIdQueryHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReturnsValidationError_WhenRecipeIdIsInvalid()
+    public async Task Handle_RecipeIdIsInvalid_Fail()
     {
         // Arrange
         int recipeId = 0;
@@ -108,7 +108,7 @@ public class GetRecipeByIdQueryHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReturnsValidationError_WhenRecipeDoesNotExist()
+    public async Task Handle_RecipeDoesNotExist_Fail()
     {
         // Arrange
         GetRecipeByIdQuery query = new GetRecipeByIdQuery { RecipeId = 1 };

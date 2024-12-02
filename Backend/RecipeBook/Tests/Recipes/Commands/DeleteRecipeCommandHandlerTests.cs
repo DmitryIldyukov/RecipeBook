@@ -43,7 +43,7 @@ public class DeleteRecipeCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReturnsValidationError_WhenRecipeIdIsInvalid()
+    public async Task Handle_RecipeIdIsInvalid_Fail()
     {
         // Arrange
         int recipeId = -1;
@@ -73,7 +73,7 @@ public class DeleteRecipeCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReturnsError_WhenRecipeNotFound()
+    public async Task Handle_RecipeNotFound_Fail()
     {
         // Arrange
         DeleteRecipeCommand command = new DeleteRecipeCommand { RecipeId = 1 };
@@ -94,7 +94,7 @@ public class DeleteRecipeCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_DeletesTags_WhenRecipeExists()
+    public async Task Handle_RecipeExists_DeleteRcipe()
     {
         // Arrange
         DeleteRecipeCommand command = new DeleteRecipeCommand { RecipeId = 1 };
@@ -122,7 +122,7 @@ public class DeleteRecipeCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReturnsError_WhenDeleteTagsFails()
+    public async Task Handle_DeleteTagsFails_Fail()
     {
         // Arrange
         int recipeId = 1;

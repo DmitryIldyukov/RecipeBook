@@ -44,7 +44,7 @@ public class CreateTagCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ValidCommand_TagDoesNotExist_CreatesAndAddsNewTagToRecipe()
+    public async Task Handle_ValidCommand_TagDoesNotExist_CreateAndAddNewTagToRecipe()
     {
         // Arrange
         string tagName = "новый тег";
@@ -66,7 +66,7 @@ public class CreateTagCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_InvalidCommand_ReturnsFailure()
+    public async Task Handle_InvalidNameOrRecipe_Fail()
     {
         // Arrange
         var command = new CreateTagCommand { Name = "", Recipe = null };
@@ -82,7 +82,7 @@ public class CreateTagCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_CommandWithLongTagName_ReturnsFail()
+    public async Task Handle_LongTagName_Fail()
     {
         // Arrange
         string longTagName = new string( 'a', 31 );

@@ -32,7 +32,7 @@ public class UpdateUserCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReturnsSuccess_WhenDataIsValid()
+    public async Task Handle_ValidCommand_SaveUser()
     {
         // Arrange
         UpdateUserCommand command = new UpdateUserCommand
@@ -72,7 +72,7 @@ public class UpdateUserCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReturnsValidationError_WhenUserIdIsInvalid()
+    public async Task Handle_InvalidUserId_Fail()
     {
         // Arrange
         UpdateUserCommand command = new UpdateUserCommand { UserId = 0, Name = "Test Name", Login = "TestLogin" };
@@ -86,7 +86,7 @@ public class UpdateUserCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReturnsValidationError_WhenNameIsEmpty()
+    public async Task Handle_EmptyName_Fail()
     {
         // Arrange
         UpdateUserCommand command = new UpdateUserCommand { UserId = 1, Name = "", Login = "ValidLogin" };
@@ -100,7 +100,7 @@ public class UpdateUserCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReturnsValidationError_WhenLoginIsNotUnique()
+    public async Task Handle_NonUniqueLogin_Fail()
     {
         // Arrange
         UpdateUserCommand command = new UpdateUserCommand { UserId = 1, Name = "Valid Name", Login = "ExistingLogin" };
@@ -117,7 +117,7 @@ public class UpdateUserCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_DoesNotUpdatePassword_WhenPasswordIsEmpty()
+    public async Task Handle_EmptyPassword_DoesNotUpdatePassword()
     {
         // Arrange
         UpdateUserCommand command = new UpdateUserCommand

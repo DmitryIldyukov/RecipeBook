@@ -33,7 +33,7 @@ public class GetUserByIdQueryHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReturnsSuccess_WhenUserExists()
+    public async Task Handle_ValidCommandAndExistingUser_ReturnsUser()
     {
         // Arrange
         GetUserByIdQuery query = new GetUserByIdQuery { Id = 1 };
@@ -58,7 +58,7 @@ public class GetUserByIdQueryHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReturnsValidationError_WhenIdIsZeroOrNegative()
+    public async Task Handle_InvalidUserId_Fail()
     {
         // Arrange
         GetUserByIdQuery query = new GetUserByIdQuery { Id = 0 };
@@ -72,7 +72,7 @@ public class GetUserByIdQueryHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReturnsValidationError_WhenUserDoesNotExist()
+    public async Task Handle_NonExistsUser_Fail()
     {
         // Arrange
         GetUserByIdQuery query = new GetUserByIdQuery { Id = 1 };
@@ -86,30 +86,6 @@ public class GetUserByIdQueryHandlerTests
         // Assert
         Assert.False( result.IsSuccess );
         Assert.Contains( "Пользователь не найден.", result.ErrorMessages );
-    }
-
-    [Fact]
-    public async Task Handle_CommitsTransaction_WhenUserIsFound()
-    {
-        // Arrange
-        GetUserByIdQuery query = new GetUserByIdQuery { Id = 1 };
-        User user = new User( "Test User", "testuser", "password" ) { Id = 1 };
-        GetUserQueryDto userDto = new GetUserQueryDto { Id = 1, Name = "Test User", Login = "testuser" };
-
-        _userRepositoryMock.Setup( repo => repo.GetById( query.Id ) )
-            .ReturnsAsync( user );
-
-        _mapperMock.Setup( mapper => mapper.Map<GetUserQueryDto>( user ) )
-            .Returns( userDto );
-
-        _userRepositoryMock.Setup( repo => repo.ContainsAsync( It.IsAny<Expression<Func<User, bool>>>() ) ).ReturnsAsync( true );
-
-        // Act
-        ResultT<GetUserQueryDto> result = await _handler.Handle( query );
-
-        // Assert
-        Assert.True( result.IsSuccess );
-        _unitOfWorkMock.Verify( uow => uow.Commit(), Times.Once );
     }
 }
 

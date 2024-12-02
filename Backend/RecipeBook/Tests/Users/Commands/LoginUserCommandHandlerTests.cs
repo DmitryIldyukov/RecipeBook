@@ -40,7 +40,7 @@ public class LoginUserCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReturnsSuccess_WhenLoginIsValid()
+    public async Task Handle_ValidCommandAndLoginData_ReturnsToken()
     {
         // Arrange
         LoginUserCommand command = new LoginUserCommand { Login = "user123", Password = "ValidPass123" };
@@ -72,7 +72,7 @@ public class LoginUserCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReturnsValidationError_WhenLoginIsEmpty()
+    public async Task Handle_EmptyLogin_Fail()
     {
         // Arrange
         LoginUserCommand command = new LoginUserCommand { Login = "", Password = "ValidPass123" };
@@ -86,7 +86,7 @@ public class LoginUserCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReturnsValidationError_WhenPasswordIsEmpty()
+    public async Task Handle_EmptyPassword_Fail()
     {
         // Arrange
         LoginUserCommand command = new LoginUserCommand { Login = "user123", Password = "" };
@@ -100,7 +100,7 @@ public class LoginUserCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReturnsValidationError_WhenUserDoesNotExist()
+    public async Task Handle_NonExistentUser_Fail()
     {
         // Arrange
         LoginUserCommand command = new LoginUserCommand { Login = "nonexistent", Password = "ValidPass123" };
@@ -117,7 +117,7 @@ public class LoginUserCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReturnsError_WhenPasswordIsIncorrect()
+    public async Task Handle_IncorrectPassword_Fail()
     {
         // Arrange
         LoginUserCommand command = new LoginUserCommand { Login = "user123", Password = "WrongPassword" };

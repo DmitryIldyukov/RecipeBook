@@ -1,11 +1,11 @@
-﻿using Application.Common.PasswordHasher;
-using Application.Interfaces.Repositories;
-using Application.Interfaces;
-using Application.UseCases.Users.Commands.Create;
-using Moq;
-using Domain.Entities;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
+using Application.Common.PasswordHasher;
 using Application.Common.Result;
+using Application.Interfaces;
+using Application.Interfaces.Repositories;
+using Application.UseCases.Users.Commands.Create;
+using Domain.Entities;
+using Moq;
 
 namespace Tests.Users.Commands;
 
@@ -27,7 +27,7 @@ public class CreateUserCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReturnsSuccess_WhenValidationSucceeds()
+    public async Task Handle_ValidCommand_SaveUser()
     {
         // Arrange
         CreateUserCommand command = new CreateUserCommand { Name = "John Doe", Login = "johndoe", Password = "StrongPass123" };
@@ -46,7 +46,7 @@ public class CreateUserCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReturnsValidationError_WhenLoginIsNotUnique()
+    public async Task Handle_NonUniqueLogin_Fail()
     {
         // Arrange
         CreateUserCommand command = new CreateUserCommand { Name = "Jane Doe", Login = "janedoe", Password = "StrongPass123" };
@@ -65,7 +65,7 @@ public class CreateUserCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReturnsValidationError_WhenPasswordIsTooShort()
+    public async Task Handle_ShortPassword_Fail()
     {
         // Arrange
         CreateUserCommand command = new CreateUserCommand { Name = "John Doe", Login = "johndoe", Password = "short" };
@@ -81,7 +81,7 @@ public class CreateUserCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReturnsValidationError_WhenNameIsEmpty()
+    public async Task Handle_EmptyName_Fail()
     {
         // Arrange
         CreateUserCommand command = new CreateUserCommand { Name = "", Login = "newuser", Password = "StrongPass123" };
@@ -97,7 +97,7 @@ public class CreateUserCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReturnsValidationError_WhenPasswordIsEmpty()
+    public async Task Handle_EmptyPassword_Fail()
     {
         // Arrange
         CreateUserCommand command = new CreateUserCommand { Name = "John Doe", Login = "newuser", Password = "" };

@@ -24,7 +24,7 @@ public class GetPopularTagsQueryHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReturnsMappedTags_WhenValidationSucceeds()
+    public async Task Handle_ValidQuery_ReturnsTags()
     {
         // Arrange
         GetPopularTagsQuery query = new GetPopularTagsQuery { Count = 3 };
@@ -52,7 +52,7 @@ public class GetPopularTagsQueryHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReturnsValidationError_WhenCountIsZero()
+    public async Task Handle_InvalidCount_Fail()
     {
         // Arrange
         GetPopularTagsQuery query = new GetPopularTagsQuery { Count = 0 };

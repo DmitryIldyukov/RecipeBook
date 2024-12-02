@@ -3,7 +3,6 @@ using Application.Interfaces;
 using Application.Interfaces.Repositories;
 using Application.UseCases.Favorites.Commands.Delete;
 using Domain.Entities;
-using FluentValidation.Results;
 using Moq;
 
 namespace Tests.Favorites.Commands;
@@ -57,7 +56,7 @@ public class DeleteLikeCommandHandlerTests
     [Theory]
     [InlineData( 0, 1, "Идентификатор пользователя обязателен." )]
     [InlineData( 1, 0, "Идентификатор рецепта обязателен." )]
-    public async Task Validate_MissingFields_FailValidation( int userId, int recipeId, string expectedError )
+    public async Task Handle_InvalidUserIdOrRecipeId_Fail( int userId, int recipeId, string expectedError )
     {
         // Arrange
         DeleteFavoriteCommand command = new DeleteFavoriteCommand
@@ -77,7 +76,7 @@ public class DeleteLikeCommandHandlerTests
     }
 
     [Fact]
-    public async Task Validate_FavoriteDoesNotExist_FailValidation()
+    public async Task Handle_FavoriteDoesNotExist_Fail()
     {
         // Arrange
         DeleteFavoriteCommand command = new DeleteFavoriteCommand { UserId = 1, RecipeId = 1 };

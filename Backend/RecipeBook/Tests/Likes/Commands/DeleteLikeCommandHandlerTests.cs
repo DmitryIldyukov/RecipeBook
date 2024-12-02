@@ -57,7 +57,7 @@ public class DeleteLikeCommandHandlerTests
     [Theory]
     [InlineData( 0, 1, "Идентификатор пользователя обязателен." )]
     [InlineData( 1, 0, "Идентификатор рецепта обязателен." )]
-    public async Task Validate_MissingFields_FailValidation( int userId, int recipeId, string expectedError )
+    public async Task Validate_MissingRecipeIdOrUserId_Fail( int userId, int recipeId, string expectedError )
     {
         // Arrange
         DeleteLikeCommand command = new DeleteLikeCommand
@@ -77,7 +77,7 @@ public class DeleteLikeCommandHandlerTests
     }
 
     [Fact]
-    public async Task Validate_LikeDoesNotExist_FailValidation()
+    public async Task Validate_LikeDoesNotExist_Fail()
     {
         // Arrange
         DeleteLikeCommand command = new DeleteLikeCommand { UserId = 1, RecipeId = 1 };

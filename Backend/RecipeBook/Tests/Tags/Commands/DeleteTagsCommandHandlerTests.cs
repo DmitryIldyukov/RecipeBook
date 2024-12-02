@@ -73,7 +73,7 @@ public class DeleteTagsCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_InvalidCommand_ReturnsFailure()
+    public async Task Handle_InvalidRecipeId_Fail()
     {
         // Arrange
         DeleteTagsCommand command = new DeleteTagsCommand { RecipeId = 0, Tags = null };
@@ -88,7 +88,7 @@ public class DeleteTagsCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_NonExistingRecipe_ReturnsFailure()
+    public async Task Handle_NonExistingRecipe_Fail()
     {
         // Arrange
         int recipeId = 1;

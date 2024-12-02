@@ -28,7 +28,7 @@ public class GetUserRecipesQueryHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReturnsSuccess_WhenUserHasRecipes()
+    public async Task Handle_UserHasRecipes_ReturnsUserRecipes()
     {
         // Arrange
         GetUserRecipesQuery query = new GetUserRecipesQuery { UserId = 1 };
@@ -55,7 +55,7 @@ public class GetUserRecipesQueryHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReturnsValidationError_WhenUserIdIsInvalid()
+    public async Task Handle_UserIdIsInvalid_Fail()
     {
         // Arrange
         GetUserRecipesQuery query = new GetUserRecipesQuery { UserId = 0 };
@@ -69,7 +69,7 @@ public class GetUserRecipesQueryHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReturnsEmptyList_WhenNoRecipesFound()
+    public async Task Handle_NoRecipesFound_ReturnsEmptyListOfRecipes()
     {
         // Arrange
         GetUserRecipesQuery query = new GetUserRecipesQuery { UserId = 1 };

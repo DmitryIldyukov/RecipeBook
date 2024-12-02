@@ -22,7 +22,7 @@ public class GetAllTagsQueryHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReturnsMappedTags_WhenTagsExist()
+    public async Task Handle_ReturnsTags_WhenTagsExist()
     {
         // Arrange
         List<Tag> tags = new List<Tag>

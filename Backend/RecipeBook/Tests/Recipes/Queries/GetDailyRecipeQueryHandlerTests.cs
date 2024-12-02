@@ -22,7 +22,7 @@ public class GetDailyRecipeQueryHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ShouldReturnSuccess_WhenDailyRecipeExists()
+    public async Task Handle_DailyRecipeExists_ReturnsDailyRecipe()
     {
         // Arrange
         Recipe recipe = new Recipe( 1, "Рецепт", "Описание", 30, 4, "image.jpg" ) { Id = 1 };
@@ -54,7 +54,7 @@ public class GetDailyRecipeQueryHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ShouldReturnFail_WhenDailyRecipeDoesNotExist()
+    public async Task Handle_DailyRecipeDoesNotExist_Fail()
     {
         // Arrange
         _recipeRepositoryMock

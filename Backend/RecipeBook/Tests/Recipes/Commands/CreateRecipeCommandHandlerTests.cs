@@ -70,7 +70,7 @@ public class CreateRecipeCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReturnsError_WhenAddTagsFails()
+    public async Task Handle_AddTag_Fail()
     {
         // Arrange
         CreateRecipeCommand command = CreateValidCommand();
@@ -93,7 +93,7 @@ public class CreateRecipeCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReturnsError_WhenAddStepsFails()
+    public async Task Handle_AddStep_Fail()
     {
         // Arrange
         CreateRecipeCommand command = CreateValidCommand();
@@ -118,7 +118,7 @@ public class CreateRecipeCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReturnsError_WhenAddIngredientsFails()
+    public async Task Handle_AddIngredient_Fail()
     {
         // Arrange
         CreateRecipeCommand command = CreateValidCommand();
@@ -147,7 +147,7 @@ public class CreateRecipeCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_CommitsTransaction_WhenAllHandlersSucceed()
+    public async Task Handle_ValidCommand_SaveRecipe()
     {
         // Arrange
         CreateRecipeCommand command = CreateValidCommand();
@@ -175,7 +175,7 @@ public class CreateRecipeCommandHandlerTests
     }
 
     [Fact]
-    public async Task Validate_ReturnsError_WhenAuthorIdIsInvalid()
+    public async Task Validate_InvalidAuthorId_Fail()
     {
         // Arrange
         CreateRecipeCommand command = new CreateRecipeCommand
@@ -204,7 +204,7 @@ public class CreateRecipeCommandHandlerTests
     }
 
     [Fact]
-    public async Task Validate_ReturnsError_WhenUserDoesNotExist()
+    public async Task Validate_UserNotFound_Fail()
     {
         // Arrange
         CreateRecipeCommand command = CreateValidCommand();
@@ -231,7 +231,7 @@ public class CreateRecipeCommandHandlerTests
     }
 
     [Fact]
-    public async Task Validate_ReturnsError_WhenNameIsEmpty()
+    public async Task Handle_EmptyName_Fail()
     {
         // Arrange
         CreateRecipeCommand command = new CreateRecipeCommand
@@ -260,7 +260,7 @@ public class CreateRecipeCommandHandlerTests
     }
 
     [Fact]
-    public async Task Validate_ReturnsError_WhenNameExceedsMaxLength()
+    public async Task Handle_NameExceedsMaxLength_Fail()
     {
         // Arrange
         CreateRecipeCommand command = new CreateRecipeCommand
@@ -289,7 +289,7 @@ public class CreateRecipeCommandHandlerTests
     }
 
     [Fact]
-    public async Task Validate_ReturnsError_WhenDescriptionIsEmpty()
+    public async Task Validate_DescriptionIsEmpty_Fail()
     {
         // Arrange
         CreateRecipeCommand command = new CreateRecipeCommand
@@ -318,7 +318,7 @@ public class CreateRecipeCommandHandlerTests
     }
 
     [Fact]
-    public async Task Validate_ReturnsError_WhenDescriptionExceedsMaxLength()
+    public async Task Validate_DescriptionExceedsMaxLength_Fail()
     {
         // Arrange
         CreateRecipeCommand command = new CreateRecipeCommand
@@ -347,7 +347,7 @@ public class CreateRecipeCommandHandlerTests
     }
 
     [Fact]
-    public async Task Validate_ReturnsError_WhenCookTimeIsZeroOrNegative()
+    public async Task Validate_CookTimeIsZeroOrNegative_Fail()
     {
         // Arrange
         CreateRecipeCommand command = new CreateRecipeCommand
@@ -376,7 +376,7 @@ public class CreateRecipeCommandHandlerTests
     }
 
     [Fact]
-    public async Task Validate_ReturnsError_WhenPortionCountIsZeroOrNegative()
+    public async Task Validate_PortionCountIsZeroOrNegative_Fail()
     {
         // Arrange
         CreateRecipeCommand command = new CreateRecipeCommand
@@ -405,7 +405,7 @@ public class CreateRecipeCommandHandlerTests
     }
 
     [Fact]
-    public async Task Validate_ReturnsError_WhenImageNameIsEmpty()
+    public async Task Validate_ImageNameIsEmpty_Fail()
     {
         // Arrange
         CreateRecipeCommand command = new CreateRecipeCommand
@@ -434,7 +434,7 @@ public class CreateRecipeCommandHandlerTests
     }
 
     [Fact]
-    public async Task Validate_ReturnsSuccess_WhenCommandIsValid()
+    public async Task Validate_CommandIsValid_SaveRecipe()
     {
         // Arrange
         CreateRecipeCommand command = CreateValidCommand();
@@ -449,6 +449,7 @@ public class CreateRecipeCommandHandlerTests
         _recipeRepositoryMock.Verify( r => r.Create( It.IsAny<Recipe>() ), Times.Once );
         _unitOfWorkMock.Verify( uow => uow.Commit(), Times.Once );
     }
+
     private CreateRecipeCommand CreateValidCommand()
     {
         return new CreateRecipeCommand
