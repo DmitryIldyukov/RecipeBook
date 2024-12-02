@@ -5,7 +5,9 @@ using Infrastructure.Data;
 using Infrastructure.JwtProviders;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using WebAPI.Extensions;
+using WebAPI.Middlewares;
 
 namespace WebAPI;
 
@@ -16,6 +18,8 @@ public class Program
         try
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder( args );
+
+            builder.AddSerilogLogging();
 
             string connectionString = builder.Configuration.GetConnectionString( "MSSQLRecipeBook" );
             builder.Services.AddDbContext<RecipeBookDbContext>( options =>
@@ -49,6 +53,10 @@ public class Program
                 app.UseSwaggerUI();
             }
 
+            app.UseMiddleware<RequestLoggingMiddleware>();
+
+            app.UseMiddleware<ExceptionHandlerMiddleware>();
+
             app.UseCookiePolicy( new CookiePolicyOptions
             {
                 MinimumSameSitePolicy = SameSiteMode.Strict,
@@ -57,6 +65,7 @@ public class Program
             } );
 
             app.UseAuthentication();
+
             app.UseAuthorization();
 
             app.MapControllers();
@@ -65,12 +74,12 @@ public class Program
         }
         catch ( Exception ex )
         {
-            Console.WriteLine( ex.Message );
-            Console.WriteLine( "Сервер неожиданно завершил работу." );
+            Log.Fatal( ex.Message );
+            Log.Information( "Сервер неожиданно завершил работу." );
         }
         finally
         {
-            Console.WriteLine( "Сервер отключается..." );
+            Log.Information( "Сервер отключается..." );
         }
     }
 }
