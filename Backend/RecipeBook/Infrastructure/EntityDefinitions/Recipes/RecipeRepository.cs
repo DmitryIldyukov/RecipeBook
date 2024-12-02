@@ -54,7 +54,7 @@ public class RecipeRepository( RecipeBookDbContext dbContext ) : IRecipeReposito
 
         recipesQuery = recipesQuery
             .Skip( ( page.PageNumber - 1 ) * page.PageSize )
-            .Take( page.PageSize );
+            .Take( page.PageSize + 1 );
 
         return await recipesQuery.ToListAsync();
     }
@@ -83,7 +83,7 @@ public class RecipeRepository( RecipeBookDbContext dbContext ) : IRecipeReposito
 
         recipes = recipes
             .Skip( ( page.PageNumber - 1 ) * page.PageSize )
-            .Take( page.PageSize );
+            .Take( page.PageSize + 1 );
 
         return await recipes.ToListAsync();
     }

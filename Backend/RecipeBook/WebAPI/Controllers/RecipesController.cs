@@ -26,7 +26,7 @@ public class RecipesController(
     ICommandHandler<DeleteRecipeCommand, Result> deleteRecipeHandler,
     IQueryHandler<GetRecipeImageQuery, ResultT<GetImageQueryDto>> getImageHandler,
     IQueryHandler<GetDailyRecipeQuery, ResultT<DailyRecipeDto>> getDailyRecipeHandler,
-    IQueryHandler<GetRecipesByFilterQuery, ResultT<IReadOnlyList<GetRecipeQueryDto>>> getRecipesByFilterHandler,
+    IQueryHandler<GetRecipesByFilterQuery, ResultT<GetRecipesByPageDto>> getRecipesByFilterHandler,
     IQueryHandler<GetRecipeByIdQuery, ResultT<GetRecipeQueryDto>> getByIdHandler,
     IMapper mapper
 ) : BaseController
@@ -48,13 +48,13 @@ public class RecipesController(
     }
 
     [HttpGet( "search" )]
-    [ProducesResponseType( typeof( IReadOnlyList<GetRecipeQueryDto> ), StatusCodes.Status200OK )]
+    [ProducesResponseType( typeof( GetRecipesByPageDto ), StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
     public async Task<IActionResult> GetRecipesByFilters( [FromQuery] RecipesByFilterDto recipesDto )
     {
         GetRecipesByFilterQuery query = mapper.Map<GetRecipesByFilterQuery>( recipesDto ) with { UserId = UserId };
 
-        ResultT<IReadOnlyList<GetRecipeQueryDto>> result = await getRecipesByFilterHandler.Handle( query );
+        ResultT<GetRecipesByPageDto> result = await getRecipesByFilterHandler.Handle( query );
 
         if ( result.IsSuccess )
         {

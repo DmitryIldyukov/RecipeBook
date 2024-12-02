@@ -2,7 +2,7 @@
 
 namespace Application.UseCases.Recipes.Queries.GetFavoriteRecipes;
 
-public record GetUserFavoriteRecipesQuery
+public record GetUserFavoriteRecipesQuery : IPageableQuery
 {
     public int UserId { get; init; }
     public Page Page { get; init; }
