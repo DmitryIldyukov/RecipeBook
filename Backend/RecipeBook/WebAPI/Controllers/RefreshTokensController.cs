@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
 
-public class RefreshTokenController( ICommandHandler<RefreshTokenCommand, ResultT<TokenInfoDto>> refreshTokenHandler ) : BaseController
+[Route( "api/[controller]" )]
+public class RefreshTokensController( ICommandHandler<RefreshTokenCommand, ResultT<TokenInfoDto>> refreshTokenHandler ) : BaseController
 {
     [HttpGet]
     [ProducesResponseType( typeof( TokenInfoDto ), StatusCodes.Status200OK )]

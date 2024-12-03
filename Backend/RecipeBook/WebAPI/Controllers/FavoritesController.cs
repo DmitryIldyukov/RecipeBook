@@ -1,35 +1,36 @@
 ﻿using Application.Common.CQRS.Command;
 using Application.Common.Result;
-using Application.UseCases.Likes.Commands.Create;
-using Application.UseCases.Likes.Commands.Delete;
+using Application.UseCases.Favorites.Commands.Create;
+using Application.UseCases.Favorites.Commands.Delete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
 
 [Authorize]
-public class LikeController(
-    ICommandHandler<CreateLikeCommand, Result> createLikeCommand,
-    ICommandHandler<DeleteLikeCommand, Result> deleteLikeCommand
+[Route( "api/[controller]" )]
+public class FavoritesController(
+    ICommandHandler<CreateFavoriteCommand, Result> createFavoriteCommand,
+    ICommandHandler<DeleteFavoriteCommand, Result> deleteFavoriteCommand
 ) : BaseController
 {
     [HttpPost( "{recipeId:int}" )]
     [ProducesResponseType( StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
-    public async Task<IActionResult> CreateLike( [FromRoute] int recipeId )
+    public async Task<IActionResult> CreateFavorite( [FromRoute] int recipeId )
     {
         if ( UserId is null )
         {
             return BadRequest( "Пользователь не найден." );
         }
 
-        CreateLikeCommand command = new CreateLikeCommand()
+        CreateFavoriteCommand command = new CreateFavoriteCommand()
         {
             UserId = UserId.Value,
             RecipeId = recipeId
         };
 
-        Result result = await createLikeCommand.Handle( command );
+        Result result = await createFavoriteCommand.Handle( command );
 
         if ( result.IsSuccess )
         {
@@ -42,20 +43,20 @@ public class LikeController(
     [HttpDelete( "{recipeId:int}" )]
     [ProducesResponseType( StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
-    public async Task<IActionResult> DeleteLike( [FromRoute] int recipeId )
+    public async Task<IActionResult> DeleteFavorite( [FromRoute] int recipeId )
     {
         if ( UserId is null )
         {
             return BadRequest( "Пользователь не найден." );
         }
 
-        DeleteLikeCommand command = new DeleteLikeCommand()
+        DeleteFavoriteCommand command = new DeleteFavoriteCommand()
         {
             UserId = UserId.Value,
             RecipeId = recipeId
         };
 
-        Result result = await deleteLikeCommand.Handle( command );
+        Result result = await deleteFavoriteCommand.Handle( command );
 
         if ( result.IsSuccess )
         {
