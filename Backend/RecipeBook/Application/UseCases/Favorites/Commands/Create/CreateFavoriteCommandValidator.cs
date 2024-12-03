@@ -23,7 +23,7 @@ public class CreateFavoriteCommandValidator : AbstractValidator<CreateFavoriteCo
             .MustAsync( RecipeExists ).WithMessage( f => $"Рецепт с Id {f.RecipeId} не найден." );
 
         RuleFor( f => f.UserId )
-            .NotEmpty().WithMessage( "Идентификатор пользователя обязаелен." )
+            .NotEmpty().WithMessage( "Идентификатор пользователя обязателен." )
             .MustAsync( UserExists ).WithMessage( u => $"Пользователь с Id {u.UserId} не найден." );
 
         RuleFor( f => f )
