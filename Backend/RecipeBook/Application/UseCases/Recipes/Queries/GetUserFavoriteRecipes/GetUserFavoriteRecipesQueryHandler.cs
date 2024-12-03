@@ -1,4 +1,5 @@
 ﻿using Application.Common.CQRS.Query;
+using Application.Common.Page;
 using Application.Common.Result;
 using Application.Interfaces.Repositories;
 using Application.UseCases.Recipes.Dtos;
@@ -13,19 +14,19 @@ public class GetUserFavoriteRecipesQueryHandler(
     IRecipeRepository recipeRepository,
     IValidator<GetUserFavoriteRecipesQuery> validator,
     IMapper mapper
-) : IQueryHandler<GetUserFavoriteRecipesQuery, ResultT<IReadOnlyList<GetRecipeQueryDto>>>
+) : IQueryHandler<GetUserFavoriteRecipesQuery, ResultT<GetRecipesByPageDto>>
 {
-    public async Task<ResultT<IReadOnlyList<GetRecipeQueryDto>>> Handle( GetUserFavoriteRecipesQuery query )
+    public async Task<ResultT<GetRecipesByPageDto>> Handle( GetUserFavoriteRecipesQuery query )
     {
         ValidationResult validationResult = await validator.ValidateAsync( query );
         if ( !validationResult.IsValid )
         {
-            return ResultT<IReadOnlyList<GetRecipeQueryDto>>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
+            return ResultT<GetRecipesByPageDto>.Fail( validationResult.Errors.Select( e => e.ErrorMessage ) );
         }
 
         IReadOnlyList<Recipe> recipes = await recipeRepository.GetUserFavoriteRecipesByPage( query.UserId, query.Page );
 
-        IReadOnlyList<GetRecipeQueryDto> response = recipes.Select( recipe =>
+        IReadOnlyList<GetRecipeQueryDto> mappedRecipes = recipes.Select( recipe =>
         {
             bool isLiked = recipe.Likes.Any( l => l.UserId == query.UserId );
             bool isFavorite = recipe.Favorites.Any( f => f.UserId == query.UserId );
@@ -33,6 +34,14 @@ public class GetUserFavoriteRecipesQueryHandler(
             return dto;
         } ).ToList();
 
-        return ResultT<IReadOnlyList<GetRecipeQueryDto>>.Success( response, $"Избранные рецепты пользователя с id {query.UserId} найдены." );
+        bool hasLoadMoreRecipes = await recipeRepository.AnyUserFavoriteRecipesByPage( query.UserId, new Page { PageNumber = query.Page.PageNumber + 1, PageSize = query.Page.PageSize } );
+
+        GetRecipesByPageDto response = new GetRecipesByPageDto()
+        {
+            Recipes = mappedRecipes,
+            HasTakeMoreRecipes = hasLoadMoreRecipes
+        };
+
+        return ResultT<GetRecipesByPageDto>.Success( response, $"Избранные рецепты пользователя с id {query.UserId} найдены." );
     }
 }

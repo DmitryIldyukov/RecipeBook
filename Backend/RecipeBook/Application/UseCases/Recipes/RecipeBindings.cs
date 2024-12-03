@@ -36,8 +36,8 @@ public static class RecipeBindings
         services.AddScoped<IQueryHandler<GetRecipeImageQuery, ResultT<GetImageQueryDto>>, GetRecipeImageQueryHandler>();
         services.AddScoped<IQueryHandler<GetDailyRecipeQuery, ResultT<DailyRecipeDto>>, GetDailyRecipeQueryHandler>();
         services.AddScoped<IQueryHandler<GetRecipeByIdQuery, ResultT<GetRecipeQueryDto>>, GetRecipeByIdQueryHandler>();
-        services.AddScoped<IQueryHandler<GetUserFavoriteRecipesQuery, ResultT<IReadOnlyList<GetRecipeQueryDto>>>, GetUserFavoriteRecipesQueryHandler>();
-        services.AddScoped<IQueryHandler<GetRecipesByFilterQuery, ResultT<IReadOnlyList<GetRecipeQueryDto>>>, GetRecipesByFilterQueryHandler>();
+        services.AddScoped<IQueryHandler<GetUserFavoriteRecipesQuery, ResultT<GetRecipesByPageDto>>, GetUserFavoriteRecipesQueryHandler>();
+        services.AddScoped<IQueryHandler<GetRecipesByFilterQuery, ResultT<GetRecipesByPageDto>>, GetRecipesByFilterQueryHandler>();
         services.AddScoped<IQueryHandler<GetUserRecipesQuery, ResultT<IReadOnlyList<GetRecipeQueryDto>>>, GetUserRecipesQueryHandler>();
     }
 }

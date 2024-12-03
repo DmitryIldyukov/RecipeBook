@@ -1,5 +1,5 @@
 import { Page } from "../types/page";
-import { Recipe } from "../types/recipe";
+import { Recipe, RecipeListResponse } from "../types/recipe";
 import { fetchClient } from "./fetchClient";
 
 class RecipeService {
@@ -7,7 +7,7 @@ class RecipeService {
     return fetchClient<Recipe>("/api/recipes/daily");
   }
 
-  async getRecipeList(searchQueries: string[], page: Page): Promise<Recipe[]> {
+  async getRecipeList(searchQueries: string[], page: Page): Promise<RecipeListResponse> {
     const queryString = new URLSearchParams();
     queryString.append("pageNumber", page.pageNumber.toString());
     queryString.append("pageSize", page.pageSize.toString());
@@ -17,19 +17,19 @@ class RecipeService {
 
     const url = `/api/recipes/search?${queryString.toString()}`;
 
-    return fetchClient<Recipe[]>(url, {
+    return fetchClient<RecipeListResponse>(url, {
       method: "GET",
     });
   }
 
-  async getFavoriteRecipes(userId: number, page: Page): Promise<Recipe[]> {
+  async getFavoriteRecipes(userId: number, page: Page): Promise<RecipeListResponse> {
     const queryString = new URLSearchParams();
     queryString.append("pageNumber", page.pageNumber.toString());
     queryString.append("pageSize", page.pageSize.toString());
 
     const url = `/api/users/${userId.toString()}/favorites?${queryString.toString()}`;
 
-    return fetchClient<Recipe[]>(url, {
+    return fetchClient<RecipeListResponse>(url, {
       method: "GET",
     });
   }
