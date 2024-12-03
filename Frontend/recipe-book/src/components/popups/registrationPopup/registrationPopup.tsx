@@ -17,6 +17,7 @@ export const RegistrationPopup = () => {
   const [loginData, setLoginData] = useState("");
   const [password, setPassword] = useState("");
   const [chechPassword, setChechPassword] = useState("");
+  const [errors, setErrors] = useState<{ name?: string; login?: string; password?: string }>({});
 
   const handleClosePopup = () => {
     setIsRegistrationPopupOpen(false);
@@ -27,7 +28,30 @@ export const RegistrationPopup = () => {
     setIsLoginPopupOpen(true);
   };
 
+  const validate = () => {
+    const newErrors: { name?: string; login?: string; password?: string } = {};
+
+    if (!name) {
+      newErrors.name = "Имя обязательно";
+    }
+
+    if (!loginData) {
+      newErrors.login = "Логин обязателен";
+    }
+
+    if (password.length < 8) {
+      newErrors.password = "Пароль должен содержать минимум 8 символов";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleRegistration = async () => {
+    if (!validate()) {
+      return;
+    }
+
     const data: RegistrationInfo = { name: name, login: loginData, password: password };
 
     if (password !== chechPassword) {
@@ -63,51 +87,66 @@ export const RegistrationPopup = () => {
         </button>
         <p className={styles.title}>Регистрация</p>
         <form className={styles.form}>
-          <input
-            type="text"
-            placeholder="Имя"
-            className={styles.input}
-            id="name"
-            value={name}
-            onChange={(e) => {
-              setName(e.target.value);
-            }}
-          />
-          <input
-            type="text"
-            placeholder="Логин"
-            className={styles.input}
-            id="login"
-            value={loginData}
-            onChange={(e) => {
-              setLoginData(e.target.value);
-            }}
-          />
-
-          <div className={styles.passwordContainer}>
-            <div className={styles.password}>
+          <div className={styles.formInputs}>
+            <div className={styles.inputBlock}>
               <input
-                type="password"
-                placeholder="Пароль"
-                className={styles.passInput}
-                id="password"
-                value={password}
+                type="text"
+                placeholder="Имя"
+                className={styles.input}
+                id="name"
+                value={name}
                 onChange={(e) => {
-                  setPassword(e.target.value);
+                  setName(e.target.value);
+                  setErrors((prev) => ({ ...prev, name: "" }));
                 }}
               />
-              <span className={styles.description}>Минимум 8 символов</span>
+              {errors.name && <div className={styles.errorText}>{errors.name}</div>}
             </div>
-            <input
-              type="password"
-              placeholder="Пароль"
-              className={styles.input}
-              id="password"
-              value={chechPassword}
-              onChange={(e) => {
-                setChechPassword(e.target.value);
-              }}
-            />
+
+            <div className={styles.inputBlock}>
+              <input
+                type="text"
+                placeholder="Логин"
+                className={styles.input}
+                id="login"
+                value={loginData}
+                onChange={(e) => {
+                  setLoginData(e.target.value);
+                  setErrors((prev) => ({ ...prev, login: "" }));
+                }}
+              />
+              {errors.login && <div className={styles.errorText}>{errors.login}</div>}
+            </div>
+
+            <div className={styles.inputBlock}>
+              <div className={styles.passwordContainer}>
+                <div className={styles.password}>
+                  <input
+                    type="password"
+                    placeholder="Пароль"
+                    className={styles.passInput}
+                    id="password"
+                    value={password}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      setErrors((prev) => ({ ...prev, password: "" }));
+                    }}
+                  />
+                  <span className={styles.description}>Минимум 8 символов</span>
+                </div>
+                <input
+                  type="password"
+                  placeholder="Пароль"
+                  className={styles.input}
+                  id="password"
+                  value={chechPassword}
+                  onChange={(e) => {
+                    setChechPassword(e.target.value);
+                  }}
+                />
+              </div>
+              {errors.password && <div className={styles.errorText}>{errors.password}</div>}
+            </div>
           </div>
 
           <div className={styles.buttons}>
