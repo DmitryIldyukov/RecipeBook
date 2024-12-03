@@ -53,8 +53,6 @@ public class Program
                 app.UseSwaggerUI();
             }
 
-            app.UseMiddleware<RequestLoggingMiddleware>();
-
             app.UseMiddleware<ExceptionHandlerMiddleware>();
 
             app.UseCookiePolicy( new CookiePolicyOptions
@@ -67,6 +65,8 @@ public class Program
             app.UseAuthentication();
 
             app.UseAuthorization();
+
+            app.UseMiddleware<RequestLoggingMiddleware>();
 
             app.MapControllers();
 
