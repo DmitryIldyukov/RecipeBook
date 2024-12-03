@@ -1,11 +1,12 @@
 ﻿using FluentValidation;
 
-namespace Application.UseCases.Tags.Queries.GetPopular;
-
-public class GetPopularTagsQueryValidator : AbstractValidator<GetPopularTagsQuery>
+namespace Application.UseCases.Tags.Queries.GetPopular
 {
-    public GetPopularTagsQueryValidator()
+    public class GetPopularTagsQueryValidator : AbstractValidator<GetPopularTagsQuery>
     {
-        RuleFor( q => q.Count ).NotEmpty().GreaterThan( 0 ).WithMessage( "Запрашевоемое количество тегов должно быть больше 0." );
+        public GetPopularTagsQueryValidator()
+        {
+            RuleFor( q => q.Count ).NotEmpty().GreaterThan( 0 ).WithMessage( "Запрашевоемое количество тегов должно быть больше 0." );
+        }
     }
 }

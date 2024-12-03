@@ -33,12 +33,7 @@ public class DeleteRecipeCommandHandler(
             RecipeId = recipe.Id,
             Tags = recipe.Tags
         };
-
-        Result addStepsResult = await deleteTagsHandler.Handle( deleteTagsCommand );
-        if ( !addStepsResult.IsSuccess )
-        {
-            return Result.Fail( addStepsResult.ErrorMessages );
-        }
+        await deleteTagsHandler.Handle( deleteTagsCommand );
 
         recipeRepository.Delete( recipe );
         await unitOfWork.Commit();

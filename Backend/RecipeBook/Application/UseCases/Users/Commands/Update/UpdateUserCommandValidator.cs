@@ -27,8 +27,8 @@ public class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand>
             .MustAsync( LoginIsUnique ).WithMessage( "Пользователь с таким логином уже существует" );
 
         RuleFor( command => command.Password )
-            .Must( password => string.IsNullOrEmpty( password ) || password.Length >= 8 )
-            .WithMessage( "Пароль должен состоять минимум из 8 символов, если указан." );
+            .NotEmpty().WithMessage( "Пароль не может быть пустым." )
+            .MinimumLength( 8 ).WithMessage( "Пароль должен состоять минимум из 8 символов" );
 
         RuleFor( command => command.Information )
             .MaximumLength( 255 );
