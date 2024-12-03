@@ -23,7 +23,7 @@ public class UsersController(
     ICommandHandler<UpdateUserCommand, Result> updateUserHandler,
     ICommandHandler<LoginUserCommand, ResultT<TokenInfoDto>> loginUserHandler,
     IQueryHandler<GetUserByIdQuery, ResultT<GetUserQueryDto>> getUserByIdHandler,
-    IQueryHandler<GetUserFavoriteRecipesQuery, ResultT<IReadOnlyList<GetRecipeQueryDto>>> getFavoriteRecipesHandler,
+    IQueryHandler<GetUserFavoriteRecipesQuery, ResultT<GetRecipesByPageDto>> getFavoriteRecipesHandler,
     IQueryHandler<GetUserRecipesQuery, ResultT<IReadOnlyList<GetRecipeQueryDto>>> getUserRecipesHandler,
     IMapper mapper
 ) : BaseController
@@ -145,7 +145,7 @@ public class UsersController(
 
     [Authorize]
     [HttpGet( "{userId:int}/favorites" )]
-    [ProducesResponseType( typeof( IReadOnlyList<GetRecipeQueryDto> ), StatusCodes.Status200OK )]
+    [ProducesResponseType( typeof( GetRecipesByPageDto ), StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
     public async Task<IActionResult> GetUserFavoritesRecipes(
         [FromRoute] int userId,
@@ -168,7 +168,7 @@ public class UsersController(
             }
         };
 
-        ResultT<IReadOnlyList<GetRecipeQueryDto>> result = await getFavoriteRecipesHandler.Handle( query );
+        ResultT<GetRecipesByPageDto> result = await getFavoriteRecipesHandler.Handle( query );
 
         if ( result.IsSuccess )
         {

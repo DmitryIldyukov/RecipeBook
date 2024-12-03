@@ -31,3 +31,8 @@ export type Ingredient = {
   title: string;
   description: string;
 };
+
+export type RecipeListResponse = {
+  recipes: Recipe[];
+  hasTakeMoreRecipes: boolean;
+}

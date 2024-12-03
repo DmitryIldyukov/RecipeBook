@@ -11,4 +11,6 @@ public interface IRecipeRepository : ICreateRepository<Recipe>, IDeleteRepositor
     Task<IReadOnlyList<Recipe>> GetUserFavoriteRecipesByPage( int userId, Page page );
     Task<IReadOnlyList<Recipe>> GetRecipesByFilter( List<string> searchQuery, Page page );
     Task<IReadOnlyList<Recipe>> GetUserRecipes( int userId );
+    Task<bool> AnyRecipesByFilters( List<string> searchQueries, Page page );
+    Task<bool> AnyUserFavoriteRecipesByPage( int userId, Page page );
 }

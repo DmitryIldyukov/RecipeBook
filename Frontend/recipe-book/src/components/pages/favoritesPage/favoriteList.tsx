@@ -36,11 +36,11 @@ export const FavoriteList = () => {
       .getFavoriteRecipes(userId, page)
       .then((response) => {
         if (page.pageNumber === 1) {
-          setRecipes(response);
+          setRecipes(response.recipes);
         } else {
-          setRecipes((prevRecipes) => [...prevRecipes, ...response]);
+          setRecipes((prevRecipes) => [...prevRecipes, ...response.recipes]);
         }
-        setIsCanLoadMore(response.length === defaultPageSize);
+        setIsCanLoadMore(response.hasTakeMoreRecipes);
       })
       .catch((error: unknown) => {
         handleError(error, "Произошла ошибка при загрузке избранных рецептов");

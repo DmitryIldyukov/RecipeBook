@@ -4,7 +4,6 @@ using Application.Interfaces.Repositories;
 using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Infrastructure.EntityDefinitions.Recipes;
 
@@ -59,11 +58,6 @@ public class RecipeRepository( RecipeBookDbContext dbContext ) : IRecipeReposito
         return await recipesQuery.ToListAsync();
     }
 
-    public async Task<bool> ContainsAsync( Expression<Func<Recipe, bool>> predicate )
-    {
-        return await dbContext.Recipes.AnyAsync( predicate );
-    }
-
     public async Task<IReadOnlyList<Recipe>> GetRecipesByFilter( List<string> searchQueries, Page page )
     {
         IQueryable<Recipe> recipes = dbContext.Recipes
@@ -88,6 +82,11 @@ public class RecipeRepository( RecipeBookDbContext dbContext ) : IRecipeReposito
         return await recipes.ToListAsync();
     }
 
+    public async Task<bool> ContainsAsync( Expression<Func<Recipe, bool>> predicate )
+    {
+        return await dbContext.Recipes.AnyAsync( predicate );
+    }
+
     public async Task<IReadOnlyList<Recipe>> GetUserRecipes( int userId )
     {
         return await dbContext.Recipes
@@ -99,5 +98,46 @@ public class RecipeRepository( RecipeBookDbContext dbContext ) : IRecipeReposito
            .Include( r => r.Author )
            .Where( r => r.AuthorId == userId )
            .ToListAsync();
+    }
+
+    public async Task<bool> AnyRecipesByFilters( List<string> searchQueries, Page page )
+    {
+        IQueryable<Recipe> recipes = dbContext.Recipes
+            .Include( r => r.Tags )
+            .Include( r => r.Likes )
+            .Include( r => r.Favorites )
+            .Include( r => r.Author );
+
+        if ( searchQueries is not null && searchQueries.Any() )
+        {
+            List<string> trimmedQuery = searchQueries.Select( s => s.ToLower().Trim() ).ToList();
+
+            recipes = recipes.Where( r => trimmedQuery.Any( q =>
+                r.Name.Contains( q ) ) ||
+                trimmedQuery.Any( q => r.Tags.Any( t => t.Name.Contains( q ) ) ) ).AsQueryable();
+        }
+
+        recipes = recipes
+            .Skip( ( page.PageNumber - 1 ) * page.PageSize )
+            .Take( page.PageSize );
+
+        return await recipes.AnyAsync();
+    }
+    public async Task<bool> AnyUserFavoriteRecipesByPage( int userId, Page page )
+    {
+        IQueryable<Recipe> recipes = dbContext.Recipes
+            .Include( r => r.Ingredients )
+            .Include( r => r.Steps )
+            .Include( r => r.Tags )
+            .Include( r => r.Likes )
+            .Include( r => r.Favorites )
+            .Include( r => r.Author )
+            .Where( r => r.Favorites.Any( f => f.UserId == userId ) );
+
+        recipes = recipes
+            .Skip( ( page.PageNumber - 1 ) * page.PageSize )
+            .Take( page.PageSize );
+
+        return await recipes.AnyAsync();
     }
 }
