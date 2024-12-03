@@ -33,7 +33,7 @@ public class TagsController(
         return BadRequest( result.ErrorMessages );
     }
 
-    [HttpGet( "GetPopularTags" )]
+    [HttpGet( "populars" )]
     [ProducesResponseType( StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
     public async Task<IActionResult> GetPopularTags( [FromQuery] GetPopularTagsDto popualTagsDto )
