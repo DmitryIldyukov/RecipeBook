@@ -21,8 +21,8 @@ export const Header = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (isAuth && userId) {
-          await userService.getUser(userId).then((user) => {
+        if (isAuth) {
+          await userService.getUser().then((user) => {
             setUser(user);
           });
         }

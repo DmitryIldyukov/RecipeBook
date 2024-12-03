@@ -1,36 +1,28 @@
 ﻿using Application.Common.CQRS.Command;
 using Application.Common.CQRS.Query;
-using Application.Common.Page;
 using Application.Common.Result;
-using Application.UseCases.Recipes.Dtos;
-using Application.UseCases.Recipes.Queries.GetFavoriteRecipes;
-using Application.UseCases.Recipes.Queries.GetUserRecipes;
+using Application.UseCases.RefreshTokens.Commands.Refresh;
 using Application.UseCases.Users.Commands.Create;
 using Application.UseCases.Users.Commands.Login;
 using Application.UseCases.Users.Commands.Update;
 using Application.UseCases.Users.Dtos;
 using Application.UseCases.Users.Queries.GetById;
 using AutoMapper;
-using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WebAPI.Dtos.Recipe;
 using WebAPI.Dtos.User;
 
 namespace WebAPI.Controllers;
 
-[Route( "api/[controller]" )]
-public class UsersController(
+public class UserController(
     ICommandHandler<CreateUserCommand, Result> createUserHandler,
     ICommandHandler<UpdateUserCommand, Result> updateUserHandler,
     ICommandHandler<LoginUserCommand, ResultT<TokenInfoDto>> loginUserHandler,
     IQueryHandler<GetUserByIdQuery, ResultT<GetUserQueryDto>> getUserByIdHandler,
-    IQueryHandler<GetUserFavoriteRecipesQuery, ResultT<IReadOnlyList<GetRecipeQueryDto>>> getFavoriteRecipesHandler,
-    IQueryHandler<GetUserRecipesQuery, ResultT<IReadOnlyList<GetRecipeQueryDto>>> getUserRecipesHandler,
     IMapper mapper
 ) : BaseController
 {
-    [HttpPost]
+    [HttpPost( "Registration" )]
     [ProducesResponseType( StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
     public async Task<IActionResult> Register( [FromBody] UserRegisterDto dto )
@@ -47,14 +39,14 @@ public class UsersController(
     }
 
     [Authorize]
-    [HttpGet( "{userId:int}" )]
+    [HttpGet]
     [ProducesResponseType( typeof( GetUserQueryDto ), StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
-    public async Task<IActionResult> GetUserById( [FromRoute] int userId )
+    public async Task<IActionResult> GetCurrentUser()
     {
-        if ( UserId != userId )
+        if ( UserId is null )
         {
-            return Forbid( "Невозможно получить данные другого пользователя." );
+            return BadRequest( "Пользователь не найден." );
         }
 
         GetUserByIdQuery query = new GetUserByIdQuery()
@@ -72,14 +64,14 @@ public class UsersController(
     }
 
     [Authorize]
-    [HttpPut( "{userId:int}" )]
+    [HttpPut]
     [ProducesResponseType( StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
-    public async Task<IActionResult> EditUser( [FromRoute] int userId, [FromBody] UserEditDto dto )
+    public async Task<IActionResult> EditUser( [FromBody] UserEditDto dto )
     {
-        if ( UserId != userId )
+        if ( UserId is null )
         {
-            return Forbid( "Невозможно изменить данные другого пользователя." );
+            return BadRequest( "Пользователь не найден." );
         }
 
         UpdateUserCommand command = new()
@@ -100,7 +92,7 @@ public class UsersController(
         return BadRequest( result.ErrorMessages );
     }
 
-    [HttpPost( "login" )]
+    [HttpPost( "Login" )]
     [ProducesResponseType( typeof( TokenInfoDto ), StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
     public async Task<IActionResult> Login( [FromBody] LoginDto dto )
@@ -113,67 +105,6 @@ public class UsersController(
         {
             Response.Cookies.Append( "refresh-token", result.Value.RefreshToken );
 
-            return Ok( result.Value );
-        }
-
-        return BadRequest( result.ErrorMessages );
-    }
-
-    [Authorize]
-    [HttpGet( "{userId:int}/recipes" )]
-    [ProducesResponseType( typeof( IReadOnlyList<GetRecipeQueryDto> ), StatusCodes.Status200OK )]
-    [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
-    public async Task<IActionResult> GetUserRecipes( [FromRoute] int userId )
-    {
-        if ( UserId != userId )
-        {
-            return Forbid( "Невозможно получить рецепты другого пользователя." );
-        }
-
-        GetUserRecipesQuery query = new GetUserRecipesQuery()
-        {
-            UserId = UserId.Value
-        };
-
-        ResultT<IReadOnlyList<GetRecipeQueryDto>> result = await getUserRecipesHandler.Handle( query );
-
-        if ( result.IsSuccess )
-        {
-            return Ok( result.Value );
-        }
-
-        return BadRequest( result.ErrorMessages );
-    }
-
-    [Authorize]
-    [HttpGet( "{userId:int}/favorites" )]
-    [ProducesResponseType( typeof( IReadOnlyList<GetRecipeQueryDto> ), StatusCodes.Status200OK )]
-    [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
-    public async Task<IActionResult> GetUserFavoritesRecipes(
-        [FromRoute] int userId,
-        [FromQuery] int pageNumber,
-        [FromQuery] int pageSize
-    )
-    {
-        if ( UserId != userId )
-        {
-            return Forbid( "Невозможно получить избранные рецепты другого пользователя." );
-        }
-
-        GetUserFavoriteRecipesQuery query = new GetUserFavoriteRecipesQuery()
-        {
-            UserId = userId,
-            Page = new Page()
-            {
-                PageNumber = pageNumber,
-                PageSize = pageSize
-            }
-        };
-
-        ResultT<IReadOnlyList<GetRecipeQueryDto>> result = await getFavoriteRecipesHandler.Handle( query );
-
-        if ( result.IsSuccess )
-        {
             return Ok( result.Value );
         }
 

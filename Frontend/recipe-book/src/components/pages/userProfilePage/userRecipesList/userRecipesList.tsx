@@ -15,11 +15,11 @@ export const UserRecipesList = () => {
     const getRecipes = async () => {
       try {
         if (userId) {
-          const data = await recipeService.getUserRecipes(userId);
+          const data = await recipeService.getUserRecipes();
           setRecipes(data);
         }
       } catch (error) {
-        handleError(error);
+        handleError(error)
       }
     };
 

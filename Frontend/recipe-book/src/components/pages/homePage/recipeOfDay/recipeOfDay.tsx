@@ -49,7 +49,7 @@ export const RecipeOfDay = () => {
   const addLike = async () => {
     try {
       if (recipe && userId) {
-        await recipeService.addLike(recipe.recipeId);
+        await recipeService.addLike(userId, recipe.recipeId);
         void getRecipeOfDay();
       }
     } catch (error) {

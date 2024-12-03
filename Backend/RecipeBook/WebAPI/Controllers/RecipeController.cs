@@ -1,6 +1,5 @@
 ﻿using Application.Common.CQRS.Command;
 using Application.Common.CQRS.Query;
-using Application.Common.Page;
 using Application.Common.Result;
 using Application.UseCases.Recipes.Commands.Create;
 using Application.UseCases.Recipes.Commands.Delete;
@@ -21,14 +20,16 @@ namespace WebAPI.Controllers;
 
 [ApiController]
 [Route( "api/[controller]" )]
-public class RecipesController(
+public class RecipeController(
     ICommandHandler<CreateRecipeCommand, Result> createRecipeHandler,
     ICommandHandler<UpdateRecipeCommand, Result> updateRecipeHandler,
     ICommandHandler<DeleteRecipeCommand, Result> deleteRecipeHandler,
     IQueryHandler<GetRecipeImageQuery, ResultT<GetImageQueryDto>> getImageHandler,
     IQueryHandler<GetDailyRecipeQuery, ResultT<DailyRecipeDto>> getDailyRecipeHandler,
+    IQueryHandler<GetUserFavoriteRecipesQuery, ResultT<IReadOnlyList<GetRecipeQueryDto>>> getFavoriteRecipesHandler,
     IQueryHandler<GetRecipesByFilterQuery, ResultT<IReadOnlyList<GetRecipeQueryDto>>> getRecipesByFilterHandler,
     IQueryHandler<GetRecipeByIdQuery, ResultT<GetRecipeQueryDto>> getByIdHandler,
+    IQueryHandler<GetUserRecipesQuery, ResultT<IReadOnlyList<GetRecipeQueryDto>>> getUserRecipesHandler,
     IMapper mapper
 ) : BaseController
 {
@@ -48,25 +49,35 @@ public class RecipesController(
         return BadRequest( result.ErrorMessages );
     }
 
-    [HttpGet( "search" )]
+    [Authorize]
+    [HttpPost( "FavoriteRecipes" )]
     [ProducesResponseType( typeof( IReadOnlyList<GetRecipeQueryDto> ), StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
-    public async Task<IActionResult> GetRecipesByFilters(
-        [FromQuery] int pageNumber,
-        [FromQuery] int pageSize,
-        [FromQuery] List<string> searchQueries
-    )
+    public async Task<IActionResult> GetUserFavoritesRecipes( [FromBody] FavoriteRecipesDto recipesDto )
     {
-        GetRecipesByFilterQuery query = new GetRecipesByFilterQuery
+        if ( UserId is null )
         {
-            UserId = UserId,
-            SearchQueries = searchQueries,
-            Page = new Page
-            {
-                PageNumber = pageNumber,
-                PageSize = pageSize
-            }
-        };
+            return BadRequest( "Пользователь не найден." );
+        }
+
+        GetUserFavoriteRecipesQuery query = mapper.Map<GetUserFavoriteRecipesQuery>( recipesDto ) with { UserId = UserId.Value };
+
+        ResultT<IReadOnlyList<GetRecipeQueryDto>> result = await getFavoriteRecipesHandler.Handle( query );
+
+        if ( result.IsSuccess )
+        {
+            return Ok( result.Value );
+        }
+
+        return BadRequest( result.ErrorMessages );
+    }
+
+    [HttpPost( "GetRecipes" )]
+    [ProducesResponseType( typeof( IReadOnlyList<GetRecipeQueryDto> ), StatusCodes.Status200OK )]
+    [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
+    public async Task<IActionResult> GetRecipesByFilters( [FromBody] RecipesByFilterDto recipesDto )
+    {
+        GetRecipesByFilterQuery query = mapper.Map<GetRecipesByFilterQuery>( recipesDto ) with { UserId = UserId };
 
         ResultT<IReadOnlyList<GetRecipeQueryDto>> result = await getRecipesByFilterHandler.Handle( query );
 
@@ -78,7 +89,7 @@ public class RecipesController(
         return BadRequest( result.ErrorMessages );
     }
 
-    [HttpGet( "{recipeId:int}/images" )]
+    [HttpGet( "RecipeImage/{recipeId:int}" )]
     [ProducesResponseType( typeof( FileResult ), StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
     public async Task<IActionResult> GetRecipeImage( [FromRoute] int recipeId )
@@ -97,7 +108,7 @@ public class RecipesController(
         return BadRequest( result.ErrorMessages );
     }
 
-    [HttpGet( "daily" )]
+    [HttpGet( "DailyRecipe" )]
     [ProducesResponseType( typeof( DailyRecipeDto ), StatusCodes.Status200OK )]
     [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
     public async Task<IActionResult> GetDailyRecipe()
@@ -126,6 +137,32 @@ public class RecipesController(
         };
 
         ResultT<GetRecipeQueryDto> result = await getByIdHandler.Handle( query );
+
+        if ( result.IsSuccess )
+        {
+            return Ok( result.Value );
+        }
+
+        return BadRequest( result.ErrorMessages );
+    }
+
+    [Authorize]
+    [HttpGet( "MyRecipes" )]
+    [ProducesResponseType( typeof( IReadOnlyList<GetRecipeQueryDto> ), StatusCodes.Status200OK )]
+    [ProducesResponseType( typeof( IReadOnlyList<string> ), StatusCodes.Status400BadRequest )]
+    public async Task<IActionResult> GetUserRecipes()
+    {
+        if ( UserId is null )
+        {
+            return BadRequest( "Пользователь не найден." );
+        }
+
+        GetUserRecipesQuery query = new GetUserRecipesQuery()
+        {
+            UserId = UserId.Value
+        };
+
+        ResultT<IReadOnlyList<GetRecipeQueryDto>> result = await getUserRecipesHandler.Handle( query );
 
         if ( result.IsSuccess )
         {
