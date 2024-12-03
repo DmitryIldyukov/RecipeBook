@@ -15,11 +15,12 @@ export const UserProfilePage = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
 
-  const { isAuth } = useAppStore();
+  const { isAuth, userId } = useAppStore();
 
   const getUserInfo = () => {
+    if (!userId) return;
     userService
-      .getUser()
+      .getUser(userId)
       .then((data) => {
         setUser(data);
       })

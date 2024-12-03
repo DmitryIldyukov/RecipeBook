@@ -10,7 +10,8 @@ using WebAPI.Dtos.Tag;
 namespace WebAPI.Controllers;
 
 [ApiController]
-public class TagController(
+[Route( "api/[controller]" )]
+public class TagsController(
     IQueryHandler<GetAllTagsQuery, ResultT<IReadOnlyList<GetTagDto>>> getTagsHandler,
     IQueryHandler<GetPopularTagsQuery, ResultT<IReadOnlyList<GetTagDto>>> getPopularTagsHandler,
     IMapper mapper
